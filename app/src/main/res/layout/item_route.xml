@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="25dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvRouteName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tuyến Huế – Đà Nẵng"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Route Path -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/icStart"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_location_pin" />
+
+            <TextView
+                android:id="@+id/tvStartPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/icStart"
+                android:text="Huế"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_arrow_forward" />
+
+            <TextView
+                android:id="@+id/tvEndPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/icEnd"
+                android:text="Đà Nẵng"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/icEnd"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_location_pin" />
+        </RelativeLayout>
+
+        <!-- Distance and Time Boxes -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_white"
+                android:backgroundTint="#F5F7FF"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="12dp"
+                android:layout_marginEnd="10dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Khoảng cách" android:textSize="13sp" android:textColor="#858383"/>
+                <TextView android:id="@+id/tvDistance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="100 km" android:textStyle="bold" android:textColor="#000000" android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_white"
+                android:backgroundTint="#F5F7FF"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thời gian" android:textSize="13sp" android:textColor="#858383"/>
+                <TextView android:id="@+id/tvTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="≈ 2.5 giờ" android:textStyle="bold" android:textColor="#000000" android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Status and Vehicle Info -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="Đang hoạt động"
+                android:textColor="#2E7D32"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_shift_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="Xe 4 chỗ, Xe 7 chỗ, Limousine"
+                android:textColor="#858383"
+                android:textSize="11sp" />
+        </RelativeLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditRoute"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sửa"
+                android:textAllCaps="false"
+                android:textColor="#3498DB"
+                android:textSize="16sp"
+                app:icon="@android:drawable/ic_menu_edit"
+                app:iconSize="18dp"
+                app:iconTint="#3498DB"
+                app:backgroundTint="#EBF5FB"
+                app:cornerRadius="10dp"
+                android:layout_marginEnd="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteRoute"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xóa"
+                android:textAllCaps="false"
+                android:textColor="#E74C3C"
+                android:textSize="16sp"
+                app:icon="@android:drawable/ic_menu_delete"
+                app:iconSize="18dp"
+                app:iconTint="#E74C3C"
+                app:backgroundTint="#FDEDEC"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

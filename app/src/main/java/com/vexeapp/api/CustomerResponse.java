@@ -1,0 +1,37 @@
+package com.vexeapp.api;
+
+import com.google.gson.annotations.SerializedName;
+
+public class CustomerResponse {
+    @SerializedName(value = "UserID", alternate = {"USERID", "userid", "user_id"})
+    private String UserID;
+
+    @SerializedName(value = "TenDangNhap", alternate = {"TENDANGNHAP", "tendangnhap"})
+    private String TenDangNhap;
+    
+    @SerializedName(value = "Vaitro", alternate = {"VAITRO", "vaitro", "vai_tro"})
+    private String Vaitro;
+    
+    @SerializedName(value = "SoDienThoai", alternate = {"SODIENTHOAI", "sodienthoai", "sdt"})
+    private String SoDienThoai;
+
+    @SerializedName(value = "MatKhau", alternate = {"MATKHAU", "matkhau"})
+    private String MatKhau;
+
+    @SerializedName(value = "Nhaxe", alternate = {"nhaxe", "NhaXe"})
+    private String Nhaxe;
+
+    // ✅ BỔ SUNG TRƯỜNG KHÁCH HÀNG
+    @SerializedName(value = "KhachHang", alternate = {"khachhang", "Khachhang"})
+    private String KhachHang;
+
+    public String getUserID() { return UserID; }
+    public String getVaitro() { return Vaitro; }
+    public String getSdt() { return SoDienThoai; }
+    public String getTenKhachHang() { return TenDangNhap; }
+    public String getMatKhau() { return MatKhau; }
+    public String getNhaxe() { return Nhaxe; }
+    
+    // ✅ BỔ SUNG GETTER
+    public String getKhachHang() { return KhachHang; }
+}

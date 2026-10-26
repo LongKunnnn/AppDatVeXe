@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fitsSystemWindows="false">
+
+    <!-- HEADER: Chiều cao 56dp (bằng thanh Chỉnh sửa), tiêu đề căn giữa -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#0091D5"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_back_chevron"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingEnd="40dp"
+            android:text="Thông tin nhà xe"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- LOGO: Căn giữa -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgOpLogoProfile"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/logo"
+                    app:civ_border_color="#EEEEEE"
+                    app:civ_border_width="2dp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/tvOpBusName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên nhà xe"
+                    android:textColor="#000000"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&quot;Kết nối hành trình di sản&quot;"
+                    android:textColor="#757575"
+                    android:textSize="13sp"
+                    android:textStyle="italic"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#EEEEEE" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="125dp" android:layout_height="wrap_content" android:text="Tên nhà xe:" android:textColor="#757575" android:textSize="15sp" />
+                        <TextView android:id="@+id/tvOpNameDetail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Đang tải..." android:textColor="#000000" android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="125dp" android:layout_height="wrap_content" android:text="Người đại diện:" android:textColor="#757575" android:textSize="15sp" />
+                        <TextView android:id="@+id/tvOpRep" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="N/A" android:textColor="#000000" android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="125dp" android:layout_height="wrap_content" android:text="Địa chỉ:" android:textColor="#757575" android:textSize="15sp" />
+                        <TextView android:id="@+id/tvOpAddress" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="N/A" android:textColor="#000000" android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="125dp" android:layout_height="wrap_content" android:text="Số điện thoại:" android:textColor="#757575" android:textSize="15sp" />
+                        <TextView android:id="@+id/tvOpPhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="N/A" android:textColor="#000000" android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="125dp" android:layout_height="wrap_content" android:text="Email:" android:textColor="#757575" android:textSize="15sp" />
+                        <TextView android:id="@+id/tvOpEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="N/A" android:textColor="#000000" android:textSize="15sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="0dp">
+                    <ImageView
+                        android:id="@+id/imgOpBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/nhaxe_home" />
+                </androidx.cardview.widget.CardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="30dp"
+                    app:backgroundTint="#00B0FF"
+                    android:text="Chỉnh sửa"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:cornerRadius="10dp"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogoutOp"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="15dp"
+                    app:backgroundTint="#FF5252"
+                    android:text="Đăng xuất"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:cornerRadius="10dp"
+                    app:icon="@android:drawable/ic_lock_power_off"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout android:id="@+id/nav_home_op_main" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical"><ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/home" app:tint="#757575"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trang chủ" android:textSize="8sp" android:textColor="#333333" /></LinearLayout>
+        <LinearLayout android:id="@+id/nav_driver_op" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical"><ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_driver" app:tint="#757575" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tài xế" android:textSize="8sp" android:textColor="#333333" /></LinearLayout>
+        <LinearLayout android:id="@+id/nav_vehicle_op" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical"><ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_car" app:tint="#757575" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phương tiện" android:textSize="8sp" android:textColor="#333333" /></LinearLayout>
+        <LinearLayout android:id="@+id/nav_trip_op" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical"><ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_map" app:tint="#757575" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chuyến xe" android:textSize="8sp" android:textColor="#333333" /></LinearLayout>
+        <LinearLayout android:id="@+id/nav_route_op" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical"><ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_route" app:tint="#757575" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tuyến xe" android:textSize="8sp" android:textColor="#333333" /></LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

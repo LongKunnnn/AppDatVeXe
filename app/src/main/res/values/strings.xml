@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Vé Xe App</string>
+    <string name="nha_xe_name">Nhà xe Đà Nẵng-Huế</string>
+    <string name="slogan">“Kết nối hành trình di sản”</string>
+    <string name="welcome">WELCOME</string>
+    <string name="operator_name">Hải Vân Limousine</string>
+    <string name="operator_id">Mã nhà xe: 001</string>
+    <string name="work_schedule">Lịch làm việc</string>
+    <string name="work_schedule_desc">Lịch làm việc của các tài xế trong tuần</string>
+</resources>
