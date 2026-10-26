@@ -45,7 +45,6 @@
             android:name=".ThongTinChiTietActivity"
             android:exported="false" />
 
-        <meta-data
 
         <activity
             android:name=".LoginActivity"

@@ -1318,7 +1318,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             conn.close()
 
 def run_server(port=8000):
-    init_database(force_reseed=True)
+    init_database(force_reseed=False)
     server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, VeXeApiHandler)
     print("=" * 65)
