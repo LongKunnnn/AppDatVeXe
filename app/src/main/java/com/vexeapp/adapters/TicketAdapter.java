@@ -24,6 +24,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     public interface OnTicketClickListener {
         void onTicketClick(Ticket ticket);
         void onCancelClick(Ticket ticket);
+        void onPaymentClick(Ticket ticket);
     }
 
     public TicketAdapter(Context context, List<Ticket> ticketList, OnTicketClickListener listener) {
@@ -58,26 +59,42 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         holder.tvSeatCount.setText("Số lượng ghế: " + String.format("%02d", ticket.getSoLuongGhe()));
         holder.tvSeats.setText("Mã số ghế: " + ticket.getFormattedSeats());
 
-        // Cấu hình nút dựa trên trạng thái (Tiếng Việt khớp với Backend)
+        // Cấu hình nút dựa trên trạng thái thanh toán & xác nhận 2 chiều
         String status = ticket.getTrangThai();
-        if ("Đã đặt".equals(status)) {
-            holder.btnAction.setText("Hủy");
+        if ("Chờ thanh toán".equalsIgnoreCase(status)) {
+            holder.btnAction.setText("Thanh toán");
+            holder.btnAction.setBackgroundColor(Color.parseColor("#0047AB"));
+            holder.btnAction.setEnabled(true);
+            holder.btnAction.setOnClickListener(v -> {
+                if (listener != null) listener.onPaymentClick(ticket);
+            });
+        } else if ("Chờ xác nhận".equalsIgnoreCase(status) || "Chờ nhà xe xác nhận".equalsIgnoreCase(status)) {
+            holder.btnAction.setText("Chờ nhà xe xác nhận");
+            holder.btnAction.setBackgroundColor(Color.parseColor("#FFA000"));
+            holder.btnAction.setEnabled(false);
+            holder.btnAction.setOnClickListener(null);
+        } else if ("Đã đặt".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status)) {
+            holder.btnAction.setText("Hủy vé");
             holder.btnAction.setBackgroundColor(Color.parseColor("#EF2A39"));
             holder.btnAction.setEnabled(true);
             holder.btnAction.setOnClickListener(v -> {
                 if (listener != null) listener.onCancelClick(ticket);
             });
-        } else if ("Đã đi".equals(status)) {
+        } else if ("Đã đi".equalsIgnoreCase(status) || "Hoàn thành".equalsIgnoreCase(status)) {
             holder.btnAction.setText("Đã đi");
-            holder.btnAction.setBackgroundColor(Color.parseColor("#FFC107"));
+            holder.btnAction.setBackgroundColor(Color.parseColor("#757575"));
             holder.btnAction.setEnabled(false);
-        } else if ("Đã hủy".equals(status)) {
+            holder.btnAction.setOnClickListener(null);
+        } else if ("Đã hủy".equalsIgnoreCase(status)) {
             holder.btnAction.setText("Đã hủy");
             holder.btnAction.setBackgroundColor(Color.parseColor("#34B5F1"));
             holder.btnAction.setEnabled(false);
+            holder.btnAction.setOnClickListener(null);
         } else {
-            holder.btnAction.setText(status);
+            holder.btnAction.setText(status != null ? status : "Chi tiết");
+            holder.btnAction.setBackgroundColor(Color.parseColor("#888888"));
             holder.btnAction.setEnabled(false);
+            holder.btnAction.setOnClickListener(null);
         }
 
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));

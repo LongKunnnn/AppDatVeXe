@@ -114,15 +114,28 @@
             android:scaleType="fitCenter" />
 
         <Button
-            android:id="@+id/btnQrCancel"
+            android:id="@+id/btnConfirmPaid"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#0047AB"
+            android:text="Tôi đã thanh toán"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="27dp"/>
+
+        <Button
+            android:id="@+id/btnQrCancel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#F5F5F5"
-            android:text="Hủy"
+            android:text="Đóng"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            app:cornerRadius="27dp"/>
+            app:cornerRadius="24dp"/>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

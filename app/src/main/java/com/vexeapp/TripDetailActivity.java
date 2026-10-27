@@ -44,6 +44,7 @@ public class TripDetailActivity extends AppCompatActivity {
     private Trip trip;
     private List<Passenger> passengerList = new ArrayList<>();
     private PassengerAdapter adapter;
+    private LinearLayout layoutPendingTickets, containerPendingTickets;
     private ImageView imgLogo, imgOpProfile;
     private ApiService apiService;
 
@@ -67,6 +68,8 @@ public class TripDetailActivity extends AppCompatActivity {
         tvStatusOption = findViewById(R.id.tvStatusOption);
         btnAssign = findViewById(R.id.btnAssign);
         rvPassengers = findViewById(R.id.rvPassengers);
+        layoutPendingTickets = findViewById(R.id.layoutPendingTickets);
+        containerPendingTickets = findViewById(R.id.containerPendingTickets);
         imgLogo = findViewById(R.id.imgLogo);
         imgOpProfile = findViewById(R.id.imgOpProfile);
 
@@ -253,20 +256,9 @@ public class TripDetailActivity extends AppCompatActivity {
         updateButtonState();
 
         btnAssign.setOnClickListener(v -> {
-            String driverId = trip.getTaiXeID();
-            Log.d("TripDetail", "Driver ID check: " + driverId);
-            
-            if (driverId == null || driverId.isEmpty() || driverId.equalsIgnoreCase("null") || driverId.equals("0")) {
-                Log.d("TripDetail", "Navigating to AssignDriverActivity");
-                Intent intent = new Intent(TripDetailActivity.this, AssignDriverActivity.class);
-                intent.putExtra("tripId", trip.getId());
-                startActivityForResult(intent, 500);
-            } else {
-                Log.d("TripDetail", "Navigating to TripRouteActivity");
-                Intent intent = new Intent(TripDetailActivity.this, TripRouteActivity.class);
-                intent.putExtra("trip_data", trip);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(TripDetailActivity.this, AssignDriverActivity.class);
+            intent.putExtra("tripId", trip.getId());
+            startActivityForResult(intent, 500);
         });
     }
 
@@ -277,11 +269,16 @@ public class TripDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> resK) {
                 final Map<String, String> khNames = new HashMap<>();
+                final Map<String, String> khPhones = new HashMap<>();
                 if (resK.isSuccessful() && resK.body() != null) {
                     for (Map<String, Object> kh : resK.body()) {
                         String id = findVal(kh, "KhachHangID", "id");
                         String name = findVal(kh, "Hovaten", "TenKhachHang", "hoTen");
-                        if (!id.isEmpty()) khNames.put(id, name);
+                        String phone = findVal(kh, "soDienThoai", "SoDienThoai", "phone");
+                        if (!id.isEmpty()) {
+                            khNames.put(id, name);
+                            khPhones.put(id, phone);
+                        }
                     }
                 }
 
@@ -295,6 +292,11 @@ public class TripDetailActivity extends AppCompatActivity {
                             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     passengerList.clear();
+                                    if (containerPendingTickets != null) {
+                                        containerPendingTickets.removeAllViews();
+                                    }
+                                    int pendingCount = 0;
+
                                     for (Map<String, Object> v : response.body()) {
                                         String ticketTripId = findVal(v, "ChuyenXe", "chuyenxe", "ChuyenXeID");
                                         if (!ticketTripId.equalsIgnoreCase(trip.getId())) continue;
@@ -303,8 +305,10 @@ public class TripDetailActivity extends AppCompatActivity {
                                         String khId = findVal(v, "KhachHang", "khachhang", "KhachHangID");
                                         String name = khNames.getOrDefault(khId, "Hành khách");
                                         String phone = findVal(v, "SoDienThoai", "phone", "sdt");
+                                        if (phone.isEmpty()) phone = khPhones.getOrDefault(khId, "Chưa cập nhật");
                                         String pickup = findVal(v, "DiemDon", "pickup", "diem_don");
                                         String dropoff = findVal(v, "DiemTra", "dropoff", "diem_tra");
+                                        String status = findVal(v, "TrangThai", "trangThai", "status");
 
                                         List<String> seatCodes = new ArrayList<>();
                                         for (Seat s : allSeatsRaw) {
@@ -321,11 +325,25 @@ public class TripDetailActivity extends AppCompatActivity {
                                         }
 
                                         String displaySeat = (seatCodes.isEmpty()) ? "??" : android.text.TextUtils.join(", ", seatCodes);
-                                        passengerList.add(new Passenger(name, phone, pickup, dropoff, displaySeat));
+
+                                        // XỬ LÝ VÉ CHỜ NHÀ XE XÁC NHẬN
+                                        if ("Chờ xác nhận".equalsIgnoreCase(status) || "Chờ nhà xe xác nhận".equalsIgnoreCase(status)) {
+                                            pendingCount++;
+                                            addPendingTicketView(veId, name, phone, displaySeat);
+                                        } 
+                                        // CHỈ HIỂN THỊ TRÊN DANH SÁCH CHUYẾN SAU KHI ĐÃ ĐẶT/XÁC NHẬN THÀNH CÔNG
+                                        else if ("Đã đặt".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status) || "Đã đi".equalsIgnoreCase(status) || "Hoàn thành".equalsIgnoreCase(status)) {
+                                            passengerList.add(new Passenger(name, phone, pickup, dropoff, displaySeat));
+                                        }
                                     }
+
+                                    if (layoutPendingTickets != null) {
+                                        layoutPendingTickets.setVisibility(pendingCount > 0 ? View.VISIBLE : View.GONE);
+                                    }
+
                                     adapter.notifyDataSetChanged();
                                     if (tvAvailableSeats != null) 
-                                        tvAvailableSeats.setText("Ghế trống: " + (trip.getSeats() - passengerList.size()));
+                                        tvAvailableSeats.setText("Ghế trống: " + Math.max(0, trip.getSeats() - passengerList.size()));
                                 }
                             }
                             @Override public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {}
@@ -338,10 +356,69 @@ public class TripDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void addPendingTicketView(final String veId, final String name, final String phone, final String seats) {
+        if (containerPendingTickets == null) return;
+
+        androidx.cardview.widget.CardView card = new androidx.cardview.widget.CardView(this);
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        cardParams.setMargins(0, 0, 0, 16);
+        card.setLayoutParams(cardParams);
+        card.setCardElevation(4);
+        card.setRadius(12);
+        card.setCardBackgroundColor(Color.WHITE);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(24, 20, 24, 20);
+
+        TextView tvTitle = new TextView(this);
+        tvTitle.setText("Khách: " + name + " (" + phone + ")");
+        tvTitle.setTextColor(Color.parseColor("#1A1A1A"));
+        tvTitle.setTextSize(15);
+        tvTitle.setTypeface(null, android.graphics.Typeface.BOLD);
+        layout.addView(tvTitle);
+
+        TextView tvDetails = new TextView(this);
+        tvDetails.setText("Mã vé: " + veId + " | Ghế: " + seats);
+        tvDetails.setTextColor(Color.parseColor("#666666"));
+        tvDetails.setTextSize(13);
+        tvDetails.setPadding(0, 4, 0, 12);
+        layout.addView(tvDetails);
+
+        Button btnConfirm = new Button(this);
+        btnConfirm.setText("✓ Xác nhận vé");
+        btnConfirm.setTextColor(Color.WHITE);
+        btnConfirm.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2E7D32")));
+        btnConfirm.setOnClickListener(v -> {
+            btnConfirm.setEnabled(false);
+            Map<String, Object> data = new HashMap<>();
+            data.put("ve_id", veId);
+
+            apiService.xacNhanVe(data).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Toast.makeText(TripDetailActivity.this, "Đã xác nhận vé " + veId + " thành công!", Toast.LENGTH_SHORT).show();
+                    fetchPassengersFromDB();
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    btnConfirm.setEnabled(true);
+                    Toast.makeText(TripDetailActivity.this, "Lỗi kết nối khi xác nhận vé", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        layout.addView(btnConfirm);
+
+        card.addView(layout);
+        containerPendingTickets.addView(card);
+    }
+
     private void updateButtonState() {
         String driverId = trip.getTaiXeID();
         if (driverId != null && !driverId.isEmpty() && !driverId.equalsIgnoreCase("null") && !driverId.equals("0")) {
-            btnAssign.setText("Hiển thị lộ trình chuyến");
+            btnAssign.setText("Đổi tài xế");
             btnAssign.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#4CAF50")));
         } else {
             btnAssign.setText("Phân công tài xế");

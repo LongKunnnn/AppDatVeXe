@@ -143,8 +143,15 @@ public class QLVeXeActivity extends AppCompatActivity implements TicketAdapter.O
                     progressBar.setVisibility(View.GONE);
                     if (response.isSuccessful() && response.body() != null) {
                         for (Ticket ticket : response.body()) {
-                            if (currentStatus.equalsIgnoreCase(ticket.getTrangThai()) &&
-                                    customerId.equals(ticket.getKhachHangID())) {
+                            String st = ticket.getTrangThai();
+                            boolean matches = false;
+                            if ("Đã đặt".equalsIgnoreCase(currentStatus)) {
+                                matches = "Đã đặt".equalsIgnoreCase(st) || "Đã xác nhận".equalsIgnoreCase(st) ||
+                                          "Chờ thanh toán".equalsIgnoreCase(st) || "Chờ xác nhận".equalsIgnoreCase(st);
+                            } else {
+                                matches = currentStatus.equalsIgnoreCase(st);
+                            }
+                            if (matches && (customerId == null || customerId.isEmpty() || customerId.equals(ticket.getKhachHangID()))) {
                                 ticketList.add(ticket);
                             }
                         }
@@ -299,21 +306,22 @@ public class QLVeXeActivity extends AppCompatActivity implements TicketAdapter.O
         btnPayment.setEnabled(false);
         btnPayment.setTextColor(Color.WHITE);
 
-        if ("Đã đặt".equalsIgnoreCase(status)) {
-            if ("Đã thanh toán".equalsIgnoreCase(paymentStatus)) {
-                btnPayment.setText("Đã thanh toán");
-                btnPayment
-                        .setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F1C40F")));
-            } else {
-                btnPayment.setText("Thanh toán");
-                btnPayment
-                        .setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#34B5F1")));
-                btnPayment.setEnabled(true);
-                btnPayment.setOnClickListener(v -> {
-                    dialog.dismiss();
-                    showUpcomingDialog();
-                });
-            }
+        if ("Chờ thanh toán".equalsIgnoreCase(status)) {
+            btnPayment.setText("Thanh toán ngay");
+            btnPayment.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#0047AB")));
+            btnPayment.setEnabled(true);
+            btnPayment.setOnClickListener(v -> {
+                dialog.dismiss();
+                showPaymentQrDialog(ticket);
+            });
+        } else if ("Chờ xác nhận".equalsIgnoreCase(status)) {
+            btnPayment.setText("Chờ nhà xe xác nhận");
+            btnPayment.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FFA000")));
+            btnPayment.setEnabled(false);
+        } else if ("Đã đặt".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status)) {
+            btnPayment.setText("Đã xác nhận (Đã thanh toán)");
+            btnPayment.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+            btnPayment.setEnabled(false);
         } else if ("Đã đi".equalsIgnoreCase(status)) {
             btnPayment.setText("Đã thanh toán");
             btnPayment.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F1C40F")));
@@ -337,6 +345,67 @@ public class QLVeXeActivity extends AppCompatActivity implements TicketAdapter.O
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
         dialogView.findViewById(R.id.btnUpcomingOk).setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    @Override
+    public void onPaymentClick(Ticket ticket) {
+        showPaymentQrDialog(ticket);
+    }
+
+    private void showPaymentQrDialog(Ticket ticket) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_qr_payment, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        TextView tvQrTicketCode = dialogView.findViewById(R.id.tvQrTicketCode);
+        TextView tvQrRoute = dialogView.findViewById(R.id.tvQrRoute);
+        TextView tvQrDate = dialogView.findViewById(R.id.tvQrDate);
+        TextView tvQrTime = dialogView.findViewById(R.id.tvQrTime);
+        TextView tvQrSeats = dialogView.findViewById(R.id.tvQrSeats);
+        TextView tvQrTotal = dialogView.findViewById(R.id.tvQrTotal);
+        ImageView btnQrClose = dialogView.findViewById(R.id.btnQrClose);
+        Button btnConfirmPaid = dialogView.findViewById(R.id.btnConfirmPaid);
+        Button btnQrCancel = dialogView.findViewById(R.id.btnQrCancel);
+
+        if (tvQrTicketCode != null) tvQrTicketCode.setText(ticket.getVeID());
+        if (tvQrRoute != null) tvQrRoute.setText(ticket.getTenTuyen() != null ? ticket.getTenTuyen() : "Hà Nội - Ninh Bình");
+        if (tvQrDate != null) tvQrDate.setText(ticket.getNgayKhoiHanh() != null ? ticket.getNgayKhoiHanh() : "");
+        if (tvQrTime != null) tvQrTime.setText(ticket.getGioDi() != null ? ticket.getGioDi() : "");
+        if (tvQrSeats != null) tvQrSeats.setText(ticket.getFormattedSeats());
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        if (tvQrTotal != null) tvQrTotal.setText(formatter.format(ticket.getTongTien()) + " đ");
+
+        if (btnQrClose != null) btnQrClose.setOnClickListener(v -> dialog.dismiss());
+        if (btnQrCancel != null) btnQrCancel.setOnClickListener(v -> dialog.dismiss());
+
+        if (btnConfirmPaid != null) {
+            btnConfirmPaid.setOnClickListener(v -> {
+                btnConfirmPaid.setEnabled(false);
+                Map<String, Object> data = new HashMap<>();
+                data.put("ve_id", ticket.getVeID());
+
+                apiService.thanhToanVe(data).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        dialog.dismiss();
+                        Toast.makeText(QLVeXeActivity.this, "Đã gửi thanh toán! Vui lòng chờ nhà xe xác nhận.", Toast.LENGTH_LONG).show();
+                        loadTickets();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        btnConfirmPaid.setEnabled(true);
+                        Toast.makeText(QLVeXeActivity.this, "Lỗi kết nối khi thanh toán!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
+
         dialog.show();
     }
 

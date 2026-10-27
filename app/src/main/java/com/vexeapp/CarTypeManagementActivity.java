@@ -30,6 +30,7 @@ public class CarTypeManagementActivity extends AppCompatActivity {
     private CarTypeAdapter adapter;
     private List<Loaixe> carTypeList;
     private ImageView btnBack, btnProfile;
+    private android.widget.Button btnAddCarType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class CarTypeManagementActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnProfile = findViewById(R.id.btnProfile);
         if (btnProfile == null) btnProfile = findViewById(R.id.imgOpProfile);
+        btnAddCarType = findViewById(R.id.btnAddCarType);
     }
 
     private void setupEvents() {
@@ -59,6 +61,9 @@ public class CarTypeManagementActivity extends AppCompatActivity {
                 startActivity(new Intent(this, OperatorProfileActivity.class));
             });
         }
+        if (btnAddCarType != null) {
+            btnAddCarType.setOnClickListener(v -> showAddCarTypeDialog());
+        }
     }
 
     private void setupRecyclerView() {
@@ -66,6 +71,74 @@ public class CarTypeManagementActivity extends AppCompatActivity {
         adapter = new CarTypeAdapter(carTypeList, this);
         rvCarTypes.setLayoutManager(new LinearLayoutManager(this));
         rvCarTypes.setAdapter(adapter);
+    }
+
+    private void showAddCarTypeDialog() {
+        android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.setContentView(R.layout.dialog_crud_car_type);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+
+        android.widget.TextView tvTitle = dialog.findViewById(R.id.tvCrudDialogTitle);
+        android.widget.EditText edtName = dialog.findViewById(R.id.edtCrudName);
+        android.widget.EditText edtSeats = dialog.findViewById(R.id.edtCrudSeats);
+        android.widget.EditText edtPrice = dialog.findViewById(R.id.edtCrudPrice);
+        android.widget.Button btnSave = dialog.findViewById(R.id.btnSaveCrud);
+        android.widget.Button btnCancel = dialog.findViewById(R.id.btnCancelCrud);
+        android.widget.ImageView btnCloseTop = dialog.findViewById(R.id.btnCloseCrudTop);
+
+        if (tvTitle != null) tvTitle.setText("Thêm loại xe mới");
+
+        if (btnCloseTop != null) btnCloseTop.setOnClickListener(v -> dialog.dismiss());
+        if (btnCancel != null) btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        if (btnSave != null) {
+            btnSave.setOnClickListener(v -> {
+                String nameInput = edtName.getText().toString().trim();
+                String seatsInput = edtSeats.getText().toString().trim();
+                String priceInput = edtPrice.getText().toString().trim();
+
+                if (nameInput.isEmpty() || seatsInput.isEmpty() || priceInput.isEmpty()) {
+                    Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int seats;
+                try {
+                    seats = Integer.parseInt(seatsInput);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Số chỗ phải là số nguyên hợp lệ!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Loaixe newCar = new Loaixe();
+                newCar.setTenLoai(nameInput);
+                newCar.setSoCho(seats);
+                newCar.setGiaVe(priceInput);
+
+                ApiService apiService = ApiClient.getClient().create(ApiService.class);
+                apiService.createLoaixe(newCar).enqueue(new Callback<Loaixe>() {
+                    @Override
+                    public void onResponse(Call<Loaixe> call, Response<Loaixe> response) {
+                        if (response.isSuccessful()) {
+                            dialog.dismiss();
+                            Toast.makeText(CarTypeManagementActivity.this, "Thêm loại xe mới thành công!", Toast.LENGTH_SHORT).show();
+                            fetchCarTypes();
+                        } else {
+                            Toast.makeText(CarTypeManagementActivity.this, "Lỗi server: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Loaixe> call, Throwable t) {
+                        Toast.makeText(CarTypeManagementActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
+
+        dialog.show();
     }
 
     private void fetchCarTypes() {

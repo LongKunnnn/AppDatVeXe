@@ -1,5 +1,6 @@
 package com.vexeapp.adapters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -42,12 +43,15 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
         this.context = context;
     }
 
-    private String getDisplayNameBySeats(int soCho) {
-        switch (soCho) {
+    private String getDisplayName(Loaixe car) {
+        if (car.getTenLoai() != null && !car.getTenLoai().isEmpty()) {
+            return car.getTenLoai();
+        }
+        switch (car.getSoCho()) {
             case 4: return "Loại xe A";
             case 7: return "Loại xe B";
             case 9: return "Loại xe C";
-            default: return "Loại xe " + soCho + " chỗ";
+            default: return "Loại xe " + car.getSoCho() + " chỗ";
         }
     }
 
@@ -56,7 +60,8 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
             case 4: return Color.parseColor("#13B5F6"); // Xanh dương
             case 7: return Color.parseColor("#81C784"); // Xanh lá
             case 9: return Color.parseColor("#BA68C8"); // Tím
-            default: return Color.parseColor("#13B5F6");
+            case 16: return Color.parseColor("#FFA726"); // Cam
+            default: return Color.parseColor("#0091D5");
         }
     }
 
@@ -70,21 +75,22 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
     @Override
     public void onBindViewHolder(@NonNull CarTypeViewHolder holder, int position) {
         Loaixe car = carList.get(position);
-        String displayName = getDisplayNameBySeats(car.getSoCho());
+        String displayName = getDisplayName(car);
         int themeColor = getColorBySeats(car.getSoCho());
 
         holder.tvName.setText(displayName);
-        if (displayName.contains(" ")) {
-            holder.tvIcon.setText(displayName.substring(displayName.length() - 1));
+        if (displayName.length() > 0) {
+            String initial = displayName.substring(displayName.length() - 1);
+            holder.tvIcon.setText(initial.matches("[A-Za-z0-9]") ? initial : "X");
         }
 
-        // Cập nhật màu sắc theo yêu cầu
+        // Cập nhật màu sắc
         holder.viewHeader.setBackgroundColor(themeColor);
         holder.tvIcon.setBackgroundTintList(ColorStateList.valueOf(themeColor));
         holder.btnEdit.setBackgroundTintList(ColorStateList.valueOf(themeColor));
 
         holder.tvSeats.setText("• " + car.getSoCho() + " chỗ");
-        
+
         try {
             double gia = Double.parseDouble(car.getGiaVe());
             holder.tvPrice.setText(String.format(Locale.getDefault(), "%,.0f đ", gia));
@@ -93,48 +99,57 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
         }
 
         holder.tvDate.setText(car.getNgayCapNhatGia() != null ? car.getNgayCapNhatGia() : "Chưa cập nhật");
-        holder.btnEdit.setOnClickListener(v -> showUpdateDialog(car, position));
+        holder.btnEdit.setOnClickListener(v -> showEditDialog(car, holder.getAdapterPosition()));
+        if (holder.btnDelete != null) {
+            holder.btnDelete.setOnClickListener(v -> showDeleteConfirmDialog(car, holder.getAdapterPosition()));
+        }
     }
 
-    private void showUpdateDialog(Loaixe car, int position) {
+    private void showEditDialog(Loaixe car, int position) {
         Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_update_price);
+        dialog.setContentView(R.layout.dialog_crud_car_type);
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-        TextView tvCarInfo = dialog.findViewById(R.id.tvDialogCarName);
-        TextView tvCurrentPrice = dialog.findViewById(R.id.tvDialogCurrentPrice);
-        EditText edtPrice = dialog.findViewById(R.id.edtNewPrice);
-        Button btnSave = dialog.findViewById(R.id.btnSavePrice);
-        Button btnCancel = dialog.findViewById(R.id.btnCancelUpdate);
-        ImageView btnCancelTop = dialog.findViewById(R.id.btnCancelUpdateTop);
+        TextView tvTitle = dialog.findViewById(R.id.tvCrudDialogTitle);
+        EditText edtName = dialog.findViewById(R.id.edtCrudName);
+        EditText edtSeats = dialog.findViewById(R.id.edtCrudSeats);
+        EditText edtPrice = dialog.findViewById(R.id.edtCrudPrice);
+        Button btnSave = dialog.findViewById(R.id.btnSaveCrud);
+        Button btnCancel = dialog.findViewById(R.id.btnCancelCrud);
+        ImageView btnCloseTop = dialog.findViewById(R.id.btnCloseCrudTop);
 
-        tvCarInfo.setText(getDisplayNameBySeats(car.getSoCho()) + " (" + car.getSoCho() + " chỗ)");
-        
-        try {
-            double gia = Double.parseDouble(car.getGiaVe());
-            tvCurrentPrice.setText(String.format(Locale.getDefault(), "%,.0f đ", gia));
-        } catch (Exception e) {
-            tvCurrentPrice.setText(car.getGiaVe() + " đ");
-        }
+        if (tvTitle != null) tvTitle.setText("Chỉnh sửa loại xe");
+        if (edtName != null) edtName.setText(car.getTenLoai());
+        if (edtSeats != null) edtSeats.setText(String.valueOf(car.getSoCho()));
+        if (edtPrice != null) edtPrice.setText(car.getGiaVe());
 
-        View.OnClickListener cancelListener = v -> showCancelConfirmDialog(dialog);
-        if (btnCancel != null) btnCancel.setOnClickListener(cancelListener);
-        if (btnCancelTop != null) btnCancelTop.setOnClickListener(cancelListener);
+        if (btnCloseTop != null) btnCloseTop.setOnClickListener(v -> dialog.dismiss());
+        if (btnCancel != null) btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         if (btnSave != null) {
-            btnSave.setOnClickListener(vSave -> {
-                String newPrice = edtPrice.getText().toString().trim();
-                if (newPrice.isEmpty()) {
-                    Toast.makeText(context, "Vui lòng nhập giá mới", Toast.LENGTH_SHORT).show();
+            btnSave.setOnClickListener(v -> {
+                String nameInput = edtName.getText().toString().trim();
+                String seatsInput = edtSeats.getText().toString().trim();
+                String priceInput = edtPrice.getText().toString().trim();
+
+                if (nameInput.isEmpty() || seatsInput.isEmpty() || priceInput.isEmpty()) {
+                    Toast.makeText(context, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String oldPrice = car.getGiaVe();
-                String oldDate = car.getNgayCapNhatGia();
+                int seats;
+                try {
+                    seats = Integer.parseInt(seatsInput);
+                } catch (Exception e) {
+                    Toast.makeText(context, "Số chỗ phải là số nguyên hợp lệ!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                car.setGiaVe(newPrice);
+                car.setTenLoai(nameInput);
+                car.setSoCho(seats);
+                car.setGiaVe(priceInput);
                 String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                 car.setNgayCapNhatGia(currentDate);
 
@@ -145,43 +160,48 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
                         if (response.isSuccessful()) {
                             notifyItemChanged(position);
                             dialog.dismiss();
-                            showSuccessDialog("Cập nhật giá vé thành công");
+                            showSuccessDialog("Cập nhật loại xe thành công");
                         } else {
-                            car.setGiaVe(oldPrice);
-                            car.setNgayCapNhatGia(oldDate);
                             Toast.makeText(context, "Lỗi server: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Loaixe> call, Throwable t) {
-                        car.setGiaVe(oldPrice);
-                        car.setNgayCapNhatGia(oldDate);
                         Toast.makeText(context, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
                     }
                 });
             });
         }
+
         dialog.show();
     }
 
-    private void showCancelConfirmDialog(Dialog updateDialog) {
-        Dialog cancelDialog = new Dialog(context);
-        cancelDialog.setContentView(R.layout.dialog_cancle_update_price);
-        if (cancelDialog.getWindow() != null) {
-            cancelDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
+    private void showDeleteConfirmDialog(Loaixe car, int position) {
+        new AlertDialog.Builder(context)
+                .setTitle("Xác nhận xóa loại xe")
+                .setMessage("Bạn có chắc chắn muốn xóa '" + getDisplayName(car) + "' không?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    ApiService apiService = ApiClient.getClient().create(ApiService.class);
+                    apiService.deleteLoaixe(car.getLoaixeID()).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (position >= 0 && position < carList.size()) {
+                                carList.remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, carList.size());
+                            }
+                            showSuccessDialog("Đã xóa loại xe thành công");
+                        }
 
-        Button btnNo = cancelDialog.findViewById(R.id.btnNo);
-        Button btnYes = cancelDialog.findViewById(R.id.btnYes);
-
-        if (btnNo != null) btnNo.setOnClickListener(v -> cancelDialog.dismiss());
-        if (btnYes != null) btnYes.setOnClickListener(v -> {
-            cancelDialog.dismiss();
-            updateDialog.dismiss();
-        });
-
-        cancelDialog.show();
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(context, "Lỗi kết nối khi xóa!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void showSuccessDialog(String message) {
@@ -204,7 +224,7 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
     public static class CarTypeViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvSeats, tvPrice, tvDate, tvIcon;
         View viewHeader;
-        Button btnEdit;
+        Button btnEdit, btnDelete;
 
         public CarTypeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -214,6 +234,7 @@ public class CarTypeAdapter extends RecyclerView.Adapter<CarTypeAdapter.CarTypeV
             tvDate = itemView.findViewById(R.id.tvLastUpdate);
             tvIcon = itemView.findViewById(R.id.tvIcon);
             btnEdit = itemView.findViewById(R.id.btnUpdatePrice);
+            btnDelete = itemView.findViewById(R.id.btnDeleteCarType);
             viewHeader = itemView.findViewById(R.id.viewHeaderColor);
         }
     }

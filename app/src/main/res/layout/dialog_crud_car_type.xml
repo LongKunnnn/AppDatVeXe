@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:layout_margin="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <!-- Header -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="#0091D5"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:id="@+id/tvCrudDialogTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Thông tin loại xe"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btnCloseCrudTop"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/white" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Tên loại xe -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên loại xe"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCrudName"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/edittext_border"
+                android:hint="Ví dụ: Limousine VIP 9 chỗ"
+                android:paddingHorizontal="12dp"
+                android:textSize="14sp" />
+
+            <!-- Số chỗ ngồi -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số chỗ ngồi"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCrudSeats"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/edittext_border"
+                android:hint="Ví dụ: 9"
+                android:inputType="number"
+                android:paddingHorizontal="12dp"
+                android:textSize="14sp" />
+
+            <!-- Giá vé chuẩn -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá vé chuẩn (VNĐ)"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCrudPrice"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/edittext_border"
+                android:hint="Ví dụ: 200000"
+                android:inputType="number"
+                android:paddingHorizontal="12dp"
+                android:textSize="14sp" />
+
+            <!-- Action buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCancelCrud"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="#F5F5F5"
+                    android:text="Hủy"
+                    android:textAllCaps="false"
+                    android:textColor="#333333"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnSaveCrud"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#0091D5"
+                    android:text="Lưu thông tin"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

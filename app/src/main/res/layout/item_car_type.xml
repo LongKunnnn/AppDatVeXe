@@ -124,20 +124,43 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnUpdatePrice"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:backgroundTint="#13B5F6"
-                android:text="$  Cập nhật giá vé"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:minHeight="0dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnUpdatePrice"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#13B5F6"
+                    android:text="✏️  Sửa loại xe"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"/>
+
+                <Button
+                    android:id="@+id/btnDeleteCarType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:backgroundTint="#EF5350"
+                    android:text="🗑️ Xóa"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"/>
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

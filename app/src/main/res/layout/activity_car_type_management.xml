@@ -57,6 +57,38 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layoutActionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Quản lý loại xe"
+            android:textColor="#1A1A1A"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnAddCarType"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:backgroundTint="#0091D5"
+            android:text="+ Thêm loại xe"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCarTypes"
         android:layout_width="match_parent"
@@ -64,7 +96,7 @@
         android:padding="10dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutActionHeader" />
 
     <!-- BOTTOM NAVIGATION CẬP NHẬT ICON MỚI -->
     <LinearLayout

@@ -1348,8 +1348,11 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     query += " AND v.KhachHang = ?"
                     params.append(kh_id)
                 if status:
-                    query += " AND v.trangThai = ?"
-                    params.append(status)
+                    if status in ['Đã đặt', 'active']:
+                        query += " AND v.trangThai IN ('Đã đặt', 'Đã xác nhận', 'Chờ thanh toán', 'Chờ xác nhận')"
+                    else:
+                        query += " AND v.trangThai = ?"
+                        params.append(status)
                 if cx_id:
                     query += " AND v.Chuyenxe = ?"
                     params.append(cx_id)
@@ -1545,7 +1548,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
                 cursor.execute("""
                 INSERT INTO ve (VeID, Chuyenxe, KhachHang, soLuongGhe, danhSachGhe, tongTien, diemDon, diemTra, ngayDat, trangThai, trangThaiThanhToan)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Đã đặt', 'Chưa thanh toán')
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Chờ thanh toán', 'Chưa thanh toán')
                 """, (
                     ve_id, chuyen_xe_id, kh_id, len(ghe_ids), danh_sach_ghe_str,
                     tong_tien, diem_don, diem_tra, datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -1715,6 +1718,47 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 conn.commit()
                 return self._send_json({"status": "success", "message": "Gửi đánh giá thành công!"}, 201)
 
+            # THANH TOÁN VÉ (CUSTOMER MARKS PAID VIA QR)
+            elif path == '/api/thanh-toan-ve':
+                ve_id = data.get("ve_id") or data.get("VeID") or data.get("Ve")
+                if not ve_id:
+                    return self._send_json({"status": "error", "message": "Thiếu mã vé"}, 400)
+                cursor.execute("UPDATE ve SET trangThai = 'Chờ xác nhận', trangThaiThanhToan = 'Chờ xác nhận' WHERE VeID = ?", (ve_id,))
+                conn.commit()
+                return self._send_json({"status": "success", "message": "Đã thanh toán, chờ nhà xe xác nhận!", "ve_id": ve_id})
+
+            # XÁC NHẬN VÉ (OPERATOR CONFIRMS TICKET)
+            elif path == '/api/xac-nhan-ve':
+                ve_id = data.get("ve_id") or data.get("VeID") or data.get("Ve")
+                if not ve_id:
+                    return self._send_json({"status": "error", "message": "Thiếu mã vé"}, 400)
+                cursor.execute("UPDATE ve SET trangThai = 'Đã đặt', trangThaiThanhToan = 'Đã thanh toán' WHERE VeID = ?", (ve_id,))
+                conn.commit()
+                return self._send_json({"status": "success", "message": "Nhà xe đã xác nhận vé thành công!", "ve_id": ve_id})
+
+            # TẠO MỚI LOẠI XE (CREATE CAR TYPE)
+            elif path == '/api/loaixe':
+                loaixe_id = data.get("LoaixeID") or data.get("loaixe_id") or f"LX{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                ten_loai = data.get("tenLoai") or data.get("TenLoai") or f"Xe {data.get('soCho', 34)} chỗ"
+                so_cho = int(data.get("soCho") or data.get("SoCho") or 34)
+                gia_chuan = int(data.get("giaChuan") or data.get("GiaChuan") or data.get("giaVe") or data.get("GiaVe") or 150000)
+                cursor.execute("INSERT OR REPLACE INTO loaixe (LoaixeID, tenLoai, soCho, giaChuan) VALUES (?, ?, ?, ?)",
+                               (loaixe_id, ten_loai, so_cho, gia_chuan))
+                conn.commit()
+                return self._send_json({
+                    "status": "success",
+                    "LoaixeID": loaixe_id,
+                    "loaixeID": loaixe_id,
+                    "id": loaixe_id,
+                    "tenLoai": ten_loai,
+                    "TenLoai": ten_loai,
+                    "soCho": so_cho,
+                    "SoCho": so_cho,
+                    "giaChuan": gia_chuan,
+                    "giaVe": str(gia_chuan),
+                    "GiaVe": str(gia_chuan)
+                }, 201)
+
             else:
                 return self._send_json({"status": "ok"}, 200)
 
@@ -1823,8 +1867,11 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     return self._send_json({"status": "success", "NhaxeID": res_id})
 
                 elif resource == 'loaixe':
-                    if "giaVe" in data or "GiaVe" in data:
-                        price = int(data.get("giaVe") or data.get("GiaVe"))
+                    if "tenLoai" in data or "TenLoai" in data or "name" in data:
+                        name = data.get("tenLoai") or data.get("TenLoai") or data.get("name")
+                        cursor.execute("UPDATE loaixe SET tenLoai = ? WHERE LoaixeID = ?", (name, res_id))
+                    if "giaVe" in data or "GiaVe" in data or "giaChuan" in data or "GiaChuan" in data:
+                        price = int(data.get("giaVe") or data.get("GiaVe") or data.get("giaChuan") or data.get("GiaChuan"))
                         cursor.execute("UPDATE loaixe SET giaChuan = ? WHERE LoaixeID = ?", (price, res_id))
                     if "soCho" in data or "SoCho" in data:
                         seats = int(data.get("soCho") or data.get("SoCho"))
@@ -1842,6 +1889,15 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                             "giaVe": str(r["giaChuan"])
                         })
                     return self._send_json({"status": "success"})
+
+                elif resource == 've':
+                    for k, v in data.items():
+                        if k in ['trangThai', 'TrangThai']:
+                            cursor.execute("UPDATE ve SET trangThai = ? WHERE VeID = ?", (v, res_id))
+                        elif k in ['trangThaiThanhToan', 'TrangThaiThanhToan']:
+                            cursor.execute("UPDATE ve SET trangThaiThanhToan = ? WHERE VeID = ?", (v, res_id))
+                    conn.commit()
+                    return self._send_json({"status": "success", "VeID": res_id})
 
                 elif resource == 'ghengoi':
                     if "trangThai" in data or "TrangThai" in data:
@@ -1874,7 +1930,8 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     "chuyenxe": ("chuyenxe", "ChuyenxeID"),
                     "khachhang": ("khachhang", "KhachHangID"),
                     "user-auth": ("nguoidung", "UserID"),
-                    "ve": ("ve", "VeID")
+                    "ve": ("ve", "VeID"),
+                    "loaixe": ("loaixe", "LoaixeID")
                 }
                 if resource in table_map:
                     tbl, col = table_map[resource]

@@ -176,6 +176,7 @@ INSERT INTO loaixe (LoaixeID, tenLoai, soCho, giaChuan) VALUES
 ('LX03', 'Xe Ghế Ngồi 29 chỗ', 29, 120000),
 ('LX04', 'Limousine Cung Điện 22 phòng', 22, 250000);
 
+
 -- 2. Nhà xe
 INSERT INTO nhaxe (NhaxeID, tenNhaXe, diaChi, soDienThoai, email, nguoiDaiDien, giayPhepKinhDoanh, logo) VALUES 
 ('NX00001', 'Tràng An Limousine', '107 Bến xe Mỹ Đình, Nam Từ Liêm, Hà Nội', '0988123456', 'trangan@vexeapp.com', 'Nguyễn Văn Hải', 'GP-2024-HN', ''),
