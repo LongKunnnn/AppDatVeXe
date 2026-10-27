@@ -79,7 +79,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Nhà xe Hà Nội - Ninh Bình"
+                                android:text="@string/nha_xe_name"
                                 android:textColor="@android:color/black"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
@@ -99,7 +99,7 @@
                             <!-- Rows for Info -->
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
                                 <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Tên nhà xe:" android:textSize="14sp" android:textColor="#888888"/>
-                                <TextView android:id="@+id/tvViewBusName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nhà xe Hà Nội - Ninh Bình" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvViewBusName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nha_xe_name" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">

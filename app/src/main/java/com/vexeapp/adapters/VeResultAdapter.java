@@ -50,6 +50,40 @@ public class VeResultAdapter extends RecyclerView.Adapter<VeResultAdapter.ViewHo
             if (item.getEndTime() != null) {
                 holder.tvEndTime.setText(item.getEndTime()); // Giờ đến (GioDen)
             }
+
+            // Gán hiển thị tuyến đường chính xác theo chuyến
+            String routeName = item.getTuyenXeName();
+            if (routeName != null && routeName.contains("-")) {
+                String cleanRoute = routeName.replace("Tuyến:", "").replace("Tuyến", "").trim();
+                String[] parts = cleanRoute.split("-");
+                if (parts.length >= 2) {
+                    String o = parts[0].trim();
+                    String d = parts[1].trim();
+                    holder.tvRouteBadge.setText(o + " ➔ " + d);
+                    holder.tvOrigin.setText("Bến xe " + o);
+                    holder.tvDest.setText("Bến xe TP " + d);
+                } else {
+                    holder.tvRouteBadge.setText(cleanRoute);
+                    holder.tvOrigin.setText("Bến xe xuất phát");
+                    holder.tvDest.setText("Bến xe điểm đến");
+                }
+            } else if (routeName != null && !routeName.isEmpty()) {
+                holder.tvRouteBadge.setText(routeName);
+                holder.tvOrigin.setText("Bến xe xuất phát");
+                holder.tvDest.setText("Bến xe điểm đến");
+            } else {
+                holder.tvRouteBadge.setText("Tuyến xe");
+                holder.tvOrigin.setText("Bến xe xuất phát");
+                holder.tvDest.setText("Bến xe điểm đến");
+            }
+
+            // Gán ngày đi
+            if (item.getDate() != null && !item.getDate().isEmpty()) {
+                holder.tvTripDate.setText("Ngày: " + item.getDate());
+                holder.tvTripDate.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvTripDate.setVisibility(View.GONE);
+            }
             
             holder.imgNhaXe.setImageResource(R.drawable.kh_home_1);
 
@@ -64,6 +98,7 @@ public class VeResultAdapter extends RecyclerView.Adapter<VeResultAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime, tvEndTime, tvNhaXe, tvPrice, tvSeats, tvCar;
+        TextView tvRouteBadge, tvTripDate, tvOrigin, tvDest;
         ImageView imgNhaXe;
         Button btnSelect;
 
@@ -75,6 +110,10 @@ public class VeResultAdapter extends RecyclerView.Adapter<VeResultAdapter.ViewHo
             tvPrice = itemView.findViewById(R.id.tvPriceResult);
             tvSeats = itemView.findViewById(R.id.tvEmptySeats);
             tvCar = itemView.findViewById(R.id.tvCarType);
+            tvRouteBadge = itemView.findViewById(R.id.tvRouteBadge);
+            tvTripDate = itemView.findViewById(R.id.tvTripDateResult);
+            tvOrigin = itemView.findViewById(R.id.tvOriginResult);
+            tvDest = itemView.findViewById(R.id.tvDestResult);
             btnSelect = itemView.findViewById(R.id.btnSelectSeat);
             imgNhaXe = itemView.findViewById(R.id.imgNhaXe);
         }

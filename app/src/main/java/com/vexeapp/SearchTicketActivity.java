@@ -160,17 +160,37 @@ public class SearchTicketActivity extends AppCompatActivity {
         displayRecentHistory();
     }
 
+    private boolean isSupportedCity(String city) {
+        if (city == null) return false;
+        return city.equals("Tất cả") || city.equals("Hà Nội") || city.equals("Ninh Bình") || city.equals("Thanh Hóa");
+    }
+
     private List<SearchHistory> getHistory() {
         String json = sharedPreferences.getString("search_history", "");
-        if (json.isEmpty()) {
-            List<SearchHistory> defaultHistory = new ArrayList<>();
-            defaultHistory.add(new SearchHistory("Hà Nội", "Ninh Bình", "", "07:30"));
-            defaultHistory.add(new SearchHistory("Hà Nội", "Thanh Hóa", "", "09:00"));
-            defaultHistory.add(new SearchHistory("Ninh Bình", "Hà Nội", "", "14:00"));
-            return defaultHistory;
+        List<SearchHistory> validList = new ArrayList<>();
+        if (!json.isEmpty()) {
+            try {
+                Type type = new TypeToken<List<SearchHistory>>(){}.getType();
+                List<SearchHistory> parsed = gson.fromJson(json, type);
+                if (parsed != null) {
+                    for (SearchHistory item : parsed) {
+                        if (isSupportedCity(item.getOrigin()) && isSupportedCity(item.getDest())) {
+                            validList.add(item);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
         }
-        Type type = new TypeToken<List<SearchHistory>>(){}.getType();
-        return gson.fromJson(json, type);
+
+        if (validList.isEmpty()) {
+            validList.add(new SearchHistory("Hà Nội", "Ninh Bình", "", "07:30"));
+            validList.add(new SearchHistory("Hà Nội", "Thanh Hóa", "", "09:00"));
+            validList.add(new SearchHistory("Ninh Bình", "Thanh Hóa", "", "14:00"));
+            sharedPreferences.edit().putString("search_history", gson.toJson(validList)).apply();
+        } else {
+            sharedPreferences.edit().putString("search_history", gson.toJson(validList)).apply();
+        }
+        return validList;
     }
 
     private void displayRecentHistory() {

@@ -250,6 +250,8 @@ def init_database(force_reseed=False):
             ('CX00014', 'TXE00004', 'XE00003', 'TX00003', today_s, '13:00', '14:30', 150000, 'Chưa hoàn thành'),
             ('CX00015', 'TXE00005', 'XE00002', 'TX00005', today_s, '06:00', '08:30', 220000, 'Chưa hoàn thành'),
             ('CX00016', 'TXE00005', 'XE00004', 'TX00006', today_s, '13:30', '16:00', 220000, 'Chưa hoàn thành'),
+            ('CX00024', 'TXE00006', 'XE00005', 'TX00004', today_s, '09:00', '10:15', 100000, 'Chưa hoàn thành'),
+            ('CX00025', 'TXE00006', 'XE00005', 'TX00004', today_s, '16:30', '17:45', 100000, 'Chưa hoàn thành'),
             ('CX00017', 'TXE00001', 'XE00001', 'TX00001', tomorrow_s, '08:00', '09:30', 150000, 'Chưa hoàn thành'),
             ('CX00018', 'TXE00001', 'XE00003', 'TX00002', tomorrow_s, '14:00', '15:30', 150000, 'Chưa hoàn thành'),
             ('CX00019', 'TXE00002', 'XE00002', 'TX00005', tomorrow_s, '08:30', '11:00', 220000, 'Chưa hoàn thành'),
@@ -919,7 +921,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d = dict(r)
                     d["time"] = r["gioDi"]
                     d["date"] = r["ngayKhoiHanh"]
-                    d["route"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["route"] = r["tenTuyen"] or "Tuyến xe"
                     d["car"] = f"Limousine {r['soCho'] or 34} chỗ"
                     d["seatCount"] = f"{r['soLuongGhe']} chỗ"
                     d["seats"] = r["danhSachGhe"]
@@ -1355,8 +1357,8 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 for r in cursor.fetchall():
                     d = dict(r)
                     d["VeID"] = r["VeID"]
-                    d["TenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
-                    d["tenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["TenTuyen"] = r["tenTuyen"] or "Tuyến xe"
+                    d["tenTuyen"] = r["tenTuyen"] or "Tuyến xe"
                     d["TenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
                     d["tenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
                     d["NgayKhoiHanh"] = r["ngayKhoiHanh"]
@@ -1394,8 +1396,8 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d = dict(r)
                     d["VeID"] = r["VeID"]
                     d["VeHuyID"] = r["VeID"]
-                    d["TenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
-                    d["tenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["TenTuyen"] = r["tenTuyen"] or "Tuyến xe"
+                    d["tenTuyen"] = r["tenTuyen"] or "Tuyến xe"
                     d["TenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
                     d["tenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
                     d["NgayKhoiHanh"] = r["ngayKhoiHanh"]

@@ -258,6 +258,8 @@ INSERT INTO chuyenxe (ChuyenxeID, Tuyenxe, Xe, TaiXe, ngayKhoiHanh, gioDi, gioDe
 ('CX00014', 'TXE00004', 'XE00003', 'TX00003', CURDATE(), '13:00', '14:30', 150000, 'Chưa hoàn thành'),
 ('CX00015', 'TXE00005', 'XE00002', 'TX00005', CURDATE(), '06:00', '08:30', 220000, 'Chưa hoàn thành'),
 ('CX00016', 'TXE00005', 'XE00004', 'TX00006', CURDATE(), '13:30', '16:00', 220000, 'Chưa hoàn thành'),
+('CX00024', 'TXE00006', 'XE00005', 'TX00004', CURDATE(), '09:00', '10:15', 100000, 'Chưa hoàn thành'),
+('CX00025', 'TXE00006', 'XE00005', 'TX00004', CURDATE(), '16:30', '17:45', 100000, 'Chưa hoàn thành'),
 ('CX00017', 'TXE00001', 'XE00001', 'TX00001', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '08:00', '09:30', 150000, 'Chưa hoàn thành'),
 ('CX00018', 'TXE00001', 'XE00003', 'TX00002', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:00', '15:30', 150000, 'Chưa hoàn thành'),
 ('CX00019', 'TXE00002', 'XE00002', 'TX00005', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '08:30', '11:00', 220000, 'Chưa hoàn thành'),

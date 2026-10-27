@@ -14,6 +14,38 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- THÔNG TIN TUYẾN RÕ RÀNG -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvRouteBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_route"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Hà Nội ➔ Thanh Hóa"
+                android:textColor="#1976D2"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTripDateResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="2026-10-28"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -44,7 +76,14 @@
                         android:textSize="15sp"/>
                 </LinearLayout>
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bến xe Giáp Bát, Hà Nội" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
+                <TextView
+                    android:id="@+id/tvOriginResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bến xe Giáp Bát, Hà Nội"
+                    android:textColor="#555555"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp"/>
 
                 <View android:layout_width="1dp" android:layout_height="15dp" android:background="#DDDDDD" android:layout_marginStart="4dp" android:layout_marginVertical="4dp"/>
 
@@ -64,7 +103,14 @@
                         android:textSize="15sp"/>
                 </LinearLayout>
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bến xe TP Ninh Bình" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
+                <TextView
+                    android:id="@+id/tvDestResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bến xe TP Thanh Hóa"
+                    android:textColor="#555555"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp"/>
             </LinearLayout>
 
             <LinearLayout

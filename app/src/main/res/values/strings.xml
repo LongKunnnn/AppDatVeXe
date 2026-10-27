@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Vé Xe App</string>
-    <string name="nha_xe_name">Nhà xe Hà Nội - Ninh Bình</string>
+    <string name="app_name">Vé Xe Hà Nội - Ninh Bình - Thanh Hóa</string>
+    <string name="nha_xe_name">Xe Khách Hà Nội - Ninh Bình - Thanh Hóa</string>
     <string name="slogan">“Kết nối hành trình di sản”</string>
     <string name="welcome">WELCOME</string>
     <string name="operator_name">Tràng An Limousine</string>
