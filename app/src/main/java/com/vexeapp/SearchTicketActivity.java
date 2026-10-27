@@ -110,7 +110,7 @@ public class SearchTicketActivity extends AppCompatActivity {
     private void setupCityData() {
         List<String> cities = new ArrayList<>();
         cities.add("Tất cả"); 
-        cities.add("Đà Nẵng"); cities.add("Huế"); cities.add("Hội An");
+        cities.add("Hà Nội"); cities.add("Ninh Bình"); cities.add("Thanh Hóa");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spOrigin.setAdapter(adapter);
@@ -162,7 +162,13 @@ public class SearchTicketActivity extends AppCompatActivity {
 
     private List<SearchHistory> getHistory() {
         String json = sharedPreferences.getString("search_history", "");
-        if (json.isEmpty()) return new ArrayList<>();
+        if (json.isEmpty()) {
+            List<SearchHistory> defaultHistory = new ArrayList<>();
+            defaultHistory.add(new SearchHistory("Hà Nội", "Ninh Bình", "", "07:30"));
+            defaultHistory.add(new SearchHistory("Hà Nội", "Thanh Hóa", "", "09:00"));
+            defaultHistory.add(new SearchHistory("Ninh Bình", "Hà Nội", "", "14:00"));
+            return defaultHistory;
+        }
         Type type = new TypeToken<List<SearchHistory>>(){}.getType();
         return gson.fromJson(json, type);
     }

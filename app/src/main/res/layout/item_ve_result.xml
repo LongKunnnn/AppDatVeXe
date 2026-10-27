@@ -44,7 +44,7 @@
                         android:textSize="15sp"/>
                 </LinearLayout>
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="BX Trung tâm Đà Nẵng" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bến xe Giáp Bát, Hà Nội" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
 
                 <View android:layout_width="1dp" android:layout_height="15dp" android:background="#DDDDDD" android:layout_marginStart="4dp" android:layout_marginVertical="4dp"/>
 
@@ -64,7 +64,7 @@
                         android:textSize="15sp"/>
                 </LinearLayout>
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trung tâm TP Huế" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bến xe TP Ninh Bình" android:textColor="#888888" android:textSize="12sp" android:layout_marginStart="16dp"/>
             </LinearLayout>
 
             <LinearLayout

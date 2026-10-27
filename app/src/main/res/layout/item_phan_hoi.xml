@@ -74,7 +74,7 @@
                     android:id="@+id/tvRoute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Huế - Đà Nẵng"
+                    android:text="Hà Nội - Ninh Bình"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />

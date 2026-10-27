@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="Đà Nẵng"
+        android:text="Hà Nội"
         android:textColor="#FFFFFF"
         android:textSize="9sp"
         android:textStyle="bold" />

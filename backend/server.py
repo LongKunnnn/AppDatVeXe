@@ -164,17 +164,17 @@ def init_database(force_reseed=False):
         ])
 
         cursor.executemany("INSERT INTO nhaxe VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
-            ('NX00001', 'Hải Vân Limousine', '233 Nguyễn Tri Phương, Thanh Khê, Đà Nẵng', '0905123456', 'haivan@vexeapp.com', 'Nguyễn Văn Hải', 'GP-2024-HV', ''),
-            ('NX00002', 'Phương Trang Bus Lines', '201 Tôn Đức Thắng, Liên Chiểu, Đà Nẵng', '0905888999', 'phuongtrang@vexeapp.com', 'Trần Văn Trang', 'GP-2023-PT', '')
+            ('NX00001', 'Tràng An Limousine', '107 Bến xe Mỹ Đình, Nam Từ Liêm, Hà Nội', '0988123456', 'trangan@vexeapp.com', 'Nguyễn Văn Hải', 'GP-2024-HN', ''),
+            ('NX00002', 'Vân Anh Limousine', '29 Lê Hoàn, Phường Điện Biên, TP. Thanh Hóa', '0905888999', 'vananh@vexeapp.com', 'Trần Văn Trang', 'GP-2023-TH', '')
         ])
 
         drivers_data = [
-            ('TX00001', 'Nguyễn Văn Bình', '0905111222', 'B2-998877', 'NX00001', ''),
-            ('TX00002', 'Trần Đình Trọng', '0905333444', 'E-556677', 'NX00001', ''),
-            ('TX00003', 'Lê Văn Hùng', '0905555666', 'E-667788', 'NX00001', ''),
-            ('TX00004', 'Phạm Quốc Tuấn', '0905777888', 'D-334455', 'NX00001', ''),
-            ('TX00005', 'Hoàng Đức Anh', '0905999000', 'E-112233', 'NX00001', ''),
-            ('TX00006', 'Đỗ Minh Quân', '0905222333', 'D-445566', 'NX00001', '')
+            ('TX00001', 'Nguyễn Văn Bình', '0988111222', 'B2-998877', 'NX00001', ''),
+            ('TX00002', 'Trần Đình Trọng', '0988333444', 'E-556677', 'NX00001', ''),
+            ('TX00003', 'Lê Văn Hùng', '0988555666', 'E-667788', 'NX00001', ''),
+            ('TX00004', 'Phạm Quốc Tuấn', '0988777888', 'D-334455', 'NX00001', ''),
+            ('TX00005', 'Hoàng Đức Anh', '0988999000', 'E-112233', 'NX00001', ''),
+            ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00001', '')
         ]
         cursor.executemany("INSERT INTO taixe VALUES (?, ?, ?, ?, ?, ?)", drivers_data)
 
@@ -183,14 +183,14 @@ def init_database(force_reseed=False):
                            (d[0], d[0], d[1], d[2], d[3], d[4], d[5]))
 
         cursor.executemany("INSERT INTO xe VALUES (?, ?, ?, ?, ?)", [
-            ('XE00001', '43B-012.34', 'LX01', 'NX00001', 'Hoạt động'),
-            ('XE00002', '43B-056.78', 'LX02', 'NX00001', 'Hoạt động'),
-            ('XE00003', '43B-088.88', 'LX01', 'NX00001', 'Hoạt động'),
-            ('XE00004', '43B-099.99', 'LX02', 'NX00001', 'Hoạt động'),
-            ('XE00005', '43B-034.56', 'LX03', 'NX00001', 'Hoạt động'),
-            ('XE00006', '43B-077.77', 'LX04', 'NX00001', 'Hoạt động'),
-            ('XE00007', '43B-023.45', 'LX01', 'NX00002', 'Hoạt động'),
-            ('XE00008', '43B-067.89', 'LX02', 'NX00002', 'Hoạt động')
+            ('XE00001', '29B-123.45', 'LX01', 'NX00001', 'Hoạt động'),
+            ('XE00002', '29B-567.89', 'LX02', 'NX00001', 'Hoạt động'),
+            ('XE00003', '35B-012.34', 'LX01', 'NX00001', 'Hoạt động'),
+            ('XE00004', '36B-056.78', 'LX02', 'NX00001', 'Hoạt động'),
+            ('XE00005', '29B-333.44', 'LX03', 'NX00001', 'Hoạt động'),
+            ('XE00006', '29B-888.99', 'LX04', 'NX00001', 'Hoạt động'),
+            ('XE00007', '36B-023.45', 'LX01', 'NX00002', 'Hoạt động'),
+            ('XE00008', '36B-067.89', 'LX02', 'NX00002', 'Hoạt động')
         ])
 
         cursor.executemany("INSERT INTO khachhang VALUES (?, ?, ?, ?, ?, ?)", [
@@ -200,41 +200,58 @@ def init_database(force_reseed=False):
         ])
 
         cursor.executemany("INSERT INTO nguoidung VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-            ('US00001', 'haivan', '123456', 'haivan@vexeapp.com', '0905123456', 'Nhaxe', 'Hải Vân Limousine', None, 'NX00001'),
-            ('US00002', 'phuongtrang', '123456', 'phuongtrang@vexeapp.com', '0905888999', 'Nhaxe', 'Phương Trang Bus Lines', None, 'NX00002'),
+            ('US00001', 'haivan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001'),
+            ('US00006', 'trangan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001'),
+            ('US00002', 'phuongtrang', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002'),
+            ('US00007', 'vananh', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002'),
             ('US00003', '0912345678', '123456', 'nam.le@vexeapp.com', '0912345678', 'KhachHang', 'Lê Hoàng Nam', 'KH00001', None),
             ('US00004', '0987654321', '123456', 'ha.nguyen@vexeapp.com', '0987654321', 'KhachHang', 'Nguyễn Thu Hà', 'KH00002', None),
             ('US00005', '0905123987', '123456', 'bao.tran@vexeapp.com', '0905123987', 'KhachHang', 'Trần Quốc Bảo', 'KH00003', None)
         ])
 
         cursor.executemany("INSERT INTO tuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-            ('TXE00001', 'Đà Nẵng - Huế', 'Đà Nẵng', 'Huế', 'Lăng Cô, Phú Lộc', 100.5, '2 giờ 15 phút', 160000, 'NX00001'),
-            ('TXE00002', 'Đà Nẵng - Hội An', 'Đà Nẵng', 'Hội An', 'Ngũ Hành Sơn', 30.0, '45 phút', 70000, 'NX00001'),
-            ('TXE00003', 'Đà Nẵng - Quy Nhơn', 'Đà Nẵng', 'Quy Nhơn', 'Tam Kỳ, Quảng Ngãi', 315.0, '6 giờ', 260000, 'NX00001'),
-            ('TXE00004', 'Đà Nẵng - Nha Trang', 'Đà Nẵng', 'Nha Trang', 'Bình Định, Phú Yên', 530.0, '10 giờ', 380000, 'NX00001'),
-            ('TXE00005', 'Huế - Đà Nẵng', 'Huế', 'Đà Nẵng', 'Phú Lộc, Hải Vân', 100.5, '2 giờ 15 phút', 160000, 'NX00001')
+            ('TXE00001', 'Hà Nội - Ninh Bình', 'Hà Nội', 'Ninh Bình', 'Phủ Lý, Cao Bồ', 95.0, '1 giờ 30 phút', 150000, 'NX00001'),
+            ('TXE00002', 'Hà Nội - Thanh Hóa', 'Hà Nội', 'Thanh Hóa', 'Ninh Bình, Bỉm Sơn', 160.0, '2 giờ 30 phút', 220000, 'NX00001'),
+            ('TXE00003', 'Ninh Bình - Thanh Hóa', 'Ninh Bình', 'Thanh Hóa', 'Tam Điệp, Bỉm Sơn', 65.0, '1 giờ 15 phút', 100000, 'NX00001'),
+            ('TXE00004', 'Ninh Bình - Hà Nội', 'Ninh Bình', 'Hà Nội', 'Phủ Lý, Bến xe Nước Ngầm', 95.0, '1 giờ 30 phút', 150000, 'NX00001'),
+            ('TXE00005', 'Thanh Hóa - Hà Nội', 'Thanh Hóa', 'Hà Nội', 'Bỉm Sơn, Ninh Bình, Bến xe Giáp Bát', 160.0, '2 giờ 30 phút', 220000, 'NX00001'),
+            ('TXE00006', 'Thanh Hóa - Ninh Bình', 'Thanh Hóa', 'Ninh Bình', 'Bỉm Sơn, Tam Điệp', 65.0, '1 giờ 15 phút', 100000, 'NX00001')
         ])
 
         today = date.today()
         today_s = today.isoformat()
+        yesterday_s = (today - timedelta(days=1)).isoformat()
+        two_days_ago_s = (today - timedelta(days=2)).isoformat()
         tomorrow_s = (today + timedelta(days=1)).isoformat()
         after_s = (today + timedelta(days=2)).isoformat()
+        after_3_s = (today + timedelta(days=3)).isoformat()
 
         trips_data = [
-            ('CX00001', 'TXE00001', 'XE00001', 'TX00001', today_s, '06:30', '08:45', 160000, 'Sắp chạy'),
-            ('CX00002', 'TXE00001', 'XE00003', 'TX00002', today_s, '09:00', '11:15', 160000, 'Sắp chạy'),
-            ('CX00003', 'TXE00001', 'XE00001', 'TX00003', today_s, '13:30', '15:45', 160000, 'Sắp chạy'),
-            ('CX00004', 'TXE00001', 'XE00003', 'TX00001', today_s, '16:30', '18:45', 160000, 'Sắp chạy'),
-            ('CX00005', 'TXE00002', 'XE00005', 'TX00004', today_s, '08:00', '08:45', 70000, 'Sắp chạy'),
-            ('CX00006', 'TXE00002', 'XE00005', 'TX00004', today_s, '14:00', '14:45', 70000, 'Sắp chạy'),
-            ('CX00007', 'TXE00003', 'XE00002', 'TX00005', today_s, '07:00', '13:00', 260000, 'Sắp chạy'),
-            ('CX00008', 'TXE00003', 'XE00004', 'TX00006', today_s, '19:30', '01:30', 260000, 'Sắp chạy'),
-            ('CX00009', 'TXE00004', 'XE00006', 'TX00005', today_s, '18:00', '04:00', 380000, 'Sắp chạy'),
-            ('CX00010', 'TXE00005', 'XE00001', 'TX00002', today_s, '07:30', '09:45', 160000, 'Sắp chạy'),
-            ('CX00011', 'TXE00001', 'XE00001', 'TX00001', tomorrow_s, '08:00', '10:15', 160000, 'Sắp chạy'),
-            ('CX00012', 'TXE00001', 'XE00002', 'TX00002', tomorrow_s, '14:00', '16:15', 160000, 'Sắp chạy'),
-            ('CX00013', 'TXE00003', 'XE00004', 'TX00005', tomorrow_s, '07:30', '13:30', 260000, 'Sắp chạy'),
-            ('CX00014', 'TXE00001', 'XE00003', 'TX00003', after_s, '09:30', '11:45', 160000, 'Sắp chạy')
+            ('CX00001', 'TXE00001', 'XE00001', 'TX00001', today_s, '06:30', '08:00', 150000, 'Chưa hoàn thành'),
+            ('CX00002', 'TXE00001', 'XE00003', 'TX00002', today_s, '08:30', '10:00', 150000, 'Chưa hoàn thành'),
+            ('CX00003', 'TXE00001', 'XE00001', 'TX00003', today_s, '10:30', '12:00', 150000, 'Chưa hoàn thành'),
+            ('CX00004', 'TXE00001', 'XE00003', 'TX00001', today_s, '13:30', '15:00', 150000, 'Chưa hoàn thành'),
+            ('CX00005', 'TXE00001', 'XE00001', 'TX00002', today_s, '15:30', '17:00', 150000, 'Chưa hoàn thành'),
+            ('CX00006', 'TXE00001', 'XE00003', 'TX00004', today_s, '18:00', '19:30', 150000, 'Chưa hoàn thành'),
+            ('CX00007', 'TXE00002', 'XE00002', 'TX00005', today_s, '07:00', '09:30', 220000, 'Chưa hoàn thành'),
+            ('CX00008', 'TXE00002', 'XE00004', 'TX00006', today_s, '09:30', '12:00', 220000, 'Chưa hoàn thành'),
+            ('CX00009', 'TXE00002', 'XE00002', 'TX00005', today_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
+            ('CX00010', 'TXE00002', 'XE00004', 'TX00006', today_s, '17:30', '20:00', 220000, 'Chưa hoàn thành'),
+            ('CX00011', 'TXE00003', 'XE00005', 'TX00004', today_s, '08:00', '09:15', 100000, 'Chưa hoàn thành'),
+            ('CX00012', 'TXE00003', 'XE00005', 'TX00004', today_s, '15:00', '16:15', 100000, 'Chưa hoàn thành'),
+            ('CX00013', 'TXE00004', 'XE00001', 'TX00002', today_s, '07:30', '09:00', 150000, 'Chưa hoàn thành'),
+            ('CX00014', 'TXE00004', 'XE00003', 'TX00003', today_s, '13:00', '14:30', 150000, 'Chưa hoàn thành'),
+            ('CX00015', 'TXE00005', 'XE00002', 'TX00005', today_s, '06:00', '08:30', 220000, 'Chưa hoàn thành'),
+            ('CX00016', 'TXE00005', 'XE00004', 'TX00006', today_s, '13:30', '16:00', 220000, 'Chưa hoàn thành'),
+            ('CX00017', 'TXE00001', 'XE00001', 'TX00001', tomorrow_s, '08:00', '09:30', 150000, 'Chưa hoàn thành'),
+            ('CX00018', 'TXE00001', 'XE00003', 'TX00002', tomorrow_s, '14:00', '15:30', 150000, 'Chưa hoàn thành'),
+            ('CX00019', 'TXE00002', 'XE00002', 'TX00005', tomorrow_s, '08:30', '11:00', 220000, 'Chưa hoàn thành'),
+            ('CX00020', 'TXE00002', 'XE00004', 'TX00006', tomorrow_s, '15:00', '17:30', 220000, 'Chưa hoàn thành'),
+            ('CX00021', 'TXE00001', 'XE00001', 'TX00003', after_s, '09:30', '11:00', 150000, 'Chưa hoàn thành'),
+            ('CX00022', 'TXE00002', 'XE00002', 'TX00005', after_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
+            ('CX00023', 'TXE00001', 'XE00003', 'TX00001', after_3_s, '08:30', '10:00', 150000, 'Chưa hoàn thành'),
+            ('CX00099', 'TXE00001', 'XE00001', 'TX00001', yesterday_s, '08:00', '09:30', 150000, 'Hoàn thành'),
+            ('CX00098', 'TXE00002', 'XE00002', 'TX00005', two_days_ago_s, '14:00', '16:30', 220000, 'Hoàn thành')
         ]
         cursor.executemany("INSERT INTO chuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", trips_data)
 
@@ -245,16 +262,31 @@ def init_database(force_reseed=False):
                 cursor.execute("INSERT INTO ghengoi VALUES (?, ?, ?, ?)", (f"{seat_num}_{t_id}", t_id, seat_num, 'Trống'))
 
         cursor.executemany("INSERT INTO ve VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-            ('VE00001', 'CX00001', 'KH00001', 2, 'A01, A02', 320000, 'Bến xe Trung tâm Đà Nẵng', 'Bến xe phía Nam Huế', today_s + ' 06:00', 'Đã đặt', 'Đã thanh toán'),
-            ('VE00002', 'CX00005', 'KH00002', 1, 'A05', 70000, 'Cầu Rồng, Đà Nẵng', 'Phố cổ Hội An', today_s + ' 07:15', 'Đã đặt', 'Chưa thanh toán'),
-            ('VE00003', 'CX00007', 'KH00001', 1, 'B02', 260000, 'Đà Nẵng', 'Bến xe Quy Nhơn', today_s + ' 06:15', 'Đã đặt', 'Đã thanh toán')
+            ('VE00001', 'CX00001', 'KH00001', 2, 'A01, A02', 300000, 'Bến xe Mỹ Đình, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 06:00', 'Đã đặt', 'Đã thanh toán'),
+            ('VE00002', 'CX00007', 'KH00001', 1, 'A05', 220000, 'Bến xe Giáp Bát, Hà Nội', 'Bến xe phía Bắc Thanh Hóa', today_s + ' 06:30', 'Đã đặt', 'Chưa thanh toán'),
+            ('VE00003', 'CX00099', 'KH00001', 1, 'B02', 150000, 'Rạp xiếc Trung ương, Hà Nội', 'Bến xe Ninh Bình', yesterday_s + ' 07:30', 'Đã đi', 'Đã thanh toán'),
+            ('VE00004', 'CX00098', 'KH00001', 2, 'A03, A04', 440000, 'Bến xe Nước Ngầm, Hà Nội', 'Bến xe Sầm Sơn, Thanh Hóa', two_days_ago_s + ' 13:00', 'Đã đi', 'Đã thanh toán'),
+            ('VE00005', 'CX00002', 'KH00001', 1, 'A08', 150000, 'Bến xe Giáp Bát, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 07:00', 'Đã hủy', 'Đã hoàn tiền'),
+            ('VE00006', 'CX00001', 'KH00002', 1, 'A06', 150000, 'Bến xe Mỹ Đình, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 06:10', 'Đã đặt', 'Đã thanh toán'),
+            ('VE00007', 'CX00099', 'KH00002', 1, 'A07', 150000, 'Bến xe Nước Ngầm, Hà Nội', 'Bến xe Ninh Bình', yesterday_s + ' 07:45', 'Đã đi', 'Đã thanh toán')
         ])
 
-        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00001' AND (soGhe = 'A01' OR soGhe = 'A02'))")
-        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00005' AND soGhe = 'A05')")
-        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00007' AND soGhe = 'B02')")
+        cursor.executemany("INSERT INTO vehuy (Ve, KhachHang, lyDoHuy, ngayHuy) VALUES (?, ?, ?, ?)", [
+            ('VE00005', 'KH00001', 'Khách bận việc đột xuất cần đổi lịch trình', today_s + ' 07:15')
+        ])
 
-    conn.commit()
+        cursor.executemany("INSERT INTO danhgia (Ve, KhachHang, soSao, noiDung, ngayDanhGia) VALUES (?, ?, ?, ?, ?)", [
+            ('VE00004', 'KH00001', 5, 'Xe Limousine rất mới, ghế massage êm ái, bác tài chạy cẩn thận đúng giờ. 10 điểm chất lượng!', two_days_ago_s + ' 18:00'),
+            ('VE00007', 'KH00002', 5, 'Dịch vụ đón tận nơi rất chu đáo, nước uống và khăn lạnh đầy đủ. Sẽ tiếp tục ủng hộ nhà xe!', yesterday_s + ' 20:00'),
+            ('VE00008', 'KH00003', 5, 'Đi tuyến Hà Nội - Thanh Hóa xe chạy cao tốc cực nhanh, chỉ hơn 2 tiếng là tới. Rất hài lòng!', yesterday_s + ' 16:30')
+        ])
+
+        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00001' AND (soGhe = 'A01' OR soGhe = 'A02' OR soGhe = 'A06'))")
+        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00002' AND soGhe = 'A08')")
+        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00007' AND soGhe = 'A05')")
+        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00099' AND (soGhe = 'B02' OR soGhe = 'A07'))")
+        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE (Chuyenxe = 'CX00098' AND (soGhe = 'A03' OR soGhe = 'A04'))")
+        conn.commit()
     conn.close()
 
 def auto_generate_seats_if_needed(conn, trip_id, car_type_id="LX01"):
@@ -643,7 +675,7 @@ def generate_web_dashboard(conn):
                                     <td><span class="badge bg-dark fs-6">{x["bienSo"]}</span></td>
                                     <td class="fw-semibold text-primary">{x["tenLoai"]}</td>
                                     <td>{x["soCho"]} chỗ ngồi</td>
-                                    <td>{x["tenNhaXe"] or "Hải Vân Limousine"}</td>
+                                    <td>{x["tenNhaXe"] or "Tràng An Limousine"}</td>
                                     <td><span class="badge bg-success">{x["trangThai"]}</span></td>
                                 </tr>"""
 
@@ -677,7 +709,7 @@ def generate_web_dashboard(conn):
                                     <td class="fw-bold text-primary"><i class="fa-solid fa-user-circle me-1 text-muted"></i>{tx["HoTen"]}</td>
                                     <td><a href="tel:{tx["SoDienThoai"]}" class="text-decoration-none">{tx["SoDienThoai"]}</a></td>
                                     <td><span class="badge bg-secondary">{tx["SoBangLai"]}</span></td>
-                                    <td>Hải Vân Limousine</td>
+                                    <td>Tràng An Limousine</td>
                                 </tr>"""
 
     html += """
@@ -885,30 +917,62 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 return self._send_json(rows)
 
             elif path == '/api/chitiettaixe':
-                cursor.execute("SELECT * FROM chitiettaixe")
+                cursor.execute('''
+                SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe
+                FROM chitiettaixe c
+                LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID
+                LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID
+                ''')
                 rows = []
-                for r in cursor.fetchall():
+                for idx, r in enumerate(cursor.fetchall(), start=1):
                     d = dict(r)
-                    d["Taixe"] = d.get("TaiXe")
-                    d["TaixeID"] = d.get("TaiXe")
-                    d["TaiXeID"] = d.get("TaiXe")
-                    d["HinhAnhURL"] = d.get("AnhDaiDien")
+                    d["id"] = idx
+                    d["ChiTietID"] = r["ChiTietID"]
+                    d["Taixe"] = r["TaiXe"]
+                    d["TaiXe"] = r["TaiXe"]
+                    d["TaiXeID"] = r["TaiXe"]
+                    d["taixe"] = r["TaiXe"]
+                    d["taiXeID"] = r["TaiXe"]
+                    d["HoTen"] = r["HoTen"]
+                    d["hoTen"] = r["HoTen"]
+                    d["SoDienThoai"] = r["SoDienThoai"]
+                    d["SoBangLai"] = r["SoBangLai"]
+                    d["Nhaxe"] = r["Nhaxe"]
+                    d["nhaxe"] = r["Nhaxe"]
+                    d["Tennhaxe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["tennhaxe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["NgayBatDau"] = "2024-01-01"
+                    d["NgayKetThuc"] = "2026-12-31"
+                    d["HinhAnhURL"] = r["AnhDaiDien"]
                     rows.append(d)
                 return self._send_json(rows)
 
             # 5. XE & LOẠI XE
             elif path == '/api/xe':
-                cursor.execute("""
+                cursor.execute('''
                 SELECT x.*, l.tenLoai, l.soCho, n.tenNhaXe 
                 FROM xe x 
                 LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID 
                 LEFT JOIN nhaxe n ON x.Nhaxe = n.NhaxeID
-                """)
+                ''')
                 rows = []
                 for r in cursor.fetchall():
                     d = dict(r)
-                    d["loaiXe"] = d["Loaixe"]
-                    d["nhaXe"] = d["Nhaxe"]
+                    d["XeID"] = r["XeID"]
+                    d["BienSoXe"] = r["bienSo"]
+                    d["bienSo"] = r["bienSo"]
+                    d["TrangThai"] = "Đang hoạt động"
+                    d["trangThai"] = "Đang hoạt động"
+                    d["SoGhe"] = r["soCho"] or 34
+                    d["soCho"] = r["soCho"] or 34
+                    d["Loaixe"] = {
+                        "LoaixeID": r["Loaixe"],
+                        "TenLoai": r["tenLoai"],
+                        "SoCho": r["soCho"] or 34
+                    }
+                    d["loaiXe"] = r["Loaixe"]
+                    d["Nhaxe"] = r["Nhaxe"]
+                    d["nhaXe"] = r["Nhaxe"]
                     rows.append(d)
                 return self._send_json(rows)
 
@@ -919,11 +983,36 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             # 6. TUYẾN XE
             elif path == '/api/tuyenxe':
                 cursor.execute("SELECT * FROM tuyenxe")
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["tuyenXeID"] = r["TuyenxeID"]
+                    d["TuyenxeID"] = r["TuyenxeID"]
+                    d["id"] = r["TuyenxeID"]
+                    d["name"] = r["tenTuyen"]
+                    d["tenTuyen"] = r["tenTuyen"]
+                    d["diemDi"] = r["diemDi"]
+                    d["startPoint"] = r["diemDi"]
+                    d["diemDen"] = r["diemDen"]
+                    d["endPoint"] = r["diemDen"]
+                    d["DiemTrungGian"] = r["diemDung"] or ""
+                    d["midPoint"] = r["diemDung"] or ""
+                    d["QuangDuong"] = f"{r['khoangCach']} km" if r['khoangCach'] else "100 km"
+                    d["distance"] = f"{r['khoangCach']} km" if r['khoangCach'] else "100 km"
+                    d["ThoiGian"] = r["thoiGianUocTinh"] or "1 giờ 30 phút"
+                    d["time"] = r["thoiGianUocTinh"] or "1 giờ 30 phút"
+                    d["TrangThai"] = "Đang hoạt động"
+                    d["trangThai"] = "Đang hoạt động"
+                    d["status"] = "Đang hoạt động"
+                    d["nhaXe"] = r["Nhaxe"]
+                    d["Nhaxe"] = r["Nhaxe"]
+                    d["nhaXeId"] = r["Nhaxe"]
+                    rows.append(d)
+                return self._send_json(rows)
 
             # 7. CHUYẾN XE (TRIP)
             elif path == '/api/chuyenxe':
-                cursor.execute("""
+                cursor.execute('''
                 SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh,
                        x.bienSo, x.Loaixe as loaiXeId, l.tenLoai as loaiXeTen, l.soCho,
                        tx.HoTen as tenTaiXe, n.tenNhaXe
@@ -934,14 +1023,32 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID
                 LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
                 ORDER BY c.ngayKhoiHanh DESC, c.gioDi ASC
-                """)
+                ''')
                 res = []
                 for r in cursor.fetchall():
                     item = {
+                        # PascalCase keys for Trip.java (@SerializedName)
+                        "ChuyenXeID": r["ChuyenxeID"],
+                        "NgayKhoiHanh": r["ngayKhoiHanh"],
+                        "GioDi": r["gioDi"],
+                        "GioDen": r["gioDen"],
+                        "TrangThai": r["trangThai"] or "Chưa hoàn thành",
+                        "Xe": r["Xe"] or r["bienSo"],
+                        "TuyenXe": r["Tuyenxe"],
+                        "Taixe": r["TaiXe"],
+                        "TenTuyen": r["tenTuyen"],
+                        "LoaiXe": r["loaiXeTen"] or "Limousine VIP 34 chỗ",
+                        "GiaVe": str(r["giaVe"] if r["giaVe"] else 200000),
+                        "TenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
+                        "SoChoTrong": r["soCho"] or 34,
+                        "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút",
+
+                        # Additional aliases for other views & adapters
                         "ChuyenxeID": r["ChuyenxeID"],
                         "id": r["ChuyenxeID"],
                         "Tuyenxe": r["Tuyenxe"],
                         "TuyenxeID": r["Tuyenxe"],
+                        "tuyen": r["Tuyenxe"],
                         "tuyenXeName": r["tenTuyen"],
                         "routeName": r["tenTuyen"],
                         "diemDi": r["diemDi"],
@@ -950,33 +1057,40 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "ngayKhoiHanh": r["ngayKhoiHanh"],
                         "time": r["gioDi"],
                         "gioDi": r["gioDi"],
+                        "startTime": r["gioDi"],
                         "endTime": r["gioDen"],
                         "gioDen": r["gioDen"],
                         "price": r["giaVe"],
                         "giaVe": r["giaVe"],
-                        "status": r["trangThai"],
-                        "trangThai": r["trangThai"],
-                        "carType": r["loaiXeTen"] or "Limousine VIP",
+                        "status": r["trangThai"] or "Chưa hoàn thành",
+                        "trangThai": r["trangThai"] or "Chưa hoàn thành",
+                        "carType": r["loaiXeTen"] or "Limousine VIP 34 chỗ",
+                        "loaiXe": r["loaiXeTen"] or "Limousine VIP 34 chỗ",
                         "totalSeats": r["soCho"] or 34,
                         "availableSeats": r["soCho"] or 34,
                         "TaiXeID": r["TaiXe"],
+                        "TaiXe": r["TaiXe"],
+                        "taixe": r["TaiXe"],
+                        "taiXeID": r["TaiXe"],
                         "tenTaiXe": r["tenTaiXe"],
-                        "tenNhaXe": r["tenNhaXe"] or "Hải Vân Limousine",
-                        "duration": r["thoiGianUocTinh"] or "2 giờ"
+                        "tenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
+                        "duration": r["thoiGianUocTinh"] or "1 giờ 30 phút",
+                        "XeID": r["Xe"],
+                        "bienSo": r["bienSo"]
                     }
                     res.append(item)
                 return self._send_json(res)
 
             elif path.startswith('/api/chuyenxe/'):
                 cid = path.split('/')[-1]
-                cursor.execute("""
+                cursor.execute('''
                 SELECT c.*, t.tenTuyen, x.bienSo, l.soCho 
                 FROM chuyenxe c
                 LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
                 LEFT JOIN xe x ON c.Xe = x.XeID
                 LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID
                 WHERE c.ChuyenxeID = ?
-                """, (cid,))
+                ''', (cid,))
                 row = cursor.fetchone()
                 return self._send_json(dict(row) if row else {}, 200 if row else 404)
 
@@ -988,7 +1102,21 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     cursor.execute("SELECT * FROM ghengoi WHERE Chuyenxe = ? ORDER BY soGhe", (chuyen_xe_id,))
                 else:
                     cursor.execute("SELECT * FROM ghengoi")
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["gheID"] = r["GheID"]
+                    d["GheID"] = r["GheID"]
+                    d["soGhe"] = r["soGhe"]
+                    d["SoGhe"] = r["soGhe"]
+                    d["trangThai"] = r["trangThai"]
+                    d["TrangThai"] = r["trangThai"]
+                    d["status"] = r["trangThai"]
+                    d["ChuyenXe"] = r["Chuyenxe"]
+                    d["Chuyenxe"] = r["Chuyenxe"]
+                    d["chuyenXe"] = r["Chuyenxe"]
+                    rows.append(d)
+                return self._send_json(rows)
 
             # 9. VÉ XE
             elif path == '/api/ve':
@@ -996,28 +1124,102 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 status = qs.get('TrangThai', [''])[0]
                 cx_id = qs.get('ChuyenXe', [''])[0]
 
-                query = "SELECT * FROM ve WHERE 1=1"
+                query = '''
+                SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe
+                FROM ve v
+                LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID
+                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
+                LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
+                WHERE 1=1
+                '''
                 params = []
                 if kh_id:
-                    query += " AND KhachHang = ?"
+                    query += " AND v.KhachHang = ?"
                     params.append(kh_id)
                 if status:
-                    query += " AND trangThai = ?"
+                    query += " AND v.trangThai = ?"
                     params.append(status)
                 if cx_id:
-                    query += " AND Chuyenxe = ?"
+                    query += " AND v.Chuyenxe = ?"
                     params.append(cx_id)
 
                 cursor.execute(query, params)
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["VeID"] = r["VeID"]
+                    d["TenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["tenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["TenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["tenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["NgayKhoiHanh"] = r["ngayKhoiHanh"]
+                    d["ngayKhoiHanh"] = r["ngayKhoiHanh"]
+                    d["GioDi"] = r["gioDi"]
+                    d["gioDi"] = r["gioDi"]
+                    d["SoLuongGhe"] = r["soLuongGhe"]
+                    d["soLuongGhe"] = r["soLuongGhe"]
+                    d["DanhSachGhe"] = r["danhSachGhe"]
+                    d["danhSachGhe"] = r["danhSachGhe"]
+                    d["TongTien"] = float(r["tongTien"] or 0)
+                    d["tongTien"] = float(r["tongTien"] or 0)
+                    d["TrangThai"] = r["trangThai"]
+                    d["trangThai"] = r["trangThai"]
+                    d["TrangThaiThanhToan"] = r["trangThaiThanhToan"]
+                    d["trangThaiThanhToan"] = r["trangThaiThanhToan"]
+                    d["KhachHang"] = r["KhachHang"]
+                    d["khachHang"] = r["KhachHang"]
+                    d["ChuyenXe"] = r["Chuyenxe"]
+                    d["chuyenXe"] = r["Chuyenxe"]
+                    d["Chuyenxe"] = r["Chuyenxe"]
+                    rows.append(d)
+                return self._send_json(rows)
 
             elif path == '/api/vehuy':
                 kh_id = qs.get('KhachHang', [''])[0]
+                query = '''
+                SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe, vh.lyDoHuy, vh.ngayHuy
+                FROM ve v
+                LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID
+                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
+                LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
+                LEFT JOIN vehuy vh ON v.VeID = vh.Ve
+                WHERE v.trangThai = 'Đã hủy'
+                '''
+                params = []
                 if kh_id:
-                    cursor.execute("SELECT * FROM ve WHERE KhachHang = ? AND trangThai = 'Đã hủy'", (kh_id,))
-                else:
-                    cursor.execute("SELECT * FROM ve WHERE trangThai = 'Đã hủy'")
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                    query += " AND v.KhachHang = ?"
+                    params.append(kh_id)
+                cursor.execute(query, params)
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["VeID"] = r["VeID"]
+                    d["VeHuyID"] = r["VeID"]
+                    d["TenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["tenTuyen"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["TenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["tenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["NgayKhoiHanh"] = r["ngayKhoiHanh"]
+                    d["ngayKhoiHanh"] = r["ngayKhoiHanh"]
+                    d["GioDi"] = r["gioDi"]
+                    d["gioDi"] = r["gioDi"]
+                    d["SoLuongGhe"] = r["soLuongGhe"]
+                    d["soLuongGhe"] = r["soLuongGhe"]
+                    d["DanhSachGhe"] = r["danhSachGhe"]
+                    d["danhSachGhe"] = r["danhSachGhe"]
+                    d["TongTien"] = float(r["tongTien"] or 0)
+                    d["tongTien"] = float(r["tongTien"] or 0)
+                    d["TrangThai"] = r["trangThai"]
+                    d["trangThai"] = r["trangThai"]
+                    d["TrangThaiThanhToan"] = r["trangThaiThanhToan"]
+                    d["trangThaiThanhToan"] = r["trangThaiThanhToan"]
+                    d["KhachHang"] = r["KhachHang"]
+                    d["khachHang"] = r["KhachHang"]
+                    d["ChuyenXe"] = r["Chuyenxe"]
+                    d["chuyenXe"] = r["Chuyenxe"]
+                    d["Chuyenxe"] = r["Chuyenxe"]
+                    rows.append(d)
+                return self._send_json(rows)
 
             # 10. ĐÁNH GIÁ
             elif path == '/api/danhgia':

@@ -108,7 +108,7 @@
                                 android:background="#F0F0F0"
                                 android:gravity="center_vertical"
                                 android:paddingStart="15dp"
-                                android:text="Đà Nẵng"
+                                android:text="Hà Nội"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
 
@@ -127,7 +127,7 @@
                                 android:background="#F0F0F0"
                                 android:gravity="center_vertical"
                                 android:paddingStart="15dp"
-                                android:text="Huế"
+                                android:text="Ninh Bình"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
                         </LinearLayout>

@@ -17,6 +17,7 @@ import com.vexeapp.models.Seat;
 import com.vexeapp.models.TripSearchResult;
 import com.vexeapp.api.ApiClient;
 import com.vexeapp.api.ApiService;
+import com.vexeapp.utils.OSMRouteLibrary;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,7 +120,7 @@ public class VeResultsActivity extends AppCompatActivity {
                         String tripId = trip.getId();
                         for (Seat seat : allSeats) {
                             if (tripId != null && tripId.equals(seat.getChuyenXe()) 
-                                    && "Còn trống".equalsIgnoreCase(seat.getStatus())) {
+                                    && ("Còn trống".equalsIgnoreCase(seat.getStatus()) || "Trống".equalsIgnoreCase(seat.getStatus()))) {
                                 emptyCount++;
                             }
                         }
@@ -153,7 +154,7 @@ public class VeResultsActivity extends AppCompatActivity {
         List<TripSearchResult> tier4 = new ArrayList<>(); // Đúng tuyến (Tất cả tương lai)
 
         for (TripSearchResult trip : allTrips) {
-            if (trip.getStatus() != null && !trip.getStatus().equalsIgnoreCase("Chưa hoàn thành")) {
+            if (trip.getStatus() != null && (trip.getStatus().equalsIgnoreCase("Hoàn thành") || trip.getStatus().equalsIgnoreCase("Đã hoàn thành") || trip.getStatus().equalsIgnoreCase("Đã hủy"))) {
                 continue;
             }
 
@@ -161,8 +162,8 @@ public class VeResultsActivity extends AppCompatActivity {
             String tripTime = trip.getTime() != null ? trip.getTime() : "00:00";
 
             // Bỏ qua chuyến trong quá khứ
+            // Giữ các chuyến cùng ngày để thuận tiện test/demo bất kỳ lúc nào trong ngày
             if (tripDate.compareTo(nowStrDate) < 0) continue;
-            if (tripDate.equals(nowStrDate) && tripTime.compareTo(nowStrTime) < 0) continue;
 
             if (checkRouteMatch(trip, sOrigin, sDest)) {
                 boolean matchDate = (sDate == null || sDate.isEmpty()) || tripDate.equals(formattedSearchDate);
@@ -206,30 +207,34 @@ public class VeResultsActivity extends AppCompatActivity {
         String routeName = trip.getTuyenXeName();
         if (routeName == null) return sOrigin.equals("Tất cả") && sDest.equals("Tất cả");
 
-        String cleanRoute = routeName.replace("Tuyến:", "").replace("Tuyến", "").toLowerCase().trim();
-        String searchOrigin = sOrigin.toLowerCase().trim();
-        String searchDest = sDest.toLowerCase().trim();
+        String cleanRoute = routeName.replace("Tuyến:", "").replace("Tuyến", "").trim();
+        String searchOrigin = sOrigin.trim();
+        String searchDest = sDest.trim();
+
+        String normClean = OSMRouteLibrary.normalize(cleanRoute);
+        String normOrigin = OSMRouteLibrary.normalize(searchOrigin);
+        String normDest = OSMRouteLibrary.normalize(searchDest);
 
         if (cleanRoute.contains("-")) {
             String[] parts = cleanRoute.split("-");
             if (parts.length >= 2) {
-                String tOrigin = parts[0].trim();
-                String tDest = parts[1].trim();
+                String normTOrigin = OSMRouteLibrary.normalize(parts[0].trim());
+                String normTDest = OSMRouteLibrary.normalize(parts[1].trim());
 
-                boolean originOk = sOrigin.equals("Tất cả") || tOrigin.contains(searchOrigin);
-                boolean destOk = sDest.equals("Tất cả") || tDest.contains(searchDest);
+                boolean originOk = sOrigin.equals("Tất cả") || normTOrigin.contains(normOrigin) || normOrigin.contains(normTOrigin);
+                boolean destOk = sDest.equals("Tất cả") || normTDest.contains(normDest) || normDest.contains(normTDest);
                 return originOk && destOk;
             }
         }
 
         if (!sOrigin.equals("Tất cả") && !sDest.equals("Tất cả")) {
-             int originIdx = cleanRoute.indexOf(searchOrigin);
-             int destIdx = cleanRoute.indexOf(searchDest);
-             return originIdx != -1 && destIdx != -1 && originIdx < destIdx;
+            int originIdx = normClean.indexOf(normOrigin);
+            int destIdx = normClean.indexOf(normDest);
+            return originIdx != -1 && destIdx != -1 && originIdx < destIdx;
         }
 
-        boolean matchOrigin = sOrigin.equals("Tất cả") || cleanRoute.contains(searchOrigin);
-        boolean matchDest = sDest.equals("Tất cả") || cleanRoute.contains(searchDest);
+        boolean matchOrigin = sOrigin.equals("Tất cả") || normClean.contains(normOrigin);
+        boolean matchDest = sDest.equals("Tất cả") || normClean.contains(normDest);
         return matchOrigin && matchDest;
     }
 

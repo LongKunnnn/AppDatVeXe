@@ -36,7 +36,7 @@
                     android:id="@+id/tvRouteTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đà Nẵng - Huế"
+                    android:text="Hà Nội - Ninh Bình"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />

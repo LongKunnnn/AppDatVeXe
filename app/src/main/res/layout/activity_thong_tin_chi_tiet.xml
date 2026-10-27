@@ -98,7 +98,7 @@
                             android:id="@+id/tvOriginDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Đà Nẵng"
+                            android:text="Hà Nội"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
                         <TextView
@@ -106,7 +106,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="Huế"
+                            android:text="Ninh Bình"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
                     </RelativeLayout>
@@ -189,7 +189,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/bg_input_white"
-                        android:hint="Vd: Bến xe Đà Nẵng"
+                        android:hint="Vd: Bến xe Mỹ Đình, Hà Nội"
                         android:inputType="text"
                         android:importantForAutofill="no"
                         android:paddingHorizontal="15dp"
@@ -208,7 +208,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/bg_input_white"
-                        android:hint="Vd: Bến xe Huế"
+                        android:hint="Vd: Bến xe Ninh Bình"
                         android:inputType="text"
                         android:importantForAutofill="no"
                         android:paddingHorizontal="15dp"

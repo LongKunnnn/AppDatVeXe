@@ -110,9 +110,9 @@ Hệ thống đã có sẵn dữ liệu tài khoản mẫu được kích hoạt
 
 | Vai trò | Tên đăng nhập / Số điện thoại | Mật khẩu | Thông tin chi tiết |
 | :--- | :--- | :--- | :--- |
-| **Nhà xe (Quản trị)** | `haivan` | `123456` | Nhà xe Hải Vân Limousine (Đà Nẵng - Huế) |
-| **Nhà xe (Quản trị)** | `phuongtrang` | `123456` | Phương Trang Bus Lines |
-| **Khách hàng** | `0912345678` | `123456` | Khách hàng: Lê Hoàng Nam |
+| **Nhà xe (Quản trị)** | `trangan` *(hoặc `haivan`)* | `123456` | Tràng An Limousine (Hà Nội - Ninh Bình - Thanh Hóa) |
+| **Nhà xe (Quản trị)** | `vananh` *(hoặc `phuongtrang`)* | `123456` | Vân Anh Limousine |
+| **Khách hàng** | `0912345678` | `123456` | Khách hàng: Lê Hoàng Nam (Có sẵn vé đã đặt, đã đi, đã hủy để demo) |
 | **Khách hàng** | `0987654321` | `123456` | Khách hàng: Nguyễn Thu Hà |
 | **Khách hàng mới** | Tự bấm **"Đăng ký"** | Tự đặt | Xác thực OTP trực tiếp, tự sinh ID |
 
@@ -124,19 +124,24 @@ Hệ thống đã có sẵn dữ liệu tài khoản mẫu được kích hoạt
 
 1. **Đăng nhập:** Mở app, nhập SĐT `0912345678` và Mật khẩu `123456` -> Bấm **Đăng nhập**.
 2. **Tìm kiếm vé:**
-   - Chọn điểm đi: **Đà Nẵng**
-   - Chọn điểm đến: **Huế** (hoặc Hội An)
-   - Chọn ngày đi và nhấn **Tìm vé**.
+   - Chọn điểm đi: **Hà Nội**
+   - Chọn điểm đến: **Ninh Bình** (hoặc **Thanh Hóa**)
+   - Chọn ngày đi (hoặc để trống) và nhấn **Tìm vé**.
 3. **Chọn chuyến & Sơ đồ ghế:**
    - Chọn một chuyến xe trong danh sách kết quả.
    - Màn hình sơ đồ ghế hiện ra: Bấm chọn các ghế trống (ghế đổi màu cam và tự tính tổng tiền).
 4. **Xác nhận đặt vé & Thanh toán:**
-   - Chọn điểm đón và điểm trả khách.
+   - Chọn điểm đón và điểm trả khách (VD: Bến xe Mỹ Đình, Rạp xiếc Trung ương -> Bến xe Ninh Bình).
    - Nhấn **Xác nhận đặt vé** -> App hiển thị thông tin hóa đơn và thông báo đặt vé thành công.
-5. **Quản lý vé đã mua:**
-   - Chuyển sang tab **Vé của tôi** ở thanh điều hướng dưới: Xem danh sách vé đã đặt, xem mã vé, thực hiện **Hủy vé** nếu muốn.
-6. **Đánh giá chuyến đi:**
-   - Vào các chuyến đã hoàn thành để chấm điểm số sao và viết nhận xét.
+5. **Quản lý vé đã mua (Đầy đủ 3 tab demo):**
+   - Chuyển sang tab **Vé của tôi** ở thanh điều hướng dưới:
+     * **Tab Đã đặt:** Xem các vé đang chờ khởi hành, bấm vào vé xem mã QR và thực hiện **Hủy vé**.
+     * **Tab Đã đi:** Xem lịch sử các chuyến đã hoàn thành, bấm nút **Viết nhận xét**.
+     * **Tab Đã hủy:** Xem các vé đã hủy cùng lý do hủy và thông tin hoàn tiền.
+6. **Đánh giá & Phản hồi:**
+   - Chuyển sang tab **Phản hồi** (icon sao):
+     * **Tab Chờ đánh giá:** Có sẵn chuyến đi đã hoàn thành chờ bạn chấm sao và viết nhận xét.
+     * **Tab Đã đánh giá:** Xem các đánh giá nhận xét thực tế 5 sao của hành khách.
 
 ---
 
@@ -144,7 +149,7 @@ Hệ thống đã có sẵn dữ liệu tài khoản mẫu được kích hoạt
 
 1. **Đăng nhập nhà xe:**
    - Tại màn hình Đăng nhập, bấm vào dòng chữ: **"Bạn là nhà xe?"**.
-   - Nhập tài khoản: `haivan` | Mật khẩu: `123456` -> Bấm **Đăng nhập**.
+   - Nhập tài khoản: `trangan` *(hoặc `haivan`)* | Mật khẩu: `123456` -> Bấm **Đăng nhập**.
 2. **Bảng ma trận điều hành lịch chạy (Trang chủ):**
    - Hiển thị danh sách các tài xế và lịch trình ca chạy theo từng ngày trong tuần.
    - Nhấn trực tiếp vào từng ô ca chạy để xem chi tiết danh sách khách đi xe.

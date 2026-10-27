@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Tuyến: Đà Nẵng - Huế"
+        android:text="Tuyến: Hà Nội - Ninh Bình"
         android:textColor="#0091D5"
         android:textSize="14sp"
         android:textStyle="bold" />

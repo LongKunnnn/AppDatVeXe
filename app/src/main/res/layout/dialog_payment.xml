@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tuyến" android:textColor="#666666"/>
-                <TextView android:id="@+id/tvPayRoute" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Đà Nẵng -> Huế" android:textColor="@color/black" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvPayRoute" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Hà Nội -> Ninh Bình" android:textColor="@color/black" android:textStyle="bold"/>
             </RelativeLayout>
 
             <RelativeLayout

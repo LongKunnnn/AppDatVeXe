@@ -20,20 +20,20 @@ public class OSMRouteLibrary {
     private static final Map<String, RouteInfo> routeData = new HashMap<>();
 
     static {
-        // Tọa độ thực tế từ OSM (để tham khảo trong code nếu cần mở rộng)
-        // Huế: 16.4637, 107.5909
-        // Đà Nẵng: 16.0544, 108.2022
-        // Hội An: 15.8801, 108.3382
+        // Tọa độ thực tế từ OSM
+        // Hà Nội: 21.0285, 105.8542
+        // Ninh Bình: 20.2506, 105.9745
+        // Thanh Hóa: 19.8067, 105.7852
 
         // Cài đặt dữ liệu lộ trình thực tế (Road Distance) từ OSM
-        addRoute("Huế", "Đà Nẵng", "93 km", "2 giờ 15 phút");
-        addRoute("Đà Nẵng", "Huế", "93 km", "2 giờ 15 phút");
+        addRoute("Hà Nội", "Ninh Bình", "95 km", "1 giờ 30 phút");
+        addRoute("Ninh Bình", "Hà Nội", "95 km", "1 giờ 30 phút");
         
-        addRoute("Đà Nẵng", "Hội An", "30 km", "1 giờ");
-        addRoute("Hội An", "Đà Nẵng", "30 km", "1 giờ");
+        addRoute("Hà Nội", "Thanh Hóa", "160 km", "2 giờ 30 phút");
+        addRoute("Thanh Hóa", "Hà Nội", "160 km", "2 giờ 30 phút");
         
-        addRoute("Huế", "Hội An", "122 km", "2 giờ 45 phút");
-        addRoute("Hội An", "Huế", "122 km", "2 giờ 45 phút");
+        addRoute("Ninh Bình", "Thanh Hóa", "65 km", "1 giờ 15 phút");
+        addRoute("Thanh Hóa", "Ninh Bình", "65 km", "1 giờ 15 phút");
     }
 
     private static void addRoute(String start, String end, String dist, String time) {

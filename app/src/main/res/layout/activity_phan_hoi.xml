@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nhà xe Đà Nẵng-Huế"
+                android:text="Nhà xe Hà Nội - Ninh Bình"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

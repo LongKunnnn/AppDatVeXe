@@ -249,16 +249,16 @@ public class QLTuyenxeActivity extends AppCompatActivity implements RouteAdapter
     }
 
     private int getBaseDist(String s, String e) {
-        if ((s.contains("da nang") && e.contains("hue")) || (s.contains("hue") && e.contains("da nang"))) return 100;
-        if ((s.contains("da nang") && e.contains("hoi an")) || (s.contains("hoi an") && e.contains("da nang"))) return 30;
-        if ((s.contains("hue") && e.contains("hoi an")) || (s.contains("hoi an") && e.contains("hue"))) return 130;
+        if ((s.contains("ha noi") && e.contains("ninh binh")) || (s.contains("ninh binh") && e.contains("ha noi"))) return 95;
+        if ((s.contains("ha noi") && e.contains("thanh hoa")) || (s.contains("thanh hoa") && e.contains("ha noi"))) return 160;
+        if ((s.contains("ninh binh") && e.contains("thanh hoa")) || (s.contains("thanh hoa") && e.contains("ninh binh"))) return 65;
         return 0;
     }
 
     private float getBaseTime(String s, String e) {
-        if ((s.contains("da nang") && e.contains("hue")) || (s.contains("hue") && e.contains("da nang"))) return 2.5f;
-        if ((s.contains("da nang") && e.contains("hoi an")) || (s.contains("hoi an") && e.contains("da nang"))) return 1.0f;
-        if ((s.contains("hue") && e.contains("hoi an")) || (s.contains("hoi an") && e.contains("hue"))) return 3.5f;
+        if ((s.contains("ha noi") && e.contains("ninh binh")) || (s.contains("ninh binh") && e.contains("ha noi"))) return 1.5f;
+        if ((s.contains("ha noi") && e.contains("thanh hoa")) || (s.contains("thanh hoa") && e.contains("ha noi"))) return 2.5f;
+        if ((s.contains("ninh binh") && e.contains("thanh hoa")) || (s.contains("thanh hoa") && e.contains("ninh binh"))) return 1.25f;
         return 0;
     }
 

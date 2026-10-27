@@ -41,9 +41,9 @@ public class TripRouteActivity extends AppCompatActivity {
     private List<Seat> allSeatsOfTrip = new ArrayList<>();
 
     // Tọa độ các thành phố chính
-    private final GeoPoint HUE = new GeoPoint(16.4637, 107.5909);
-    private final GeoPoint DANANG = new GeoPoint(16.0544, 108.2022);
-    private final GeoPoint HOIAN = new GeoPoint(15.8801, 108.3273);
+    private final GeoPoint HANOI = new GeoPoint(21.0285, 105.8542);
+    private final GeoPoint NINHBINH = new GeoPoint(20.2506, 105.9745);
+    private final GeoPoint THANHHOA = new GeoPoint(19.8067, 105.7852);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,21 +159,27 @@ public class TripRouteActivity extends AppCompatActivity {
         map.getOverlays().add(new MapEventsOverlay(mReceive));
 
         // Xác định điểm đi và điểm đến dựa trên tên tuyến
-        GeoPoint startPoint = DANANG; 
-        GeoPoint endPoint = HUE;
+        GeoPoint startPoint = HANOI; 
+        GeoPoint endPoint = NINHBINH;
         String routeName = (currentTrip.getRouteName() != null ? currentTrip.getRouteName() : "").toLowerCase();
         
-        if (routeName.contains("huế") && (routeName.contains("đà nẵng") || routeName.contains("đn"))) {
-            if (routeName.indexOf("huế") < (routeName.contains("đà nẵng") ? routeName.indexOf("đà nẵng") : routeName.indexOf("đn"))) {
-                startPoint = HUE; endPoint = DANANG;
+        if (routeName.contains("ninh bình") && routeName.contains("hà nội")) {
+            if (routeName.indexOf("ninh bình") < routeName.indexOf("hà nội")) {
+                startPoint = NINHBINH; endPoint = HANOI;
             } else {
-                startPoint = DANANG; endPoint = HUE;
+                startPoint = HANOI; endPoint = NINHBINH;
             }
-        } else if ((routeName.contains("hội an") || routeName.contains("ha")) && (routeName.contains("đà nẵng") || routeName.contains("đn"))) {
-            if ((routeName.contains("đà nẵng") ? routeName.indexOf("đà nẵng") : routeName.indexOf("đn")) < (routeName.contains("hội an") ? routeName.indexOf("hội an") : routeName.indexOf("ha"))) {
-                startPoint = DANANG; endPoint = HOIAN;
+        } else if (routeName.contains("thanh hóa") && routeName.contains("hà nội")) {
+            if (routeName.indexOf("thanh hóa") < routeName.indexOf("hà nội")) {
+                startPoint = THANHHOA; endPoint = HANOI;
             } else {
-                startPoint = HOIAN; endPoint = DANANG;
+                startPoint = HANOI; endPoint = THANHHOA;
+            }
+        } else if (routeName.contains("ninh bình") && routeName.contains("thanh hóa")) {
+            if (routeName.indexOf("thanh hóa") < routeName.indexOf("ninh bình")) {
+                startPoint = THANHHOA; endPoint = NINHBINH;
+            } else {
+                startPoint = NINHBINH; endPoint = THANHHOA;
             }
         }
 

@@ -34,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nhà xe Đà Nẵng-Huế"
+                android:text="Nhà xe Hà Nội - Ninh Bình"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -99,7 +99,7 @@
                             android:id="@+id/tvRouteName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tuyến xe: Đà Nẵng-Huế"
+                            android:text="Tuyến xe: Hà Nội - Ninh Bình"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="14sp" />
