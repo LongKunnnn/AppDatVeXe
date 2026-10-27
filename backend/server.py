@@ -174,8 +174,8 @@ def init_database(force_reseed=False):
             ('TX00002', 'Trần Đình Trọng', '0988333444', 'E-556677', 'NX00001', ''),
             ('TX00003', 'Lê Văn Hùng', '0988555666', 'E-667788', 'NX00001', ''),
             ('TX00004', 'Phạm Quốc Tuấn', '0988777888', 'D-334455', 'NX00001', ''),
-            ('TX00005', 'Hoàng Đức Anh', '0988999000', 'E-112233', 'NX00001', ''),
-            ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00001', '')
+            ('TX00005', 'Hoàng Đức Anh', '0988999000', 'E-112233', 'NX00002', ''),
+            ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00002', '')
         ]
         cursor.executemany("INSERT INTO taixe VALUES (?, ?, ?, ?, ?, ?)", drivers_data)
 
@@ -187,7 +187,7 @@ def init_database(force_reseed=False):
             ('XE00001', '29B-123.45', 'LX01', 'NX00001', 'Hoạt động'),
             ('XE00002', '29B-567.89', 'LX02', 'NX00001', 'Hoạt động'),
             ('XE00003', '35B-012.34', 'LX01', 'NX00001', 'Hoạt động'),
-            ('XE00004', '36B-056.78', 'LX02', 'NX00001', 'Hoạt động'),
+            ('XE00004', '36B-056.78', 'LX02', 'NX00002', 'Hoạt động'),
             ('XE00005', '29B-333.44', 'LX03', 'NX00001', 'Hoạt động'),
             ('XE00006', '29B-888.99', 'LX04', 'NX00001', 'Hoạt động'),
             ('XE00007', '36B-023.45', 'LX01', 'NX00002', 'Hoạt động'),
@@ -212,17 +212,17 @@ def init_database(force_reseed=False):
             ('US00011', 'taixe2', '123456', 'trong.tran@vexeapp.com', '0988333444', 'TaiXe', 'Trần Đình Trọng', None, 'NX00001', 'TX00002'),
             ('US00012', 'taixe3', '123456', 'hung.le@vexeapp.com', '0988555666', 'TaiXe', 'Lê Văn Hùng', None, 'NX00001', 'TX00003'),
             ('US00013', 'taixe4', '123456', 'tuan.pham@vexeapp.com', '0988777888', 'TaiXe', 'Phạm Quốc Tuấn', None, 'NX00001', 'TX00004'),
-            ('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', None, 'NX00001', 'TX00005'),
-            ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00001', 'TX00006')
+            ('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', None, 'NX00002', 'TX00005'),
+            ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00002', 'TX00006')
         ])
 
         cursor.executemany("INSERT INTO tuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
             ('TXE00001', 'Hà Nội - Ninh Bình', 'Hà Nội', 'Ninh Bình', 'Phủ Lý, Cao Bồ', 95.0, '1 giờ 30 phút', 150000, 'NX00001'),
-            ('TXE00002', 'Hà Nội - Thanh Hóa', 'Hà Nội', 'Thanh Hóa', 'Ninh Bình, Bỉm Sơn', 160.0, '2 giờ 30 phút', 220000, 'NX00001'),
-            ('TXE00003', 'Ninh Bình - Thanh Hóa', 'Ninh Bình', 'Thanh Hóa', 'Tam Điệp, Bỉm Sơn', 65.0, '1 giờ 15 phút', 100000, 'NX00001'),
+            ('TXE00002', 'Hà Nội - Thanh Hóa', 'Hà Nội', 'Thanh Hóa', 'Ninh Bình, Bỉm Sơn', 160.0, '2 giờ 30 phút', 220000, 'NX00002'),
+            ('TXE00003', 'Ninh Bình - Thanh Hóa', 'Ninh Bình', 'Thanh Hóa', 'Tam Điệp, Bỉm Sơn', 65.0, '1 giờ 15 phút', 100000, 'NX00002'),
             ('TXE00004', 'Ninh Bình - Hà Nội', 'Ninh Bình', 'Hà Nội', 'Phủ Lý, Bến xe Nước Ngầm', 95.0, '1 giờ 30 phút', 150000, 'NX00001'),
-            ('TXE00005', 'Thanh Hóa - Hà Nội', 'Thanh Hóa', 'Hà Nội', 'Bỉm Sơn, Ninh Bình, Bến xe Giáp Bát', 160.0, '2 giờ 30 phút', 220000, 'NX00001'),
-            ('TXE00006', 'Thanh Hóa - Ninh Bình', 'Thanh Hóa', 'Ninh Bình', 'Bỉm Sơn, Tam Điệp', 65.0, '1 giờ 15 phút', 100000, 'NX00001')
+            ('TXE00005', 'Thanh Hóa - Hà Nội', 'Thanh Hóa', 'Hà Nội', 'Bỉm Sơn, Ninh Bình, Bến xe Giáp Bát', 160.0, '2 giờ 30 phút', 220000, 'NX00002'),
+            ('TXE00006', 'Thanh Hóa - Ninh Bình', 'Thanh Hóa', 'Ninh Bình', 'Bỉm Sơn, Tam Điệp', 65.0, '1 giờ 15 phút', 100000, 'NX00002')
         ])
 
         today = date.today()
@@ -240,27 +240,27 @@ def init_database(force_reseed=False):
             ('CX00004', 'TXE00001', 'XE00003', 'TX00001', today_s, '13:30', '15:00', 150000, 'Chưa hoàn thành'),
             ('CX00005', 'TXE00001', 'XE00001', 'TX00002', today_s, '15:30', '17:00', 150000, 'Chưa hoàn thành'),
             ('CX00006', 'TXE00001', 'XE00003', 'TX00004', today_s, '18:00', '19:30', 150000, 'Chưa hoàn thành'),
-            ('CX00007', 'TXE00002', 'XE00002', 'TX00005', today_s, '07:00', '09:30', 220000, 'Chưa hoàn thành'),
+            ('CX00007', 'TXE00002', 'XE00007', 'TX00005', today_s, '07:00', '09:30', 220000, 'Chưa hoàn thành'),
             ('CX00008', 'TXE00002', 'XE00004', 'TX00006', today_s, '09:30', '12:00', 220000, 'Chưa hoàn thành'),
-            ('CX00009', 'TXE00002', 'XE00002', 'TX00005', today_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
+            ('CX00009', 'TXE00002', 'XE00007', 'TX00005', today_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
             ('CX00010', 'TXE00002', 'XE00004', 'TX00006', today_s, '17:30', '20:00', 220000, 'Chưa hoàn thành'),
-            ('CX00011', 'TXE00003', 'XE00005', 'TX00004', today_s, '08:00', '09:15', 100000, 'Chưa hoàn thành'),
-            ('CX00012', 'TXE00003', 'XE00005', 'TX00004', today_s, '15:00', '16:15', 100000, 'Chưa hoàn thành'),
+            ('CX00011', 'TXE00003', 'XE00008', 'TX00005', today_s, '08:00', '09:15', 100000, 'Chưa hoàn thành'),
+            ('CX00012', 'TXE00003', 'XE00008', 'TX00005', today_s, '15:00', '16:15', 100000, 'Chưa hoàn thành'),
             ('CX00013', 'TXE00004', 'XE00001', 'TX00002', today_s, '07:30', '09:00', 150000, 'Chưa hoàn thành'),
             ('CX00014', 'TXE00004', 'XE00003', 'TX00003', today_s, '13:00', '14:30', 150000, 'Chưa hoàn thành'),
-            ('CX00015', 'TXE00005', 'XE00002', 'TX00005', today_s, '06:00', '08:30', 220000, 'Chưa hoàn thành'),
+            ('CX00015', 'TXE00005', 'XE00007', 'TX00005', today_s, '06:00', '08:30', 220000, 'Chưa hoàn thành'),
             ('CX00016', 'TXE00005', 'XE00004', 'TX00006', today_s, '13:30', '16:00', 220000, 'Chưa hoàn thành'),
-            ('CX00024', 'TXE00006', 'XE00005', 'TX00004', today_s, '09:00', '10:15', 100000, 'Chưa hoàn thành'),
-            ('CX00025', 'TXE00006', 'XE00005', 'TX00004', today_s, '16:30', '17:45', 100000, 'Chưa hoàn thành'),
+            ('CX00024', 'TXE00006', 'XE00008', 'TX00006', today_s, '09:00', '10:15', 100000, 'Chưa hoàn thành'),
+            ('CX00025', 'TXE00006', 'XE00008', 'TX00006', today_s, '16:30', '17:45', 100000, 'Chưa hoàn thành'),
             ('CX00017', 'TXE00001', 'XE00001', 'TX00001', tomorrow_s, '08:00', '09:30', 150000, 'Chưa hoàn thành'),
             ('CX00018', 'TXE00001', 'XE00003', 'TX00002', tomorrow_s, '14:00', '15:30', 150000, 'Chưa hoàn thành'),
-            ('CX00019', 'TXE00002', 'XE00002', 'TX00005', tomorrow_s, '08:30', '11:00', 220000, 'Chưa hoàn thành'),
+            ('CX00019', 'TXE00002', 'XE00007', 'TX00005', tomorrow_s, '08:30', '11:00', 220000, 'Chưa hoàn thành'),
             ('CX00020', 'TXE00002', 'XE00004', 'TX00006', tomorrow_s, '15:00', '17:30', 220000, 'Chưa hoàn thành'),
             ('CX00021', 'TXE00001', 'XE00001', 'TX00003', after_s, '09:30', '11:00', 150000, 'Chưa hoàn thành'),
-            ('CX00022', 'TXE00002', 'XE00002', 'TX00005', after_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
+            ('CX00022', 'TXE00002', 'XE00007', 'TX00005', after_s, '14:00', '16:30', 220000, 'Chưa hoàn thành'),
             ('CX00023', 'TXE00001', 'XE00003', 'TX00001', after_3_s, '08:30', '10:00', 150000, 'Chưa hoàn thành'),
             ('CX00099', 'TXE00001', 'XE00001', 'TX00001', yesterday_s, '08:00', '09:30', 150000, 'Hoàn thành'),
-            ('CX00098', 'TXE00002', 'XE00002', 'TX00005', two_days_ago_s, '14:00', '16:30', 220000, 'Hoàn thành')
+            ('CX00098', 'TXE00002', 'XE00007', 'TX00005', two_days_ago_s, '14:00', '16:30', 220000, 'Hoàn thành')
         ]
         cursor.executemany("INSERT INTO chuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", trips_data)
 
@@ -718,7 +718,7 @@ def generate_web_dashboard(conn):
                                     <td class="fw-bold text-primary"><i class="fa-solid fa-user-circle me-1 text-muted"></i>{tx["HoTen"]}</td>
                                     <td><a href="tel:{tx["SoDienThoai"]}" class="text-decoration-none">{tx["SoDienThoai"]}</a></td>
                                     <td><span class="badge bg-secondary">{tx["SoBangLai"]}</span></td>
-                                    <td>Tràng An Limousine</td>
+                                    <td>{"Tràng An Limousine" if tx.get("Nhaxe") == "NX00001" else "Vân Anh Limousine"}</td>
                                 </tr>"""
 
     html += """
@@ -737,6 +737,7 @@ def generate_web_dashboard(conn):
                                 <tr>
                                     <th>Mã Tuyến</th>
                                     <th>Tên Tuyến Xe</th>
+                                    <th>Nhà Xe Vận Hành</th>
                                     <th>Điểm Xuất Phát</th>
                                     <th>Điểm Đích Đến</th>
                                     <th>Cự Ly (km)</th>
@@ -751,6 +752,7 @@ def generate_web_dashboard(conn):
                                 <tr>
                                     <td class="fw-bold">{r["TuyenxeID"]}</td>
                                     <td class="fw-bold text-primary">{r["tenTuyen"]}</td>
+                                    <td><span class="badge bg-primary">{"Tràng An Limousine" if r.get("Nhaxe") == "NX00001" else "Vân Anh Limousine"}</span></td>
                                     <td><i class="fa-solid fa-location-dot text-danger me-1"></i>{r["diemDi"]}</td>
                                     <td><i class="fa-solid fa-flag-checkered text-success me-1"></i>{r["diemDen"]}</td>
                                     <td>{r["khoangCach"]} km</td>

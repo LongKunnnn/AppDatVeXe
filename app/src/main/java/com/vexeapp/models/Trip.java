@@ -112,7 +112,7 @@ public class Trip implements Serializable {
     public String getGiaVe() { return giaVe; }
     public void setGiaVe(String giaVe) { this.giaVe = giaVe; }
 
-    public String getTenNhaXe() { return tenNhaXe; }
+    public String getTenNhaXe() { return (tenNhaXe != null && !tenNhaXe.isEmpty() && !tenNhaXe.equalsIgnoreCase("Nhà xe")) ? tenNhaXe : "Tràng An Limousine"; }
     public void setTenNhaXe(String tenNhaXe) { this.tenNhaXe = tenNhaXe; }
 
     public Integer getSoChoTrong() { return soChoTrong; }

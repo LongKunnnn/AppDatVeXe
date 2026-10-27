@@ -12,7 +12,7 @@ public class TripSearchResult extends Trip {
 
     public String getNhaXeName() { 
         String name = getTenNhaXe();
-        return (name != null && !name.isEmpty()) ? name : "Nhà xe"; 
+        return (name != null && !name.isEmpty() && !name.equalsIgnoreCase("Nhà xe")) ? name : "Tràng An Limousine"; 
     }
     
     public String getPrice() { 

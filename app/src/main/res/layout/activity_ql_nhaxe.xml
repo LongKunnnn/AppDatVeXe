@@ -79,7 +79,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="@string/nha_xe_name"
+                                android:text="Tràng An Limousine"
                                 android:textColor="@android:color/black"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
@@ -99,12 +99,12 @@
                             <!-- Rows for Info -->
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
                                 <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Tên nhà xe:" android:textSize="14sp" android:textColor="#888888"/>
-                                <TextView android:id="@+id/tvViewBusName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nha_xe_name" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvViewBusName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tràng An Limousine" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
                                 <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Người đại diện:" android:textSize="14sp" android:textColor="#888888"/>
-                                <TextView android:id="@+id/tvViewRepName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tôn Thất Huy Phong" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvViewRepName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nguyễn Văn Hải" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
@@ -114,12 +114,12 @@
 
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
                                 <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Số điện thoại:" android:textSize="14sp" android:textColor="#888888"/>
-                                <TextView android:id="@+id/tvViewPhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0905509767" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvViewPhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0988123456" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
                                 <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Email:" android:textSize="14sp" android:textColor="#888888"/>
-                                <TextView android:id="@+id/tvViewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="trangan@nhaxe.vn" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvViewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="trangan@vexeapp.com" android:textColor="#333333" android:textStyle="bold" android:textSize="14sp"/>
                             </LinearLayout>
 
                         <ImageView

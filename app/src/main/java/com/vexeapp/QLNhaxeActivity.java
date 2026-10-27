@@ -81,7 +81,7 @@ public class QLNhaxeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ql_nhaxe);
 
         SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        opUid = pref.getString("op_uid", "");
+        opUid = pref.getString("op_uid", "NX00001");
         apiService = ApiClient.getClient().create(ApiService.class);
 
         initViews();

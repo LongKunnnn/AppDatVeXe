@@ -172,7 +172,7 @@
                         android:id="@+id/tvNhaXeName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nhà xe Thành Hải"
+                        android:text="Tràng An Limousine"
                         android:textColor="#000000"
                         android:textStyle="bold"
                         android:textSize="15sp"

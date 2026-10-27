@@ -36,7 +36,7 @@ public class TripListActivity extends AppCompatActivity implements TripAdapter.O
         setContentView(R.layout.activity_trip_list);
 
         SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        opUid = pref.getString("op_uid", "");
+        opUid = pref.getString("op_uid", "NX00001");
 
         apiService = ApiClient.getClient().create(ApiService.class);
 

@@ -42,7 +42,7 @@ public class AssignDriverActivity extends AppCompatActivity implements AssignDri
         setContentView(R.layout.activity_assign_driver);
 
         SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        currentOpId = pref.getString("op_uid", "");
+        currentOpId = pref.getString("op_uid", "NX00001");
         
         tripId = getIntent().getStringExtra("tripId");
         Log.d("AssignDriver", "Received Trip ID: " + tripId);
