@@ -61,7 +61,8 @@ def init_database(force_reseed=False):
         Vaitro TEXT NOT NULL,
         Hovaten TEXT,
         KhachHangID TEXT,
-        NhaxeID TEXT
+        NhaxeID TEXT,
+        TaiXeID TEXT
     );
 
     CREATE TABLE IF NOT EXISTS taixe (
@@ -199,14 +200,20 @@ def init_database(force_reseed=False):
             ('KH00003', 'Trần Quốc Bảo', 'bao.tran@vexeapp.com', '1998-11-10', '0905123987', '')
         ])
 
-        cursor.executemany("INSERT INTO nguoidung VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-            ('US00001', 'haivan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001'),
-            ('US00006', 'trangan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001'),
-            ('US00002', 'phuongtrang', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002'),
-            ('US00007', 'vananh', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002'),
-            ('US00003', '0912345678', '123456', 'nam.le@vexeapp.com', '0912345678', 'KhachHang', 'Lê Hoàng Nam', 'KH00001', None),
-            ('US00004', '0987654321', '123456', 'ha.nguyen@vexeapp.com', '0987654321', 'KhachHang', 'Nguyễn Thu Hà', 'KH00002', None),
-            ('US00005', '0905123987', '123456', 'bao.tran@vexeapp.com', '0905123987', 'KhachHang', 'Trần Quốc Bảo', 'KH00003', None)
+        cursor.executemany("INSERT INTO nguoidung VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+            ('US00001', 'haivan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001', None),
+            ('US00006', 'trangan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', None, 'NX00001', None),
+            ('US00002', 'phuongtrang', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002', None),
+            ('US00007', 'vananh', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', None, 'NX00002', None),
+            ('US00003', '0912345678', '123456', 'nam.le@vexeapp.com', '0912345678', 'KhachHang', 'Lê Hoàng Nam', 'KH00001', None, None),
+            ('US00004', '0987654321', '123456', 'ha.nguyen@vexeapp.com', '0987654321', 'KhachHang', 'Nguyễn Thu Hà', 'KH00002', None, None),
+            ('US00005', '0905123987', '123456', 'bao.tran@vexeapp.com', '0905123987', 'KhachHang', 'Trần Quốc Bảo', 'KH00003', None, None),
+            ('US00010', 'taixe1', '123456', 'binh.nguyen@vexeapp.com', '0988111222', 'TaiXe', 'Nguyễn Văn Bình', None, 'NX00001', 'TX00001'),
+            ('US00011', 'taixe2', '123456', 'trong.tran@vexeapp.com', '0988333444', 'TaiXe', 'Trần Đình Trọng', None, 'NX00001', 'TX00002'),
+            ('US00012', 'taixe3', '123456', 'hung.le@vexeapp.com', '0988555666', 'TaiXe', 'Lê Văn Hùng', None, 'NX00001', 'TX00003'),
+            ('US00013', 'taixe4', '123456', 'tuan.pham@vexeapp.com', '0988777888', 'TaiXe', 'Phạm Quốc Tuấn', None, 'NX00001', 'TX00004'),
+            ('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', None, 'NX00001', 'TX00005'),
+            ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00001', 'TX00006')
         ])
 
         cursor.executemany("INSERT INTO tuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
@@ -867,7 +874,12 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "Vaitro": u["Vaitro"],
                         "Hovaten": u["Hovaten"],
                         "KhachHang": u["KhachHangID"],
-                        "Nhaxe": u["NhaxeID"]
+                        "KhachHangID": u["KhachHangID"],
+                        "Nhaxe": u["NhaxeID"],
+                        "NhaxeID": u["NhaxeID"],
+                        "Taixe": u.get("TaiXeID") or u.get("NhaxeID"),
+                        "TaiXe": u.get("TaiXeID") or u.get("NhaxeID"),
+                        "TaiXeID": u.get("TaiXeID") or u.get("NhaxeID")
                     })
                 return self._send_json(users)
 
@@ -875,32 +887,90 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 uid = path.split('/')[-1]
                 cursor.execute("SELECT * FROM nguoidung WHERE UserID = ? OR TenDangNhap = ?", (uid, uid))
                 row = cursor.fetchone()
-                return self._send_json(dict(row) if row else {}, 200 if row else 404)
+                if row:
+                    u = dict(row)
+                    u["KhachHang"] = u.get("KhachHangID")
+                    u["Nhaxe"] = u.get("NhaxeID")
+                    u["Taixe"] = u.get("TaiXeID")
+                    u["TaiXe"] = u.get("TaiXeID")
+                    return self._send_json(u)
+                return self._send_json({}, 404)
 
             # 2. KHÁCH HÀNG
             elif path == '/api/khachhang':
                 cursor.execute("SELECT * FROM khachhang")
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["Hovaten"] = r["hoTen"]
+                    d["name"] = r["hoTen"]
+                    d["soDienThoai"] = r["soDienThoai"]
+                    d["SoDienThoai"] = r["soDienThoai"]
+                    d["phone"] = r["soDienThoai"]
+                    d["NgayDangKy"] = "2026-01-01"
+                    rows.append(d)
+                return self._send_json(rows)
 
             elif path.startswith('/api/khachhang/') and path.endswith('/lich-su-ve'):
                 kh_id = path.split('/')[3]
-                cursor.execute("SELECT * FROM ve WHERE KhachHang = ?", (kh_id,))
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                cursor.execute("SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe, l.soCho FROM ve v LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID LEFT JOIN xe x ON c.Xe = x.XeID LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID WHERE v.KhachHang = ?", (kh_id,))
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["time"] = r["gioDi"]
+                    d["date"] = r["ngayKhoiHanh"]
+                    d["route"] = r["tenTuyen"] or "Hà Nội - Ninh Bình"
+                    d["car"] = f"Limousine {r['soCho'] or 34} chỗ"
+                    d["seatCount"] = f"{r['soLuongGhe']} chỗ"
+                    d["seats"] = r["danhSachGhe"]
+                    d["status"] = r["trangThai"]
+                    rows.append(d)
+                return self._send_json(rows)
 
             elif path.startswith('/api/khachhang/'):
                 kh_id = path.split('/')[-1]
                 cursor.execute("SELECT * FROM khachhang WHERE KhachHangID = ? OR soDienThoai = ?", (kh_id, kh_id))
                 row = cursor.fetchone()
-                return self._send_json(dict(row) if row else {}, 200 if row else 404)
+                if row:
+                    d = dict(row)
+                    d["Hovaten"] = row["hoTen"]
+                    d["name"] = row["hoTen"]
+                    d["soDienThoai"] = row["soDienThoai"]
+                    d["SoDienThoai"] = row["soDienThoai"]
+                    d["phone"] = row["soDienThoai"]
+                    d["NgayDangKy"] = "2026-01-01"
+                    return self._send_json(d)
+                return self._send_json({}, 404)
 
             # 3. NHÀ XE
+            elif path == '/api/nhaxe':
+                cursor.execute("SELECT * FROM nhaxe")
+                rows = []
+                for r in cursor.fetchall():
+                    d = dict(r)
+                    d["Tennhaxe"] = r["tenNhaXe"]
+                    d["BusName"] = r["tenNhaXe"]
+                    d["busName"] = r["tenNhaXe"]
+                    d["TenNguoiDaiDien"] = r["nguoiDaiDien"]
+                    d["DiaChiTruSo"] = r["diaChi"]
+                    d["SoDienThoai"] = r["soDienThoai"]
+                    d["AnhDaiDien"] = r["logo"]
+                    rows.append(d)
+                return self._send_json(rows)
+
             elif path.startswith('/api/nhaxe/'):
                 nx_id = path.split('/')[-1]
                 cursor.execute("SELECT * FROM nhaxe WHERE NhaxeID = ?", (nx_id,))
                 row = cursor.fetchone()
                 if row:
                     d = dict(row)
-                    d["BusName"] = d["tenNhaXe"]
+                    d["Tennhaxe"] = row["tenNhaXe"]
+                    d["BusName"] = row["tenNhaXe"]
+                    d["busName"] = row["tenNhaXe"]
+                    d["TenNguoiDaiDien"] = row["nguoiDaiDien"]
+                    d["DiaChiTruSo"] = row["diaChi"]
+                    d["SoDienThoai"] = row["soDienThoai"]
+                    d["AnhDaiDien"] = row["logo"]
                     return self._send_json(d)
                 return self._send_json({}, 404)
 
@@ -910,19 +980,53 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 rows = []
                 for r in cursor.fetchall():
                     d = dict(r)
-                    d["TaixeID"] = d.get("TaiXeID")
-                    d["Taixe"] = d.get("TaiXeID")
-                    d["HinhAnhURL"] = d.get("AnhDaiDien")
+                    d["TaixeID"] = r["TaiXeID"]
+                    d["TaiXeID"] = r["TaiXeID"]
+                    d["Taixe"] = r["TaiXeID"]
+                    d["TaiXe"] = r["TaiXeID"]
+                    d["taixe"] = r["TaiXeID"]
+                    d["id"] = r["TaiXeID"]
+                    d["HoTen"] = r["HoTen"]
+                    d["hoTen"] = r["HoTen"]
+                    d["name"] = r["HoTen"]
+                    d["SoDienThoai"] = r["SoDienThoai"]
+                    d["soDienThoai"] = r["SoDienThoai"]
+                    d["phone"] = r["SoDienThoai"]
+                    d["SoBangLai"] = r["SoBangLai"]
+                    d["soBangLai"] = r["SoBangLai"]
+                    d["soCCCD"] = "037198001234"
+                    d["LoaiBangLai"] = "Hạng D"
+                    d["NgayHetHanBangLai"] = "2028-12-31"
+                    d["HinhAnhURL"] = r["AnhDaiDien"]
                     rows.append(d)
                 return self._send_json(rows)
 
+            elif path.startswith('/api/taixe/'):
+                tx_id = path.split('/')[-1]
+                cursor.execute("SELECT * FROM taixe WHERE TaiXeID = ?", (tx_id,))
+                row = cursor.fetchone()
+                if row:
+                    d = dict(row)
+                    d["TaixeID"] = row["TaiXeID"]
+                    d["TaiXeID"] = row["TaiXeID"]
+                    d["Taixe"] = row["TaiXeID"]
+                    d["TaiXe"] = row["TaiXeID"]
+                    d["id"] = row["TaiXeID"]
+                    d["HoTen"] = row["HoTen"]
+                    d["hoTen"] = row["HoTen"]
+                    d["SoDienThoai"] = row["SoDienThoai"]
+                    d["soDienThoai"] = row["SoDienThoai"]
+                    d["SoBangLai"] = row["SoBangLai"]
+                    d["soBangLai"] = row["SoBangLai"]
+                    d["soCCCD"] = "037198001234"
+                    d["LoaiBangLai"] = "Hạng D"
+                    d["NgayHetHanBangLai"] = "2028-12-31"
+                    d["HinhAnhURL"] = row["AnhDaiDien"]
+                    return self._send_json(d)
+                return self._send_json({}, 404)
+
             elif path == '/api/chitiettaixe':
-                cursor.execute('''
-                SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe
-                FROM chitiettaixe c
-                LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID
-                LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID
-                ''')
+                cursor.execute("SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe FROM chitiettaixe c LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID")
                 rows = []
                 for idx, r in enumerate(cursor.fetchall(), start=1):
                     d = dict(r)
@@ -936,6 +1040,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d["HoTen"] = r["HoTen"]
                     d["hoTen"] = r["HoTen"]
                     d["SoDienThoai"] = r["SoDienThoai"]
+                    d["soDienThoai"] = r["SoDienThoai"]
                     d["SoBangLai"] = r["SoBangLai"]
                     d["Nhaxe"] = r["Nhaxe"]
                     d["nhaxe"] = r["Nhaxe"]
@@ -949,36 +1054,130 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             # 5. XE & LOẠI XE
             elif path == '/api/xe':
-                cursor.execute('''
-                SELECT x.*, l.tenLoai, l.soCho, n.tenNhaXe 
-                FROM xe x 
-                LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID 
-                LEFT JOIN nhaxe n ON x.Nhaxe = n.NhaxeID
-                ''')
+                cursor.execute("SELECT x.*, l.tenLoai, l.soCho, n.tenNhaXe FROM xe x LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN nhaxe n ON x.Nhaxe = n.NhaxeID")
                 rows = []
                 for r in cursor.fetchall():
-                    d = dict(r)
-                    d["XeID"] = r["XeID"]
-                    d["BienSoXe"] = r["bienSo"]
-                    d["bienSo"] = r["bienSo"]
-                    d["TrangThai"] = "Đang hoạt động"
-                    d["trangThai"] = "Đang hoạt động"
-                    d["SoGhe"] = r["soCho"] or 34
-                    d["soCho"] = r["soCho"] or 34
-                    d["Loaixe"] = {
-                        "LoaixeID": r["Loaixe"],
-                        "TenLoai": r["tenLoai"],
-                        "SoCho": r["soCho"] or 34
+                    status_val = r["trangThai"] or "Đang hoạt động"
+                    d = {
+                        "XeID": r["XeID"],
+                        "id": r["XeID"],
+                        "bienSo": r["bienSo"],
+                        "BienSoXe": r["bienSo"],
+                        "BienSo": r["bienSo"],
+                        "plateNumber": r["bienSo"],
+                        "trangThai": status_val,
+                        "TrangThai": status_val,
+                        "status": status_val,
+                        "soCho": r["soCho"] or 34,
+                        "SoGhe": r["soCho"] or 34,
+                        "soGhe": r["soCho"] or 34,
+                        "totalSeats": r["soCho"] or 34,
+                        "Loaixe": {
+                            "LoaixeID": r["Loaixe"],
+                            "id": r["Loaixe"],
+                            "TenLoai": r["tenLoai"],
+                            "tenLoai": r["tenLoai"],
+                            "SoCho": r["soCho"] or 34,
+                            "soCho": r["soCho"] or 34
+                        },
+                        "loaiXe": r["Loaixe"],
+                        "LoaiXeID": r["Loaixe"],
+                        "Nhaxe": r["Nhaxe"],
+                        "nhaXe": r["Nhaxe"],
+                        "NhaxeID": r["Nhaxe"],
+                        "tenNhaXe": r["tenNhaXe"] or "Tràng An Limousine"
                     }
-                    d["loaiXe"] = r["Loaixe"]
-                    d["Nhaxe"] = r["Nhaxe"]
-                    d["nhaXe"] = r["Nhaxe"]
                     rows.append(d)
                 return self._send_json(rows)
 
+            elif path.startswith('/api/xe/'):
+                xid = path.split('/')[-1]
+                cursor.execute("SELECT x.*, l.tenLoai, l.soCho, n.tenNhaXe FROM xe x LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN nhaxe n ON x.Nhaxe = n.NhaxeID WHERE x.XeID = ?", (xid,))
+                row = cursor.fetchone()
+                if row:
+                    status_val = row["trangThai"] or "Đang hoạt động"
+                    d = {
+                        "XeID": row["XeID"],
+                        "id": row["XeID"],
+                        "bienSo": row["bienSo"],
+                        "BienSoXe": row["bienSo"],
+                        "BienSo": row["bienSo"],
+                        "plateNumber": row["bienSo"],
+                        "trangThai": status_val,
+                        "TrangThai": status_val,
+                        "status": status_val,
+                        "soCho": row["soCho"] or 34,
+                        "SoGhe": row["soCho"] or 34,
+                        "soGhe": row["soCho"] or 34,
+                        "totalSeats": row["soCho"] or 34,
+                        "Loaixe": {
+                            "LoaixeID": row["Loaixe"],
+                            "id": row["Loaixe"],
+                            "TenLoai": row["tenLoai"],
+                            "tenLoai": row["tenLoai"],
+                            "SoCho": row["soCho"] or 34,
+                            "soCho": row["soCho"] or 34
+                        },
+                        "loaiXe": row["Loaixe"],
+                        "LoaiXeID": row["Loaixe"],
+                        "Nhaxe": row["Nhaxe"],
+                        "nhaXe": row["Nhaxe"],
+                        "NhaxeID": row["Nhaxe"],
+                        "tenNhaXe": row["tenNhaXe"] or "Tràng An Limousine"
+                    }
+                    return self._send_json(d)
+                return self._send_json({}, 404)
+
             elif path == '/api/loaixe':
                 cursor.execute("SELECT * FROM loaixe")
-                return self._send_json([dict(r) for r in cursor.fetchall()])
+                rows = []
+                for r in cursor.fetchall():
+                    d = {
+                        "LoaixeID": r["LoaixeID"],
+                        "id": r["LoaixeID"],
+                        "loaixeID": r["LoaixeID"],
+                        "tenLoai": r["tenLoai"],
+                        "TenLoai": r["tenLoai"],
+                        "name": r["tenLoai"],
+                        "SoCho": r["soCho"],
+                        "soCho": r["soCho"],
+                        "seats": r["soCho"],
+                        "GiaVe": str(r["giaChuan"] or 150000),
+                        "giaVe": str(r["giaChuan"] or 150000),
+                        "giaChuan": r["giaChuan"] or 150000,
+                        "NgayCapNhatGia": "2026-10-27",
+                        "ngayCapNhatGia": "2026-10-27",
+                        "SoDoGheNgoiURL": "",
+                        "soDoGheNgoiURL": ""
+                    }
+                    rows.append(d)
+                return self._send_json(rows)
+
+            elif path.startswith('/api/loaixe/'):
+                lid = path.split('/')[-1]
+                cursor.execute("SELECT * FROM loaixe WHERE LoaixeID = ?", (lid,))
+                r = cursor.fetchone()
+                if r:
+                    d = {
+                        "LoaixeID": r["LoaixeID"],
+                        "id": r["LoaixeID"],
+                        "loaixeID": r["LoaixeID"],
+                        "tenLoai": r["tenLoai"],
+                        "TenLoai": r["tenLoai"],
+                        "name": r["tenLoai"],
+                        "SoCho": r["soCho"],
+                        "soCho": r["soCho"],
+                        "seats": r["soCho"],
+                        "GiaVe": str(r["giaChuan"] or 150000),
+                        "giaVe": str(r["giaChuan"] or 150000),
+                        "giaChuan": r["giaChuan"] or 150000,
+                        "NgayCapNhatGia": "2026-10-27",
+                        "ngayCapNhatGia": "2026-10-27",
+                        "SoDoGheNgoiURL": "",
+                        "soDoGheNgoiURL": ""
+                    }
+                    return self._send_json(d)
+                return self._send_json({}, 404)
 
             # 6. TUYẾN XE
             elif path == '/api/tuyenxe':
@@ -1012,22 +1211,10 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             # 7. CHUYẾN XE (TRIP)
             elif path == '/api/chuyenxe':
-                cursor.execute('''
-                SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh,
-                       x.bienSo, x.Loaixe as loaiXeId, l.tenLoai as loaiXeTen, l.soCho,
-                       tx.HoTen as tenTaiXe, n.tenNhaXe
-                FROM chuyenxe c
-                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
-                LEFT JOIN xe x ON c.Xe = x.XeID
-                LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID
-                LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID
-                LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
-                ORDER BY c.ngayKhoiHanh DESC, c.gioDi ASC
-                ''')
+                cursor.execute("SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh, x.bienSo, x.Loaixe as loaiXeId, l.tenLoai as loaiXeTen, l.soCho, tx.HoTen as tenTaiXe, n.tenNhaXe FROM chuyenxe c LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN xe x ON c.Xe = x.XeID LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID ORDER BY c.ngayKhoiHanh DESC, c.gioDi ASC")
                 res = []
                 for r in cursor.fetchall():
                     item = {
-                        # PascalCase keys for Trip.java (@SerializedName)
                         "ChuyenXeID": r["ChuyenxeID"],
                         "NgayKhoiHanh": r["ngayKhoiHanh"],
                         "GioDi": r["gioDi"],
@@ -1043,7 +1230,6 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "SoChoTrong": r["soCho"] or 34,
                         "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút",
 
-                        # Additional aliases for other views & adapters
                         "ChuyenxeID": r["ChuyenxeID"],
                         "id": r["ChuyenxeID"],
                         "Tuyenxe": r["Tuyenxe"],
@@ -1083,16 +1269,44 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             elif path.startswith('/api/chuyenxe/'):
                 cid = path.split('/')[-1]
-                cursor.execute('''
-                SELECT c.*, t.tenTuyen, x.bienSo, l.soCho 
-                FROM chuyenxe c
-                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
-                LEFT JOIN xe x ON c.Xe = x.XeID
-                LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID
-                WHERE c.ChuyenxeID = ?
-                ''', (cid,))
-                row = cursor.fetchone()
-                return self._send_json(dict(row) if row else {}, 200 if row else 404)
+                cursor.execute("SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh, x.bienSo, l.tenLoai, l.soCho, tx.HoTen as tenTaiXe, n.tenNhaXe FROM chuyenxe c LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN xe x ON c.Xe = x.XeID LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID WHERE c.ChuyenxeID = ?", (cid,))
+                r = cursor.fetchone()
+                if r:
+                    item = {
+                        "ChuyenXeID": r["ChuyenxeID"],
+                        "ChuyenxeID": r["ChuyenxeID"],
+                        "id": r["ChuyenxeID"],
+                        "NgayKhoiHanh": r["ngayKhoiHanh"],
+                        "ngayKhoiHanh": r["ngayKhoiHanh"],
+                        "date": r["ngayKhoiHanh"],
+                        "GioDi": r["gioDi"],
+                        "gioDi": r["gioDi"],
+                        "time": r["gioDi"],
+                        "GioDen": r["gioDen"],
+                        "gioDen": r["gioDen"],
+                        "endTime": r["gioDen"],
+                        "TrangThai": r["trangThai"] or "Chưa hoàn thành",
+                        "trangThai": r["trangThai"] or "Chưa hoàn thành",
+                        "status": r["trangThai"] or "Chưa hoàn thành",
+                        "Xe": r["Xe"],
+                        "XeID": r["Xe"],
+                        "bienSo": r["bienSo"],
+                        "TuyenXe": r["Tuyenxe"],
+                        "Tuyenxe": r["Tuyenxe"],
+                        "Taixe": r["TaiXe"],
+                        "TaiXe": r["TaiXe"],
+                        "tenTaiXe": r["tenTaiXe"],
+                        "TenTuyen": r["tenTuyen"],
+                        "tenTuyen": r["tenTuyen"],
+                        "LoaiXe": r["tenLoai"] or "Limousine VIP 34 chỗ",
+                        "GiaVe": str(r["giaVe"] if r["giaVe"] else 200000),
+                        "giaVe": r["giaVe"] if r["giaVe"] else 200000,
+                        "TenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
+                        "SoChoTrong": r["soCho"] or 34,
+                        "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút"
+                    }
+                    return self._send_json(item)
+                return self._send_json({}, 404)
 
             # 8. GHẾ NGỒI
             elif path == '/api/ghengoi':
@@ -1124,14 +1338,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 status = qs.get('TrangThai', [''])[0]
                 cx_id = qs.get('ChuyenXe', [''])[0]
 
-                query = '''
-                SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe
-                FROM ve v
-                LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID
-                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
-                LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
-                WHERE 1=1
-                '''
+                query = "SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe FROM ve v LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID WHERE 1=1"
                 params = []
                 if kh_id:
                     query += " AND v.KhachHang = ?"
@@ -1176,15 +1383,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             elif path == '/api/vehuy':
                 kh_id = qs.get('KhachHang', [''])[0]
-                query = '''
-                SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe, vh.lyDoHuy, vh.ngayHuy
-                FROM ve v
-                LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID
-                LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
-                LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
-                LEFT JOIN vehuy vh ON v.VeID = vh.Ve
-                WHERE v.trangThai = 'Đã hủy'
-                '''
+                query = "SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe, vh.lyDoHuy, vh.ngayHuy FROM ve v LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID LEFT JOIN vehuy vh ON v.VeID = vh.Ve WHERE v.trangThai = 'Đã hủy'"
                 params = []
                 if kh_id:
                     query += " AND v.KhachHang = ?"
@@ -1248,15 +1447,16 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     cursor.execute("SELECT * FROM nguoidung WHERE (TenDangNhap = ? OR SoDienThoai = ?) AND MatKhau = ?", (user, user, pw))
                     row = cursor.fetchone()
                     if row:
-                        return self._send_json({"status": "success", "user": dict(row)})
+                        u = dict(row)
+                        u["KhachHang"] = u.get("KhachHangID")
+                        u["Nhaxe"] = u.get("NhaxeID")
+                        u["Taixe"] = u.get("TaiXeID")
+                        return self._send_json({"status": "success", "user": u, "token": f"mock_token_{row['UserID']}", "username": row["TenDangNhap"]})
                     return self._send_json({"error": "Sai tài khoản hoặc mật khẩu"}, 400)
                 else:
                     uid = data.get("UserID") or f"US{int(datetime.now().timestamp()*1000)%1000000:06d}"
                     phone = data.get("SoDienThoai") or data.get("phone") or ""
-                    cursor.execute("""
-                    INSERT OR REPLACE INTO nguoidung (UserID, TenDangNhap, MatKhau, Email, SoDienThoai, Vaitro, Hovaten, KhachHangID, NhaxeID)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, (
+                    cursor.execute("INSERT OR REPLACE INTO nguoidung (UserID, TenDangNhap, MatKhau, Email, SoDienThoai, Vaitro, Hovaten, KhachHangID, NhaxeID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
                         uid,
                         data.get("TenDangNhap") or phone or uid,
                         data.get("MatKhau") or data.get("password") or "123456",
@@ -1273,59 +1473,71 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             # KHÁCH HÀNG REGISTER / CREATE
             elif path == '/api/khachhang':
                 kh_id = data.get("KhachHangID") or f"KH{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                cursor.execute("""
-                INSERT OR REPLACE INTO khachhang (KhachHangID, hoTen, Email, Ngaysinh, soDienThoai, AnhDaiDienURL)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """, (
+                cursor.execute("INSERT OR REPLACE INTO khachhang (KhachHangID, hoTen, Email, Ngaysinh, soDienThoai, AnhDaiDienURL) VALUES (?, ?, ?, ?, ?, ?)", (
                     kh_id,
-                    data.get("Hovaten") or data.get("hoTen") or "",
-                    data.get("Email") or "",
-                    data.get("Ngaysinh") or "2000-01-01",
-                    data.get("soDienThoai") or data.get("SoDienThoai") or "",
+                    data.get("Hovaten") or data.get("hoTen") or data.get("name") or "",
+                    data.get("Email") or data.get("email") or "",
+                    data.get("Ngaysinh") or data.get("ngaySinh") or "2000-01-01",
+                    data.get("soDienThoai") or data.get("SoDienThoai") or data.get("phone") or "",
                     data.get("AnhDaiDienURL") or ""
                 ))
                 conn.commit()
-                return self._send_json({"status": "success", "KhachHangID": kh_id}, 201)
+                return self._send_json({
+                    "KhachHangID": kh_id,
+                    "Hovaten": data.get("Hovaten") or data.get("hoTen") or "",
+                    "hoTen": data.get("Hovaten") or data.get("hoTen") or "",
+                    "Email": data.get("Email") or "",
+                    "Ngaysinh": data.get("Ngaysinh") or "2000-01-01",
+                    "soDienThoai": data.get("soDienThoai") or "",
+                    "status": "success"
+                }, 201)
 
             # NHÀ XE REGISTER
             elif path == '/api/nhaxe':
                 nx_id = data.get("NhaxeID") or f"NX{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                cursor.execute("""
-                INSERT OR REPLACE INTO nhaxe (NhaxeID, tenNhaXe, diaChi, soDienThoai, email, nguoiDaiDien, giayPhepKinhDoanh, logo)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
+                cursor.execute("INSERT OR REPLACE INTO nhaxe (NhaxeID, tenNhaXe, diaChi, soDienThoai, email, nguoiDaiDien, giayPhepKinhDoanh, logo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
                     nx_id,
-                    data.get("tenNhaXe") or "",
-                    data.get("diaChi") or "",
-                    data.get("soDienThoai") or "",
-                    data.get("email") or "",
-                    data.get("nguoiDaiDien") or "",
+                    data.get("tenNhaXe") or data.get("Tennhaxe") or "",
+                    data.get("diaChi") or data.get("DiaChiTruSo") or "",
+                    data.get("soDienThoai") or data.get("SoDienThoai") or "",
+                    data.get("email") or data.get("Email") or "",
+                    data.get("nguoiDaiDien") or data.get("TenNguoiDaiDien") or "",
                     data.get("giayPhepKinhDoanh") or "",
-                    data.get("logo") or ""
+                    data.get("logo") or data.get("AnhDaiDien") or ""
                 ))
                 conn.commit()
                 return self._send_json({"status": "success", "NhaxeID": nx_id}, 201)
 
             # ĐẶT VÉ (BOOK TICKET)
             elif path == '/api/dat-ve':
-                ve_id = data.get("ve_id") or f"VE{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                chuyen_xe_id = data.get("chuyen_xe_id")
-                so_dien_thoai = data.get("so_dien_thoai")
-                ghe_ids = data.get("ghe_ids", [])
-                tong_tien = data.get("tong_tien", 0)
-                diem_don = data.get("diem_don", "")
-                diem_tra = data.get("diem_tra", "")
+                ve_id = data.get("ve_id") or data.get("VeID") or f"VE{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                chuyen_xe_id = data.get("chuyen_xe") or data.get("chuyen_xe_id") or data.get("ChuyenXe") or data.get("Chuyenxe")
+                khach_hang_input = data.get("khach_hang") or data.get("so_dien_thoai") or data.get("KhachHang") or ""
+                ghe_ids = data.get("danh_sach_ghe") or data.get("ghe_ids") or []
+                tong_tien = data.get("tong_tien") or data.get("tongTien") or data.get("TongTien") or 0
+                diem_don = data.get("diem_don") or data.get("diemDon") or data.get("DiemDon") or ""
+                diem_tra = data.get("diem_tra") or data.get("diemTra") or data.get("DiemTra") or ""
 
-                cursor.execute("SELECT KhachHangID FROM khachhang WHERE soDienThoai = ?", (so_dien_thoai,))
-                row = cursor.fetchone()
-                if row:
-                    kh_id = row[0]
-                else:
-                    kh_id = f"KH{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                    cursor.execute("INSERT INTO khachhang (KhachHangID, hoTen, soDienThoai) VALUES (?, ?, ?)",
-                                   (kh_id, f"Khách hàng {so_dien_thoai}", so_dien_thoai))
+                if isinstance(ghe_ids, str):
+                    ghe_ids = [s.strip() for s in ghe_ids.split(",") if s.strip()]
 
-                danh_sach_ghe_str = ", ".join(ghe_ids) if isinstance(ghe_ids, list) else str(ghe_ids)
+                kh_id = None
+                if khach_hang_input.startswith("KH"):
+                    cursor.execute("SELECT KhachHangID FROM khachhang WHERE KhachHangID = ?", (khach_hang_input,))
+                    r = cursor.fetchone()
+                    if r:
+                        kh_id = r[0]
+                if not kh_id:
+                    cursor.execute("SELECT KhachHangID FROM khachhang WHERE soDienThoai = ? OR KhachHangID = ?", (khach_hang_input, khach_hang_input))
+                    row = cursor.fetchone()
+                    if row:
+                        kh_id = row[0]
+                    else:
+                        kh_id = f"KH{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                        cursor.execute("INSERT INTO khachhang (KhachHangID, hoTen, soDienThoai) VALUES (?, ?, ?)",
+                                       (kh_id, f"Khách hàng {khach_hang_input}", khach_hang_input))
+
+                danh_sach_ghe_str = ", ".join(ghe_ids)
 
                 cursor.execute("""
                 INSERT INTO ve (VeID, Chuyenxe, KhachHang, soLuongGhe, danhSachGhe, tongTien, diemDon, diemTra, ngayDat, trangThai, trangThaiThanhToan)
@@ -1339,11 +1551,11 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE Chuyenxe = ? AND soGhe = ?", (chuyen_xe_id, g))
 
                 conn.commit()
-                return self._send_json({"status": "success", "message": "Đặt vé thành công!", "VeID": ve_id}, 201)
+                return self._send_json({"status": "success", "message": "Đặt vé thành công!", "VeID": ve_id, "ve_id": ve_id}, 201)
 
             # HỦY VÉ (CANCEL TICKET)
             elif path == '/api/huy-ve':
-                ve_id = data.get("ve_id")
+                ve_id = data.get("ve_id") or data.get("VeID") or data.get("Ve")
                 cursor.execute("SELECT * FROM ve WHERE VeID = ?", (ve_id,))
                 ticket = cursor.fetchone()
                 if ticket:
@@ -1352,65 +1564,137 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     for s in danh_sach:
                         cursor.execute("UPDATE ghengoi SET trangThai = 'Trống' WHERE Chuyenxe = ? AND soGhe = ?", (ticket["Chuyenxe"], s.strip()))
                     cursor.execute("INSERT INTO vehuy (Ve, KhachHang, lyDoHuy, ngayHuy) VALUES (?, ?, ?, ?)",
-                                   (ve_id, ticket["KhachHang"], data.get("lyDoHuy", "Khách yêu cầu hủy"), datetime.now().strftime("%Y-%m-%d %H:%M")))
+                                   (ve_id, ticket["KhachHang"], data.get("lyDoHuy") or data.get("ly_do_huy", "Khách yêu cầu hủy"), datetime.now().strftime("%Y-%m-%d %H:%M")))
                     conn.commit()
                     return self._send_json({"status": "success", "message": "Hủy vé thành công!"})
                 return self._send_json({"error": "Không tìm thấy vé"}, 404)
 
             # TẠO PHƯƠNG TIỆN
             elif path == '/api/xe':
-                xe_id = data.get("XeID") or f"XE{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                xe_id = data.get("XeID") or data.get("id") or f"XE{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                plate = data.get("BienSoXe") or data.get("bienSo") or data.get("BienSo") or ""
+                loaixe = data.get("Loaixe") or data.get("loaiXe") or data.get("LoaiXeID") or "LX01"
+                nhaxe = data.get("Nhaxe") or data.get("nhaXe") or data.get("NhaxeID") or "NX00001"
+                status = data.get("TrangThai") or data.get("trangThai") or data.get("status") or "Đang hoạt động"
+
                 cursor.execute("INSERT INTO xe (XeID, bienSo, Loaixe, Nhaxe, trangThai) VALUES (?, ?, ?, ?, ?)",
-                               (xe_id, data.get("bienSo"), data.get("Loaixe") or data.get("loaiXe"), data.get("Nhaxe") or data.get("nhaXe"), data.get("trangThai", "Hoạt động")))
+                               (xe_id, plate, loaixe, nhaxe, status))
                 conn.commit()
-                return self._send_json({"status": "success", "XeID": xe_id}, 201)
+
+                cursor.execute("SELECT soCho, tenLoai FROM loaixe WHERE LoaixeID = ?", (loaixe,))
+                l_row = cursor.fetchone()
+                so_cho = l_row[0] if l_row else 34
+                ten_loai = l_row[1] if l_row else "Limousine VIP"
+
+                return self._send_json({
+                    "XeID": xe_id,
+                    "id": xe_id,
+                    "BienSoXe": plate,
+                    "bienSo": plate,
+                    "TrangThai": status,
+                    "trangThai": status,
+                    "SoGhe": so_cho,
+                    "soCho": so_cho,
+                    "Loaixe": {
+                        "LoaixeID": loaixe,
+                        "TenLoai": ten_loai,
+                        "tenLoai": ten_loai,
+                        "SoCho": so_cho
+                    },
+                    "Nhaxe": nhaxe
+                }, 201)
 
             # TẠO TUYẾN XE
             elif path == '/api/tuyenxe':
-                txe_id = data.get("TuyenxeID") or f"TXE{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                txe_id = data.get("TuyenxeID") or data.get("tuyenXeID") or f"TXE{int(datetime.now().timestamp()*1000)%1000000:06d}"
                 cursor.execute("""
                 INSERT INTO tuyenxe (TuyenxeID, tenTuyen, diemDi, diemDen, diemDung, khoangCach, thoiGianUocTinh, giaCoBan, Nhaxe)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
-                    txe_id, data.get("tenTuyen"), data.get("diemDi"), data.get("diemDen"),
-                    data.get("diemDung", ""), float(data.get("khoangCach", 0)),
-                    data.get("thoiGianUocTinh", "2 giờ"), int(data.get("giaCoBan", 150000)),
-                    data.get("Nhaxe", "NX00001")
+                    txe_id, data.get("tenTuyen") or data.get("name"),
+                    data.get("diemDi") or data.get("startPoint"),
+                    data.get("diemDen") or data.get("endPoint"),
+                    data.get("diemDung") or data.get("DiemTrungGian", ""),
+                    float(data.get("khoangCach") or data.get("QuangDuong", 100)),
+                    data.get("thoiGianUocTinh") or data.get("ThoiGian", "1 giờ 30 phút"),
+                    int(data.get("giaCoBan", 150000)),
+                    data.get("Nhaxe") or data.get("nhaXe", "NX00001")
                 ))
                 conn.commit()
-                return self._send_json({"status": "success", "TuyenxeID": txe_id}, 201)
+                return self._send_json({"status": "success", "TuyenxeID": txe_id, "tuyenXeID": txe_id}, 201)
 
             # TẠO CHUYẾN XE
             elif path == '/api/chuyenxe':
-                cx_id = data.get("ChuyenxeID") or f"CX{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                cursor.execute("""
-                INSERT INTO chuyenxe (ChuyenxeID, Tuyenxe, Xe, TaiXe, ngayKhoiHanh, gioDi, gioDen, giaVe, trangThai)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    cx_id, data.get("Tuyenxe") or data.get("TuyenxeID"),
-                    data.get("Xe") or data.get("XeID"),
-                    data.get("TaiXe") or data.get("TaiXeID"),
-                    data.get("ngayKhoiHanh") or date.today().isoformat(),
-                    data.get("gioDi", "08:00"), data.get("gioDen", "10:30"),
-                    int(data.get("giaVe", 160000)), data.get("trangThai", "Sắp chạy")
-                ))
+                cx_id = data.get("ChuyenXeID") or data.get("ChuyenxeID") or data.get("id") or f"CX{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                tuyen_id = data.get("TuyenXe") or data.get("Tuyenxe") or data.get("TuyenxeID")
+                xe_id = data.get("Xe") or data.get("XeID")
+                taixe_id = data.get("Taixe") or data.get("TaiXe") or data.get("TaiXeID")
+                ngay_di = data.get("NgayKhoiHanh") or data.get("ngayKhoiHanh") or date.today().isoformat()
+                gio_di = data.get("GioDi") or data.get("gioDi", "08:00")
+                gio_den = data.get("GioDen") or data.get("gioDen", "10:30")
+                gia_ve = int(data.get("GiaVe") or data.get("giaVe", 160000))
+                trang_thai = data.get("TrangThai") or data.get("trangThai", "Chưa hoàn thành")
+
+                cursor.execute("INSERT OR REPLACE INTO chuyenxe (ChuyenxeID, Tuyenxe, Xe, TaiXe, ngayKhoiHanh, gioDi, gioDen, giaVe, trangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                               (cx_id, tuyen_id, xe_id, taixe_id, ngay_di, gio_di, gio_den, gia_ve, trang_thai))
                 conn.commit()
                 auto_generate_seats_if_needed(conn, cx_id)
-                return self._send_json({"status": "success", "ChuyenxeID": cx_id, "id": cx_id}, 201)
+
+                trip_obj = {
+                    "ChuyenXeID": cx_id,
+                    "ChuyenxeID": cx_id,
+                    "id": cx_id,
+                    "TuyenXe": tuyen_id,
+                    "Xe": xe_id,
+                    "Taixe": taixe_id,
+                    "NgayKhoiHanh": ngay_di,
+                    "ngayKhoiHanh": ngay_di,
+                    "GioDi": gio_di,
+                    "gioDi": gio_di,
+                    "GioDen": gio_den,
+                    "gioDen": gio_den,
+                    "GiaVe": str(gia_ve),
+                    "giaVe": gia_ve,
+                    "TrangThai": trang_thai,
+                    "trangThai": trang_thai
+                }
+                return self._send_json(trip_obj, 201)
 
             # TẠO TÀI XẾ
             elif path == '/api/taixe' or path == '/api/chitiettaixe':
-                tx_id = data.get("TaiXeID") or data.get("TaiXe") or f"TX{int(datetime.now().timestamp()*1000)%1000000:06d}"
-                cursor.execute("""
-                INSERT OR REPLACE INTO taixe (TaiXeID, HoTen, SoDienThoai, SoBangLai, Nhaxe, AnhDaiDien)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """, (tx_id, data.get("HoTen", ""), data.get("SoDienThoai", ""), data.get("SoBangLai", ""), data.get("Nhaxe", "NX00001"), data.get("AnhDaiDien", "")))
-                cursor.execute("""
-                INSERT OR REPLACE INTO chitiettaixe (ChiTietID, TaiXe, HoTen, SoDienThoai, SoBangLai, Nhaxe, AnhDaiDien)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (tx_id, tx_id, data.get("HoTen", ""), data.get("SoDienThoai", ""), data.get("SoBangLai", ""), data.get("Nhaxe", "NX00001"), data.get("AnhDaiDien", "")))
+                tx_id = data.get("TaiXeID") or data.get("TaixeID") or data.get("TaiXe") or data.get("Taixe") or f"TX{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                hoten = data.get("HoTen") or data.get("hoTen") or data.get("name", "")
+                sdt = data.get("SoDienThoai") or data.get("soDienThoai") or data.get("phone", "")
+                banglai = data.get("SoBangLai") or data.get("soBangLai", "")
+                nhaxe = data.get("Nhaxe") or data.get("nhaxe", "NX00001")
+                anh = data.get("AnhDaiDien") or data.get("HinhAnhURL", "")
+
+                cursor.execute("INSERT OR REPLACE INTO taixe (TaiXeID, HoTen, SoDienThoai, SoBangLai, Nhaxe, AnhDaiDien) VALUES (?, ?, ?, ?, ?, ?)", (tx_id, hoten, sdt, banglai, nhaxe, anh))
+                cursor.execute("INSERT OR REPLACE INTO chitiettaixe (ChiTietID, TaiXe, HoTen, SoDienThoai, SoBangLai, Nhaxe, AnhDaiDien) VALUES (?, ?, ?, ?, ?, ?, ?)", (tx_id, tx_id, hoten, sdt, banglai, nhaxe, anh))
                 conn.commit()
-                return self._send_json({"status": "success", "TaiXeID": tx_id}, 201)
+                return self._send_json({
+                    "TaiXeID": tx_id,
+                    "TaixeID": tx_id,
+                    "HoTen": hoten,
+                    "SoDienThoai": sdt,
+                    "SoBangLai": banglai,
+                    "soCCCD": "037198001234",
+                    "LoaiBangLai": "Hạng D",
+                    "NgayHetHanBangLai": "2028-12-31"
+                }, 201)
+
+            # TẠO GHẾ NGỒI
+            elif path == '/api/ghengoi':
+                cx_id = data.get("Chuyenxe") or data.get("ChuyenXe")
+                so_ghe = data.get("soGhe") or data.get("SoGhe")
+                status = data.get("trangThai") or data.get("TrangThai") or "Trống"
+                if "Còn trống" in status:
+                    status = "Trống"
+                gid = data.get("GheID") or data.get("gheID") or f"{so_ghe}_{cx_id}"
+                cursor.execute("INSERT OR REPLACE INTO ghengoi (GheID, Chuyenxe, soGhe, trangThai) VALUES (?, ?, ?, ?)",
+                               (gid, cx_id, so_ghe, status))
+                conn.commit()
+                return self._send_json({"status": "success", "GheID": gid}, 201)
 
             # GỬI ĐÁNH GIÁ (FEEDBACK)
             elif path == '/api/danhgia':
@@ -1451,39 +1735,117 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
                 if resource == 'chuyenxe':
                     for k, v in data.items():
-                        if k in ['trangThai', 'status']:
+                        if k in ['trangThai', 'TrangThai', 'status']:
                             cursor.execute("UPDATE chuyenxe SET trangThai = ? WHERE ChuyenxeID = ?", (v, res_id))
-                        elif k in ['TaiXe', 'TaiXeID']:
+                        elif k in ['TaiXe', 'TaiXeID', 'Taixe', 'taixe']:
                             cursor.execute("UPDATE chuyenxe SET TaiXe = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['Xe', 'XeID']:
+                            cursor.execute("UPDATE chuyenxe SET Xe = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['Tuyenxe', 'TuyenXe']:
+                            cursor.execute("UPDATE chuyenxe SET Tuyenxe = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['ngayKhoiHanh', 'NgayKhoiHanh']:
+                            cursor.execute("UPDATE chuyenxe SET ngayKhoiHanh = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['gioDi', 'GioDi']:
+                            cursor.execute("UPDATE chuyenxe SET gioDi = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['gioDen', 'GioDen']:
+                            cursor.execute("UPDATE chuyenxe SET gioDen = ? WHERE ChuyenxeID = ?", (v, res_id))
+                        elif k in ['giaVe', 'GiaVe']:
+                            cursor.execute("UPDATE chuyenxe SET giaVe = ? WHERE ChuyenxeID = ?", (int(v), res_id))
                     conn.commit()
-                    return self._send_json({"status": "success"})
+                    return self._send_json({"status": "success", "ChuyenxeID": res_id})
 
                 elif resource == 'xe':
                     for k, v in data.items():
-                        if k in ['trangThai', 'status']:
+                        if k in ['trangThai', 'TrangThai', 'status']:
                             cursor.execute("UPDATE xe SET trangThai = ? WHERE XeID = ?", (v, res_id))
-                        elif k in ['bienSo']:
+                        elif k in ['bienSo', 'BienSoXe', 'BienSo', 'plateNumber']:
                             cursor.execute("UPDATE xe SET bienSo = ? WHERE XeID = ?", (v, res_id))
+                        elif k in ['Loaixe', 'loaiXe', 'LoaiXeID']:
+                            cursor.execute("UPDATE xe SET Loaixe = ? WHERE XeID = ?", (v, res_id))
+                        elif k in ['Nhaxe', 'nhaXe']:
+                            cursor.execute("UPDATE xe SET Nhaxe = ? WHERE XeID = ?", (v, res_id))
                     conn.commit()
+
+                    cursor.execute("SELECT x.*, l.tenLoai, l.soCho, n.tenNhaXe FROM xe x LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN nhaxe n ON x.Nhaxe = n.NhaxeID WHERE x.XeID = ?", (res_id,))
+                    row = cursor.fetchone()
+                    if row:
+                        status_val = row["trangThai"] or "Đang hoạt động"
+                        return self._send_json({
+                            "XeID": row["XeID"],
+                            "id": row["XeID"],
+                            "BienSoXe": row["bienSo"],
+                            "bienSo": row["bienSo"],
+                            "TrangThai": status_val,
+                            "trangThai": status_val,
+                            "SoGhe": row["soCho"] or 34,
+                            "soCho": row["soCho"] or 34,
+                            "Loaixe": {
+                                "LoaixeID": row["Loaixe"],
+                                "TenLoai": row["tenLoai"],
+                                "tenLoai": row["tenLoai"],
+                                "SoCho": row["soCho"] or 34
+                            },
+                            "Nhaxe": row["Nhaxe"]
+                        })
                     return self._send_json({"status": "success"})
 
                 elif resource == 'khachhang':
-                    if "Hovaten" in data or "hoTen" in data:
-                        cursor.execute("UPDATE khachhang SET hoTen = ? WHERE KhachHangID = ?", (data.get("Hovaten") or data.get("hoTen"), res_id))
-                    if "Email" in data:
-                        cursor.execute("UPDATE khachhang SET Email = ? WHERE KhachHangID = ?", (data.get("Email"), res_id))
-                    if "Ngaysinh" in data:
-                        cursor.execute("UPDATE khachhang SET Ngaysinh = ? WHERE KhachHangID = ?", (data.get("Ngaysinh"), res_id))
+                    if "Hovaten" in data or "hoTen" in data or "name" in data:
+                        cursor.execute("UPDATE khachhang SET hoTen = ? WHERE KhachHangID = ?", (data.get("Hovaten") or data.get("hoTen") or data.get("name"), res_id))
+                    if "Email" in data or "email" in data:
+                        cursor.execute("UPDATE khachhang SET Email = ? WHERE KhachHangID = ?", (data.get("Email") or data.get("email"), res_id))
+                    if "Ngaysinh" in data or "ngaySinh" in data:
+                        cursor.execute("UPDATE khachhang SET Ngaysinh = ? WHERE KhachHangID = ?", (data.get("Ngaysinh") or data.get("ngaySinh"), res_id))
+                    if "soDienThoai" in data or "SoDienThoai" in data:
+                        cursor.execute("UPDATE khachhang SET soDienThoai = ? WHERE KhachHangID = ?", (data.get("soDienThoai") or data.get("SoDienThoai"), res_id))
                     if "AnhDaiDienURL" in data:
                         cursor.execute("UPDATE khachhang SET AnhDaiDienURL = ? WHERE KhachHangID = ?", (data.get("AnhDaiDienURL"), res_id))
                     conn.commit()
-                    return self._send_json({"status": "success"})
+                    return self._send_json({"status": "success", "KhachHangID": res_id})
 
                 elif resource == 'nhaxe':
-                    for col in ['tenNhaXe', 'diaChi', 'soDienThoai', 'email', 'nguoiDaiDien', 'logo']:
-                        if col in data:
-                            cursor.execute(f"UPDATE nhaxe SET {col} = ? WHERE NhaxeID = ?", (data[col], res_id))
+                    col_map = {
+                        'tenNhaXe': 'tenNhaXe', 'Tennhaxe': 'tenNhaXe', 'busName': 'tenNhaXe',
+                        'diaChi': 'diaChi', 'DiaChiTruSo': 'diaChi',
+                        'soDienThoai': 'soDienThoai', 'SoDienThoai': 'soDienThoai',
+                        'email': 'email', 'Email': 'email',
+                        'nguoiDaiDien': 'nguoiDaiDien', 'TenNguoiDaiDien': 'nguoiDaiDien',
+                        'logo': 'logo', 'AnhDaiDien': 'logo'
+                    }
+                    for k, col in col_map.items():
+                        if k in data:
+                            cursor.execute(f"UPDATE nhaxe SET {col} = ? WHERE NhaxeID = ?", (data[k], res_id))
                     conn.commit()
+                    return self._send_json({"status": "success", "NhaxeID": res_id})
+
+                elif resource == 'loaixe':
+                    if "giaVe" in data or "GiaVe" in data:
+                        price = int(data.get("giaVe") or data.get("GiaVe"))
+                        cursor.execute("UPDATE loaixe SET giaChuan = ? WHERE LoaixeID = ?", (price, res_id))
+                    if "soCho" in data or "SoCho" in data:
+                        seats = int(data.get("soCho") or data.get("SoCho"))
+                        cursor.execute("UPDATE loaixe SET soCho = ? WHERE LoaixeID = ?", (seats, res_id))
+                    conn.commit()
+                    cursor.execute("SELECT * FROM loaixe WHERE LoaixeID = ?", (res_id,))
+                    r = cursor.fetchone()
+                    if r:
+                        return self._send_json({
+                            "LoaixeID": r["LoaixeID"],
+                            "tenLoai": r["tenLoai"],
+                            "SoCho": r["soCho"],
+                            "soCho": r["soCho"],
+                            "GiaVe": str(r["giaChuan"]),
+                            "giaVe": str(r["giaChuan"])
+                        })
+                    return self._send_json({"status": "success"})
+
+                elif resource == 'ghengoi':
+                    if "trangThai" in data or "TrangThai" in data:
+                        st = data.get("trangThai") or data.get("TrangThai")
+                        if "Còn trống" in st:
+                            st = "Trống"
+                        cursor.execute("UPDATE ghengoi SET trangThai = ? WHERE GheID = ?", (st, res_id))
+                        conn.commit()
                     return self._send_json({"status": "success"})
 
             return self._send_json({"status": "success"})
@@ -1518,7 +1880,6 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             return self._send_json({"status": "deleted"})
         finally:
             conn.close()
-
 def run_server(port=8000):
     init_database(force_reseed=False)
     server_address = ('0.0.0.0', port)

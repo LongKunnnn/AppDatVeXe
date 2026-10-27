@@ -4,31 +4,31 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Route implements Serializable {
-    @SerializedName("tuyenXeID")
+    @SerializedName(value = "tuyenXeID", alternate = {"TuyenxeID", "id", "tuyenXeId"})
     private String id;
 
-    @SerializedName("tenTuyen")
+    @SerializedName(value = "tenTuyen", alternate = {"TenTuyen", "name"})
     private String name;
 
-    @SerializedName("diemDi")
+    @SerializedName(value = "diemDi", alternate = {"DiemDi", "startPoint"})
     private String startPoint;
 
-    @SerializedName("DiemTrungGian")
+    @SerializedName(value = "DiemTrungGian", alternate = {"diemTrungGian", "diemDung", "midPoint"})
     private String midPoint;
 
-    @SerializedName("diemDen")
+    @SerializedName(value = "diemDen", alternate = {"DiemDen", "endPoint"})
     private String endPoint;
 
-    @SerializedName("QuangDuong")
+    @SerializedName(value = "QuangDuong", alternate = {"quangDuong", "khoangCach", "distance"})
     private String distance;
 
-    @SerializedName("ThoiGian")
+    @SerializedName(value = "ThoiGian", alternate = {"thoiGian", "thoiGianUocTinh", "time"})
     private String time;
 
-    @SerializedName("TrangThai")
-    private String status; // "Đang hoạt động", "Bảo trì" hoặc "Ngưng hoạt động"
+    @SerializedName(value = "TrangThai", alternate = {"trangThai", "status"})
+    private String status;
 
-    @SerializedName("nhaXe")
+    @SerializedName(value = "nhaXe", alternate = {"Nhaxe", "nhaXeId", "NhaxeID", "nha_xe"})
     private String nhaXeId;
 
     public Route(String id, String name, String startPoint, String midPoint, String endPoint, String distance, String time, String status) {
@@ -42,7 +42,6 @@ public class Route implements Serializable {
         this.status = status;
     }
 
-    // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getName() { return name; }
@@ -57,9 +56,8 @@ public class Route implements Serializable {
     public void setDistance(String distance) { this.distance = distance; }
     public String getTime() { return time; }
     public void setTime(String time) { this.time = time; }
-    public String getStatus() { return status; }
+    public String getStatus() { return status != null ? status : "Đang hoạt động"; }
     public void setStatus(String status) { this.status = status; }
     public String getNhaXeId() { return nhaXeId; }
     public void setNhaXeId(String nhaXeId) { this.nhaXeId = nhaXeId; }
 }
-

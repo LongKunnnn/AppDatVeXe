@@ -5,52 +5,52 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Ticket implements Serializable {
-    @SerializedName(value = "VeID", alternate = {"VeHuyID"})
+    @SerializedName(value = "VeID", alternate = {"VeHuyID", "veID", "id"})
     private String veID;
 
-    @SerializedName("TenTuyen")
+    @SerializedName(value = "TenTuyen", alternate = {"tenTuyen", "route"})
     private String tenTuyen;
 
-    @SerializedName("TenNhaXe")
+    @SerializedName(value = "TenNhaXe", alternate = {"tenNhaXe", "nhaXeName"})
     private String tenNhaXe;
 
-    @SerializedName("NgayKhoiHanh")
+    @SerializedName(value = "NgayKhoiHanh", alternate = {"ngayKhoiHanh", "date"})
     private String ngayKhoiHanh;
 
-    @SerializedName("GioDi")
+    @SerializedName(value = "GioDi", alternate = {"gioDi", "time"})
     private String gioDi;
 
-    @SerializedName("SoLuongGhe")
+    @SerializedName(value = "SoLuongGhe", alternate = {"soLuongGhe", "seatCount"})
     private int soLuongGhe;
 
-    @SerializedName("DanhSachGhe")
-    private Object danhSachGhe; // Có thể là List<String> hoặc String từ bảng VeHuy
+    @SerializedName(value = "DanhSachGhe", alternate = {"danhSachGhe", "seats"})
+    private Object danhSachGhe;
 
-    @SerializedName("TongTien")
+    @SerializedName(value = "TongTien", alternate = {"tongTien", "totalPrice"})
     private double tongTien;
 
-    @SerializedName("TrangThai")
-    private String trangThai; // "Đã đặt", "Đã đi", "Đã hủy"
+    @SerializedName(value = "TrangThai", alternate = {"trangThai", "status"})
+    private String trangThai;
 
-    @SerializedName("TrangThaiThanhToan")
+    @SerializedName(value = "TrangThaiThanhToan", alternate = {"trangThaiThanhToan", "paymentStatus"})
     private String trangThaiThanhToan;
 
-    @SerializedName("KhachHang")
+    @SerializedName(value = "KhachHang", alternate = {"khachHang", "khachHangID", "kh_id"})
     private String khachHangID;
 
-    @SerializedName("ChuyenXe")
+    @SerializedName(value = "ChuyenXe", alternate = {"Chuyenxe", "chuyenXe", "tripId"})
     private String chuyenXeID;
 
     public String getVeID() { return veID; }
     public String getTenTuyen() { return tenTuyen != null ? tenTuyen : "N/A"; }
-    public String getTenNhaXe() { return tenNhaXe != null ? tenNhaXe : "N/A"; }
+    public String getTenNhaXe() { return tenNhaXe != null ? tenNhaXe : "Tràng An Limousine"; }
     public String getNgayKhoiHanh() { return ngayKhoiHanh; }
     public String getGioDi() { return gioDi; }
     public int getSoLuongGhe() { return soLuongGhe; }
     
     public double getTongTien() { return tongTien; }
-    public String getTrangThai() { return trangThai; }
-    public String getTrangThaiThanhToan() { return trangThaiThanhToan; }
+    public String getTrangThai() { return trangThai != null ? trangThai : "Đã đặt"; }
+    public String getTrangThaiThanhToan() { return trangThaiThanhToan != null ? trangThaiThanhToan : "Chưa thanh toán"; }
     public String getKhachHangID() { return khachHangID; }
     public String getChuyenXeID() { return chuyenXeID; }
 

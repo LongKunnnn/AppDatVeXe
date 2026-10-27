@@ -6,54 +6,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Trip implements Serializable {
-    @SerializedName("ChuyenXeID")
+    @SerializedName(value = "ChuyenXeID", alternate = {"ChuyenxeID", "chuyenXeId", "id"})
     private String id;
 
-    @SerializedName("NgayKhoiHanh")
+    @SerializedName(value = "NgayKhoiHanh", alternate = {"ngayKhoiHanh", "date"})
     private String date;
 
-    @SerializedName("GioDi")
+    @SerializedName(value = "GioDi", alternate = {"gioDi", "time", "startTime"})
     private String startTime;
 
-    @SerializedName("GioDen")
+    @SerializedName(value = "GioDen", alternate = {"gioDen", "endTime"})
     private String endTime;
 
-    @SerializedName("TrangThai")
+    @SerializedName(value = "TrangThai", alternate = {"trangThai", "status"})
     private String status;
 
-    @SerializedName("Xe")
+    @SerializedName(value = "Xe", alternate = {"xe", "XeID", "bienSo", "BienSoXe"})
     private String xe; 
 
-    @SerializedName("TuyenXe")
+    @SerializedName(value = "TuyenXe", alternate = {"Tuyenxe", "tuyenXeID", "tuyen", "TuyenxeID"})
     private String tuyen; 
 
-    @SerializedName("Taixe")
+    @SerializedName(value = "Taixe", alternate = {"TaiXe", "TaiXeID", "taixe", "taiXeID"})
     private String taiXeID;
 
-    @SerializedName("TenTuyen")
+    @SerializedName(value = "TenTuyen", alternate = {"tenTuyen", "tuyenXeName", "routeName"})
     private String tenTuyen;
 
-    @SerializedName("LoaiXe")
+    @SerializedName(value = "LoaiXe", alternate = {"loaiXe", "carType", "loaiXeTen"})
     private String loaiXe;
 
-    @SerializedName("GiaVe")
+    @SerializedName(value = "GiaVe", alternate = {"giaVe", "price"})
     private String giaVe;
 
-    @SerializedName("TenNhaXe")
+    @SerializedName(value = "TenNhaXe", alternate = {"tenNhaXe", "nhaXeName"})
     private String tenNhaXe;
 
-    @SerializedName("SoChoTrong")
-    private Integer soChoTrong; // Dùng Integer để phân biệt null (chưa có dữ liệu) và 0 (hết chỗ)
+    @SerializedName(value = "SoChoTrong", alternate = {"soChoTrong", "soCho", "totalSeats", "availableSeats"})
+    private Integer soChoTrong;
 
-    @SerializedName("ThoiGian")
+    @SerializedName(value = "ThoiGian", alternate = {"thoiGian", "thoiGianUocTinh", "duration"})
     private String duration;
 
-    private int seats = 4; // Giá trị mặc định
+    private int seats = 4;
     private Driver assignedDriver;
     private List<Passenger> passengers = new ArrayList<>();
 
-    public Trip() {
-    }
+    public Trip() {}
 
     public Trip(String id, String tuyen, String date, String startTime, String status) {
         this.id = id;
@@ -75,7 +74,7 @@ public class Trip implements Serializable {
     public String getEndTime() { return endTime != null ? endTime : (startTime != null ? startTime : ""); }
     public void setEndTime(String endTime) { this.endTime = endTime; }
 
-    public String getStatus() { return status != null ? status : "Mới"; }
+    public String getStatus() { return status != null ? status : "Chưa hoàn thành"; }
     public void setStatus(String status) { this.status = status; }
 
     public String getXeID() { return xe != null ? xe : ""; }
@@ -98,44 +97,39 @@ public class Trip implements Serializable {
         return (loaiXe != null && !loaiXe.isEmpty()) ? loaiXe : "Xe: " + getXeID();
     }
 
-    public String getGiaVe() { return giaVe != null ? giaVe : "0"; }
+    public void setRouteName(String routeName) { this.tenTuyen = routeName; }
+    public void setVehicleType(String vehicleType) { this.loaiXe = vehicleType; }
 
-    /**
-     * Logic lấy số chỗ trống:
-     * 1. Ưu tiên giá trị soChoTrong từ API (kể cả khi bằng 0 - tức là hết chỗ).
-     * 2. Nếu soChoTrong là null (API không trả về), tự suy luận từ loaiXe hoặc dùng mặc định.
-     */
-    public int getSeats() { 
-        if (soChoTrong != null) {
-            return soChoTrong; 
-        }
-        
-        // Fallback logic: Suy luận sức chứa từ tên loại xe nếu server không gửi số chỗ trống
-        String type = getVehicleType().toLowerCase();
-        if (type.contains("16")) return 16;
-        if (type.contains("9")) return 9;
-        if (type.contains("7")) return 7;
-        
-        return seats; 
-    }
+    public String getPrice() { return giaVe != null ? giaVe : "0"; }
+    public void setPrice(String price) { this.giaVe = price; }
 
-    public void setSeats(int seats) {
-        this.seats = seats;
-        this.soChoTrong = seats;
-    }
-
-    public List<Passenger> getPassengers() {
-        if (passengers == null) passengers = new ArrayList<>();
-        return passengers;
-    }
-    public void setPassengers(List<Passenger> passengers) { this.passengers = passengers; }
-
-    public Driver getAssignedDriver() { return assignedDriver; }
-    public void setAssignedDriver(Driver driver) { this.assignedDriver = driver; }
-
-    public String getTenNhaXe() { return tenNhaXe != null ? tenNhaXe : ""; }
-    public void setTenNhaXe(String tenNhaXe) { this.tenNhaXe = tenNhaXe; }
+    public String getTenTuyen() { return tenTuyen; }
+    public void setTenTuyen(String tenTuyen) { this.tenTuyen = tenTuyen; }
 
     public String getLoaiXe() { return loaiXe; }
     public void setLoaiXe(String loaiXe) { this.loaiXe = loaiXe; }
+
+    public String getGiaVe() { return giaVe; }
+    public void setGiaVe(String giaVe) { this.giaVe = giaVe; }
+
+    public String getTenNhaXe() { return tenNhaXe; }
+    public void setTenNhaXe(String tenNhaXe) { this.tenNhaXe = tenNhaXe; }
+
+    public Integer getSoChoTrong() { return soChoTrong; }
+    public void setSoChoTrong(Integer soChoTrong) { this.soChoTrong = soChoTrong; }
+
+    public int getSeats() {
+        if (soChoTrong != null) return soChoTrong;
+        return seats;
+    }
+    public void setSeats(int seats) { 
+        this.seats = seats; 
+        this.soChoTrong = seats;
+    }
+
+    public Driver getAssignedDriver() { return assignedDriver; }
+    public void setAssignedDriver(Driver assignedDriver) { this.assignedDriver = assignedDriver; }
+
+    public List<Passenger> getPassengers() { return passengers; }
+    public void setPassengers(List<Passenger> passengers) { this.passengers = passengers; }
 }

@@ -45,8 +45,10 @@ CREATE TABLE IF NOT EXISTS nguoidung (
     Hovaten VARCHAR(100),
     KhachHangID VARCHAR(20),
     NhaxeID VARCHAR(20),
+    TaiXeID VARCHAR(20),
     FOREIGN KEY (KhachHangID) REFERENCES khachhang(KhachHangID) ON DELETE SET NULL,
-    FOREIGN KEY (NhaxeID) REFERENCES nhaxe(NhaxeID) ON DELETE SET NULL
+    FOREIGN KEY (NhaxeID) REFERENCES nhaxe(NhaxeID) ON DELETE SET NULL,
+    FOREIGN KEY (TaiXeID) REFERENCES taixe(TaiXeID) ON DELETE SET NULL
 );
 
 -- 5. BẢNG TÀI XẾ (TAIXE)
@@ -214,14 +216,20 @@ INSERT INTO khachhang (KhachHangID, hoTen, Email, Ngaysinh, soDienThoai, AnhDaiD
 ('KH00003', 'Trần Quốc Bảo', 'bao.tran@vexeapp.com', '1998-11-10', '0905123987', '');
 
 -- 6. Tài khoản người dùng (Mật khẩu: '123456')
-INSERT INTO nguoidung (UserID, TenDangNhap, MatKhau, Email, SoDienThoai, Vaitro, Hovaten, KhachHangID, NhaxeID) VALUES 
-('US00001', 'haivan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', NULL, 'NX00001'),
-('US00006', 'trangan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', NULL, 'NX00001'),
-('US00002', 'phuongtrang', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', NULL, 'NX00002'),
-('US00007', 'vananh', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', NULL, 'NX00002'),
-('US00003', '0912345678', '123456', 'nam.le@vexeapp.com', '0912345678', 'KhachHang', 'Lê Hoàng Nam', 'KH00001', NULL),
-('US00004', '0987654321', '123456', 'ha.nguyen@vexeapp.com', '0987654321', 'KhachHang', 'Nguyễn Thu Hà', 'KH00002', NULL),
-('US00005', '0905123987', '123456', 'bao.tran@vexeapp.com', '0905123987', 'KhachHang', 'Trần Quốc Bảo', 'KH00003', NULL);
+INSERT INTO nguoidung (UserID, TenDangNhap, MatKhau, Email, SoDienThoai, Vaitro, Hovaten, KhachHangID, NhaxeID, TaiXeID) VALUES 
+('US00001', 'haivan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', NULL, 'NX00001', NULL),
+('US00006', 'trangan', '123456', 'trangan@vexeapp.com', '0988123456', 'Nhaxe', 'Tràng An Limousine', NULL, 'NX00001', NULL),
+('US00002', 'phuongtrang', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', NULL, 'NX00002', NULL),
+('US00007', 'vananh', '123456', 'vananh@vexeapp.com', '0905888999', 'Nhaxe', 'Vân Anh Limousine', NULL, 'NX00002', NULL),
+('US00003', '0912345678', '123456', 'nam.le@vexeapp.com', '0912345678', 'KhachHang', 'Lê Hoàng Nam', 'KH00001', NULL, NULL),
+('US00004', '0987654321', '123456', 'ha.nguyen@vexeapp.com', '0987654321', 'KhachHang', 'Nguyễn Thu Hà', 'KH00002', NULL, NULL),
+('US00005', '0905123987', '123456', 'bao.tran@vexeapp.com', '0905123987', 'KhachHang', 'Trần Quốc Bảo', 'KH00003', NULL, NULL),
+('US00010', 'taixe1', '123456', 'binh.nguyen@vexeapp.com', '0988111222', 'TaiXe', 'Nguyễn Văn Bình', NULL, 'NX00001', 'TX00001'),
+('US00011', 'taixe2', '123456', 'trong.tran@vexeapp.com', '0988333444', 'TaiXe', 'Trần Đình Trọng', NULL, 'NX00001', 'TX00002'),
+('US00012', 'taixe3', '123456', 'hung.le@vexeapp.com', '0988555666', 'TaiXe', 'Lê Văn Hùng', NULL, 'NX00001', 'TX00003'),
+('US00013', 'taixe4', '123456', 'tuan.pham@vexeapp.com', '0988777888', 'TaiXe', 'Phạm Quốc Tuấn', NULL, 'NX00001', 'TX00004'),
+('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', NULL, 'NX00001', 'TX00005'),
+('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', NULL, 'NX00001', 'TX00006');
 
 -- 7. Tuyến xe
 INSERT INTO tuyenxe (TuyenxeID, tenTuyen, diemDi, diemDen, diemDung, khoangCach, thoiGianUocTinh, giaCoBan, Nhaxe) VALUES 

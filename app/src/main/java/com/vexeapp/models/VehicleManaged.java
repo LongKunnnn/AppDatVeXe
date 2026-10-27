@@ -5,22 +5,22 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class VehicleManaged implements Serializable {
-    @SerializedName("XeID") 
+    @SerializedName(value = "XeID", alternate = {"xeID", "id", "Xe"}) 
     private String XeID;
 
-    @SerializedName("BienSoXe") 
+    @SerializedName(value = "BienSoXe", alternate = {"bienSo", "BienSo", "plateNumber"}) 
     private String BienSoXe;
 
-    @SerializedName("TrangThai") 
+    @SerializedName(value = "TrangThai", alternate = {"trangThai", "status", "Status"}) 
     private String TrangThai;
 
-    @SerializedName("SoGhe") 
+    @SerializedName(value = "SoGhe", alternate = {"soCho", "soGhe", "totalSeats", "seats"}) 
     private Integer SoGhe;
 
-    @SerializedName("Loaixe") 
+    @SerializedName(value = "Loaixe", alternate = {"loaixe", "loaiXe", "LoaiXe", "carType"}) 
     private Object Loaixe; 
 
-    @SerializedName("Nhaxe") 
+    @SerializedName(value = "Nhaxe", alternate = {"nhaxe", "nhaXe", "NhaxeID", "nhaXeId"}) 
     private Object Nhaxe;
 
     public VehicleManaged() {}
@@ -48,7 +48,11 @@ public class VehicleManaged implements Serializable {
         if (Loaixe instanceof String) return (String) Loaixe;
         if (Loaixe instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) Loaixe;
+            Object name = map.get("TenLoai");
+            if (name == null) name = map.get("tenLoai");
+            if (name != null) return String.valueOf(name);
             Object id = map.get("LoaixeID");
+            if (id == null) id = map.get("id");
             return id != null ? String.valueOf(id) : "N/A";
         }
         return String.valueOf(Loaixe);
@@ -58,6 +62,7 @@ public class VehicleManaged implements Serializable {
         if (Loaixe instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) Loaixe;
             Object soCho = map.get("SoCho");
+            if (soCho == null) soCho = map.get("soCho");
             if (soCho instanceof Number) return ((Number) soCho).intValue();
         }
         return SoGhe; // Fallback về SoGhe của bảng Xe

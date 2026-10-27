@@ -4,25 +4,25 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class BookingRequest {
-    @SerializedName("ve_id")
+    @SerializedName(value = "ve_id", alternate = {"VeID", "veId"})
     private String veId;
 
-    @SerializedName("chuyen_xe")
+    @SerializedName(value = "chuyen_xe", alternate = {"ChuyenXe", "chuyenXe", "chuyen_xe_id"})
     private String chuyenXe;
     
-    @SerializedName("khach_hang")
+    @SerializedName(value = "khach_hang", alternate = {"KhachHang", "khachHang", "so_dien_thoai"})
     private String khachHang; 
     
-    @SerializedName("danh_sach_ghe")
+    @SerializedName(value = "danh_sach_ghe", alternate = {"DanhSachGhe", "danhSachGhe", "ghe_ids"})
     private List<String> danhSachGhe; 
     
-    @SerializedName("tong_tien")
+    @SerializedName(value = "tong_tien", alternate = {"TongTien", "tongTien"})
     private long tongTien;
     
-    @SerializedName("diem_don")
+    @SerializedName(value = "diem_don", alternate = {"DiemDon", "diemDon"})
     private String diemDon;
     
-    @SerializedName("diem_tra")
+    @SerializedName(value = "diem_tra", alternate = {"DiemTra", "diemTra"})
     private String diemTra;
 
     public BookingRequest(String veId, String chuyenXe, String khachHang, List<String> danhSachGhe, long tongTien, 

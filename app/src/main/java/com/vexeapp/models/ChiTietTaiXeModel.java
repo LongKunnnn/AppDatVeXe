@@ -3,25 +3,25 @@ package com.vexeapp.models;
 import com.google.gson.annotations.SerializedName;
 
 public class ChiTietTaiXeModel {
-    @SerializedName("id")
+    @SerializedName(value = "id", alternate = {"ChiTietID", "chiTietId"})
     private Integer id;
     
-    @SerializedName("HoTen")
+    @SerializedName(value = "HoTen", alternate = {"hoTen", "name"})
     private String hoTen;
     
-    @SerializedName("Tennhaxe")
+    @SerializedName(value = "Tennhaxe", alternate = {"tennhaxe", "tenNhaXe", "TenNhaXe"})
     private String tennhaxe;
     
-    @SerializedName("NgayBatDau")
+    @SerializedName(value = "NgayBatDau", alternate = {"ngayBatDau"})
     private String ngayBatDau;
     
-    @SerializedName("NgayKetThuc")
+    @SerializedName(value = "NgayKetThuc", alternate = {"ngayKetThuc"})
     private String ngayKetThuc;
     
-    @SerializedName("Nhaxe")
+    @SerializedName(value = "Nhaxe", alternate = {"nhaxe", "nhaXe", "NhaxeID"})
     private String nhaxe;
     
-    @SerializedName("Taixe")
+    @SerializedName(value = "Taixe", alternate = {"taixe", "TaiXe", "TaiXeID", "taiXeID"})
     private String taixe;
 
     public Integer getId() { return id; }

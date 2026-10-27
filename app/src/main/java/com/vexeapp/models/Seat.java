@@ -3,20 +3,20 @@ package com.vexeapp.models;
 import com.google.gson.annotations.SerializedName;
 
 public class Seat {
-    @SerializedName("gheID")
+    @SerializedName(value = "gheID", alternate = {"GheID", "id"})
     private String id;
     
-    @SerializedName("soGhe")
+    @SerializedName(value = "soGhe", alternate = {"SoGhe", "seatCode"})
     private String seatCode;
     
-    @SerializedName("trangThai")
+    @SerializedName(value = "trangThai", alternate = {"TrangThai", "status"})
     private String status;
 
-    @SerializedName("ChuyenXe")
-    private String chuyenXe; // Thêm trường này để lọc đúng chuyến xe
+    @SerializedName(value = "ChuyenXe", alternate = {"Chuyenxe", "chuyenXe", "chuyen_xe"})
+    private String chuyenXe;
 
-    @SerializedName("VeID")
-    private String ticketId; // Thêm trường này để ánh xạ với Vé
+    @SerializedName(value = "VeID", alternate = {"veID", "ticketId"})
+    private String ticketId;
 
     public String getId() { return id; }
     public String getSeatCode() { return seatCode; }

@@ -1,49 +1,46 @@
 package com.vexeapp.models;
 
 import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
 
-public class KhachHang implements Serializable {
-    @SerializedName("KhachHangID")
+public class KhachHang {
+    @SerializedName(value = "KhachHangID", alternate = {"khachHangID", "id", "KhachHang"})
     private String khachHangID;
-    
-    @SerializedName("Hovaten")
+
+    @SerializedName(value = "Hovaten", alternate = {"hoTen", "hovaten", "name"})
     private String hoTen;
-    
-    @SerializedName("Email")
+
+    @SerializedName(value = "Email", alternate = {"email"})
     private String email;
-    
-    @SerializedName("Ngaysinh")
+
+    @SerializedName(value = "Ngaysinh", alternate = {"ngaysinh", "ngaySinh"})
     private String ngaySinh;
-    
-    @SerializedName("AnhDaiDienURL")
+
+    @SerializedName(value = "soDienThoai", alternate = {"SoDienThoai", "phone"})
+    private String soDienThoai;
+
+    @SerializedName(value = "AnhDaiDienURL", alternate = {"anhDaiDienURL", "avatar"})
     private String anhDaiDienURL;
-    
-    @SerializedName("NgayDangKy")
+
+    @SerializedName(value = "NgayDangKy", alternate = {"ngayDangKy"})
     private String ngayDangKy;
 
-    public KhachHang() {}
-
-    public KhachHang(String hoTen, String email, String ngaySinh) {
-        this.hoTen = hoTen;
-        this.email = email;
-        this.ngaySinh = ngaySinh;
-    }
-
-    public String getKhachHangID() { return khachHangID; }
+    public String getKhachHangID() { return khachHangID != null ? khachHangID : ""; }
     public void setKhachHangID(String khachHangID) { this.khachHangID = khachHangID; }
 
-    public String getHoTen() { return hoTen; }
+    public String getHoTen() { return (hoTen != null && !hoTen.isEmpty()) ? hoTen : "Khách hàng"; }
     public void setHoTen(String hoTen) { this.hoTen = hoTen; }
 
-    public String getEmail() { return email; }
+    public String getEmail() { return email != null ? email : ""; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getNgaySinh() { return ngaySinh; }
+    public String getNgaySinh() { return (ngaySinh != null && !ngaySinh.isEmpty()) ? ngaySinh : "Chưa cập nhật"; }
     public void setNgaySinh(String ngaySinh) { this.ngaySinh = ngaySinh; }
 
-    public String getAnhDaiDienURL() { return anhDaiDienURL; }
+    public String getSoDienThoai() { return soDienThoai != null ? soDienThoai : ""; }
+    public void setSoDienThoai(String soDienThoai) { this.soDienThoai = soDienThoai; }
+
+    public String getAnhDaiDienURL() { return anhDaiDienURL != null ? anhDaiDienURL : ""; }
     public void setAnhDaiDienURL(String anhDaiDienURL) { this.anhDaiDienURL = anhDaiDienURL; }
 
-    public String getNgayDangKy() { return ngayDangKy; }
+    public String getNgayDangKy() { return ngayDangKy != null ? ngayDangKy : ""; }
 }
