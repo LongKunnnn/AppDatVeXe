@@ -15,7 +15,7 @@ public class UserModel {
     private String soDienThoai;
     @SerializedName("KhachHang")
     private String khachHang;
-    @SerializedName("Nhaxe")
+    @SerializedName(value = "Nhaxe", alternate = {"NhaxeID", "nhaxeID", "nhaxe", "Nhaxe_id"})
     private String nhaxe;
     
     // Thêm trường này để nhận liên kết từ backend

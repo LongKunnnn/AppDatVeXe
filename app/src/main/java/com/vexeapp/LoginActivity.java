@@ -185,6 +185,7 @@ public class LoginActivity extends AppCompatActivity {
         if ("operator".equals(role)) {
             String finalOpUid = (targetId != null && !targetId.isEmpty()) ? targetId : userModel.getUserID();
             editor.putString("op_uid", finalOpUid);
+            editor.putString("nhaxe_id", finalOpUid);
             editor.putString("op_user", loginIdentity);
 
             startActivity(new Intent(this, OperatorMainActivity.class));

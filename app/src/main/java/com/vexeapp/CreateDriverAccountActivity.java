@@ -71,6 +71,17 @@ public class CreateDriverAccountActivity extends AppCompatActivity {
         apiService = ApiClient.getClient().create(ApiService.class);
         SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         currentNhaxeId = pref.getString("nhaxe_id", null);
+        if (currentNhaxeId == null || currentNhaxeId.isEmpty() || currentNhaxeId.equalsIgnoreCase("null")) {
+            currentNhaxeId = pref.getString("op_uid", null);
+        }
+        if (currentNhaxeId == null || currentNhaxeId.isEmpty() || currentNhaxeId.equalsIgnoreCase("null")) {
+            String opUser = pref.getString("op_user", "");
+            if ("vananh".equalsIgnoreCase(opUser)) {
+                currentNhaxeId = "NX00002";
+            } else {
+                currentNhaxeId = "NX00001";
+            }
+        }
         
         initViews();
 
@@ -79,9 +90,11 @@ public class CreateDriverAccountActivity extends AppCompatActivity {
         btnSelectImage.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         btnSubmit.setOnClickListener(v -> {
-            if (currentNhaxeId == null || currentNhaxeId.isEmpty()) {
-                Toast.makeText(this, "Lỗi: Không tìm thấy nhà xe. Thử đăng nhập lại!", Toast.LENGTH_LONG).show();
-                return;
+            if (currentNhaxeId == null || currentNhaxeId.isEmpty() || currentNhaxeId.equalsIgnoreCase("null")) {
+                currentNhaxeId = pref.getString("op_uid", "NX00001");
+            }
+            if (validateInput()) {
+                checkDuplicatesAndCreate();
             }
             if (validateInput()) {
                 checkDuplicatesAndCreate();
