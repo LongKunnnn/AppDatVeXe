@@ -1236,7 +1236,14 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             # 7. CHUYẾN XE (TRIP)
             elif path == '/api/chuyenxe':
-                cursor.execute("SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh, x.bienSo, x.Loaixe as loaiXeId, l.tenLoai as loaiXeTen, l.soCho, tx.HoTen as tenTaiXe, n.tenNhaXe FROM chuyenxe c LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN xe x ON c.Xe = x.XeID LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID ORDER BY c.ngayKhoiHanh DESC, c.gioDi ASC")
+                nx_filter = qs.get('Nhaxe', [''])[0] or qs.get('nhaxe', [''])[0] or qs.get('nhaXeId', [''])[0]
+                cx_sql = "SELECT c.*, t.tenTuyen, t.diemDi, t.diemDen, t.thoiGianUocTinh, t.Nhaxe as nhaXeId, x.bienSo, x.Loaixe as loaiXeId, l.tenLoai as loaiXeTen, l.soCho, tx.HoTen as tenTaiXe, n.tenNhaXe FROM chuyenxe c LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN xe x ON c.Xe = x.XeID LEFT JOIN loaixe l ON x.Loaixe = l.LoaixeID LEFT JOIN taixe tx ON c.TaiXe = tx.TaiXeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID"
+                cx_params = []
+                if nx_filter:
+                    cx_sql += " WHERE t.Nhaxe = ?"
+                    cx_params.append(nx_filter)
+                cx_sql += " ORDER BY c.ngayKhoiHanh DESC, c.gioDi ASC"
+                cursor.execute(cx_sql, cx_params)
                 res = []
                 for r in cursor.fetchall():
                     item = {
@@ -1254,6 +1261,9 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "TenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
                         "SoChoTrong": r["soCho"] or 34,
                         "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút",
+                        "Nhaxe": r["nhaXeId"] or "",
+                        "nhaxe": r["nhaXeId"] or "",
+                        "nhaXeId": r["nhaXeId"] or "",
 
                         "ChuyenxeID": r["ChuyenxeID"],
                         "id": r["ChuyenxeID"],
@@ -1808,6 +1818,12 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 if not ve_id:
                     return self._send_json({"status": "error", "message": "Thiếu mã vé"}, 400)
                 cursor.execute("UPDATE ve SET trangThai = 'Đã đặt', trangThaiThanhToan = 'Đã thanh toán' WHERE VeID = ?", (ve_id,))
+                cursor.execute("SELECT Chuyenxe, danhSachGhe FROM ve WHERE VeID = ?", (ve_id,))
+                row_v = cursor.fetchone()
+                if row_v and row_v["danhSachGhe"]:
+                    seats = [s.strip() for s in str(row_v["danhSachGhe"]).split(",") if s.strip()]
+                    for st in seats:
+                        cursor.execute("UPDATE ghengoi SET trangThai = 'Đã đặt' WHERE Chuyenxe = ? AND soGhe = ?", (row_v["Chuyenxe"], st))
                 conn.commit()
                 return self._send_json({"status": "success", "message": "Nhà xe đã xác nhận vé thành công!", "ve_id": ve_id})
 

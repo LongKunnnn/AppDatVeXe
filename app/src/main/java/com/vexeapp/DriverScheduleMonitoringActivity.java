@@ -185,7 +185,7 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
                     for (Trip t : response.body()) {
                         String tripOp = t.getNhaXeId();
                         boolean driverMatch = false;
-                        if (t.getTaiXeID() != null) {
+                        if (t.getTaiXeID() != null && !t.getTaiXeID().isEmpty()) {
                             for (ChiTietTaiXeModel d : drivers) {
                                 if (t.getTaiXeID().equalsIgnoreCase(d.getTaiXeID()) || t.getTaiXeID().equalsIgnoreCase(d.getTaixe())) {
                                     driverMatch = true;
@@ -193,7 +193,7 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        if (driverMatch || (tripOp != null && tripOp.equalsIgnoreCase(targetOp))) {
+                        if (driverMatch || (tripOp != null && !tripOp.isEmpty() && tripOp.equalsIgnoreCase(targetOp)) || (tripOp == null || tripOp.isEmpty())) {
                             allTrips.add(t);
                         }
                     }

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class ChiTietTaiXeModel {
     @SerializedName(value = "id", alternate = {"ChiTietID", "chiTietId"})
-    private Integer id;
+    private String id;
     
     @SerializedName(value = "HoTen", alternate = {"hoTen", "name"})
     private String hoTen;
@@ -24,8 +24,8 @@ public class ChiTietTaiXeModel {
     @SerializedName(value = "Taixe", alternate = {"taixe", "TaiXe", "TaiXeID", "taiXeID"})
     private String taixe;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public String getId() { return id != null ? id : ""; }
+    public void setId(String id) { this.id = id; }
     public String getHoTen() { return hoTen; }
     public void setHoTen(String hoTen) { this.hoTen = hoTen; }
     public String getTennhaxe() { return tennhaxe; }

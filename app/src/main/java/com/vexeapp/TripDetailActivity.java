@@ -59,6 +59,12 @@ public class TripDetailActivity extends AppCompatActivity {
         setupBottomNavigation();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchPassengersFromDB();
+    }
+
     private void initViews() {
         tvRouteName = findViewById(R.id.tvRouteName);
         tvTime = findViewById(R.id.tvTime);
@@ -329,11 +335,22 @@ public class TripDetailActivity extends AppCompatActivity {
                                         String veId = findVal(v, "VeID", "id", "ve_id", "VEID");
                                         String khId = findVal(v, "KhachHang", "khachhang", "KhachHangID");
                                         String name = khNames.getOrDefault(khId, "Hành khách");
+                                        String directName = findVal(v, "HoTenKhachHang", "hoTenKhachHang", "tenKhachHang", "hoTen", "Hovaten");
+                                        if (!directName.isEmpty() && !"Hành khách".equals(directName)) {
+                                            name = directName;
+                                        }
                                         String phone = findVal(v, "SoDienThoai", "phone", "sdt");
-                                        if (phone.isEmpty()) phone = khPhones.getOrDefault(khId, "Chưa cập nhật");
+                                        if (phone.isEmpty()) phone = khPhones.getOrDefault(khId, "");
+                                        String directPhone = findVal(v, "SoDienThoaiKhachHang", "soDienThoaiKhachHang", "sdtKhachHang", "soDienThoai");
+                                        if (!directPhone.isEmpty()) {
+                                            phone = directPhone;
+                                        }
+                                        if (phone.isEmpty()) phone = "Chưa cập nhật";
+
                                         String pickup = findVal(v, "DiemDon", "pickup", "diem_don");
                                         String dropoff = findVal(v, "DiemTra", "dropoff", "diem_tra");
                                         String status = findVal(v, "TrangThai", "trangThai", "status");
+                                        String payStatus = findVal(v, "TrangThaiThanhToan", "trangThaiThanhToan", "paymentStatus");
 
                                         List<String> seatCodes = new ArrayList<>();
                                         for (Seat s : allSeatsRaw) {
@@ -345,19 +362,19 @@ public class TripDetailActivity extends AppCompatActivity {
                                         }
 
                                         if (seatCodes.isEmpty()) {
-                                            String direct = findVal(v, "DanhSachGhe", "danh_sach_ghe", "SOGHE", "soGhe");
+                                            String direct = findVal(v, "DanhSachGhe", "danh_sach_ghe", "SOGHE", "soGhe", "danhSachGhe");
                                             if (!direct.isEmpty()) seatCodes.add(direct);
                                         }
 
                                         String displaySeat = (seatCodes.isEmpty()) ? "??" : android.text.TextUtils.join(", ", seatCodes);
 
                                         // XỬ LÝ VÉ CHỜ NHÀ XE XÁC NHẬN
-                                        if ("Chờ xác nhận".equalsIgnoreCase(status) || "Chờ nhà xe xác nhận".equalsIgnoreCase(status)) {
+                                        if ("Chờ xác nhận".equalsIgnoreCase(status) || "Chờ nhà xe xác nhận".equalsIgnoreCase(status) || "Chờ xác nhận".equalsIgnoreCase(payStatus)) {
                                             pendingCount++;
                                             addPendingTicketView(veId, name, phone, displaySeat);
                                         } 
                                         // CHỈ HIỂN THỊ TRÊN DANH SÁCH CHUYẾN SAU KHI ĐÃ ĐẶT/XÁC NHẬN THÀNH CÔNG
-                                        else if ("Đã đặt".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status) || "Đã đi".equalsIgnoreCase(status) || "Hoàn thành".equalsIgnoreCase(status)) {
+                                        else if ("Đã đặt".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status) || "Đã thanh toán".equalsIgnoreCase(status) || "Đã đi".equalsIgnoreCase(status) || "Hoàn thành".equalsIgnoreCase(status) || "Đã thanh toán".equalsIgnoreCase(payStatus)) {
                                             passengerList.add(new Passenger(name, phone, pickup, dropoff, displaySeat));
                                         }
                                     }
