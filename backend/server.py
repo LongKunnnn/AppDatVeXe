@@ -184,7 +184,9 @@ def init_database(force_reseed=False):
             ('TX00005', 'Hoàng Đức Anh', '0988999000', 'E-112233', 'NX00002', ''),
             ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00002', ''),
             ('TX00007', 'Lê Thanh Tùng', '0988444555', 'E-778899', 'NX00002', ''),
-            ('TX00008', 'Vũ Hải Nam', '0988666777', 'D-889900', 'NX00002', '')
+            ('TX00008', 'Vũ Hải Nam', '0988666777', 'D-889900', 'NX00002', ''),
+            ('TX00009', 'Văn Phương Nam', '0111111222', 'D-889999', 'NX00001', '')
+
         ]
         cursor.executemany("INSERT INTO taixe VALUES (?, ?, ?, ?, ?, ?)", drivers_data)
 
@@ -224,7 +226,8 @@ def init_database(force_reseed=False):
             ('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', None, 'NX00002', 'TX00005'),
             ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00002', 'TX00006'),
             ('US00016', 'taixe7', '123456', 'tung.le@vexeapp.com', '0988444555', 'TaiXe', 'Lê Thanh Tùng', None, 'NX00002', 'TX00007'),
-            ('US00017', 'taixe8', '123456', 'nam.vu@vexeapp.com', '0988666777', 'TaiXe', 'Vũ Hải Nam', None, 'NX00002', 'TX00008')
+            ('US00017', 'taixe8', '123456', 'nam.vu@vexeapp.com', '0988666777', 'TaiXe', 'Vũ Hải Nam', None, 'NX00002', 'TX00008'),
+            ('US00018', 'taixe9', '123456', 'nam.vp@vexeapp.com', '0111111222', 'TaiXe', 'Văn Phương Nam', None, 'NX00001', 'TX00009')
         ])
 
         cursor.executemany("INSERT INTO tuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
@@ -288,7 +291,9 @@ def init_database(force_reseed=False):
             ('VE00004', 'CX00098', 'KH00001', 2, 'A03, A04', 440000, 'Bến xe Nước Ngầm, Hà Nội', 'Bến xe Sầm Sơn, Thanh Hóa', two_days_ago_s + ' 13:00', 'Đã đi', 'Đã thanh toán'),
             ('VE00005', 'CX00002', 'KH00001', 1, 'A08', 150000, 'Bến xe Giáp Bát, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 07:00', 'Đã hủy', 'Đã hoàn tiền'),
             ('VE00006', 'CX00001', 'KH00002', 1, 'A06', 150000, 'Bến xe Mỹ Đình, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 06:10', 'Đã đặt', 'Đã thanh toán'),
-            ('VE00007', 'CX00099', 'KH00002', 1, 'A07', 150000, 'Bến xe Nước Ngầm, Hà Nội', 'Bến xe Ninh Bình', yesterday_s + ' 07:45', 'Đã đi', 'Đã thanh toán')
+            ('VE00007', 'CX00099', 'KH00002', 1, 'A07', 150000, 'Bến xe Nước Ngầm, Hà Nội', 'Bến xe Ninh Bình', yesterday_s + ' 07:45', 'Đã đi', 'Đã thanh toán'),
+            ('VE99001', 'CX00001', 'KH00001', 1, 'A07', 150000, 'Bến xe Mỹ Đình, Hà Nội', 'Bến xe Ninh Bình', today_s + ' 07:00', 'Chờ xác nhận', 'Đã thanh toán (Chờ xác nhận)'),
+            ('VE99002', 'CX00008', 'KH00002', 1, 'A03', 220000, 'Bến xe Giáp Bát, Hà Nội', 'Bến xe phía Bắc Thanh Hóa', today_s + ' 07:30', 'Chờ xác nhận', 'Đã thanh toán (Chờ xác nhận)')
         ])
 
         cursor.executemany("INSERT INTO vehuy (Ve, KhachHang, lyDoHuy, ngayHuy) VALUES (?, ?, ?, ?)", [
@@ -2056,12 +2061,14 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             return self._send_json({"status": "deleted"})
         finally:
             conn.close()
-def run_server(port=8000):
-    init_database(force_reseed=False)
+def run_server(port=8000, force_reseed=False):
+    init_database(force_reseed=force_reseed)
     server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, VeXeApiHandler)
     print("=" * 65)
     print(f"🚀 VEXEAPP BACKEND SERVER & WEB DASHBOARD ĐÃ KHỞI CHẠY!")
+    if force_reseed:
+        print(f"🔄 ĐÃ LÀM MỚI (RESEED) TOÀN BỘ DATABASE TỪ MÃ NGUỒN SERVER.PY!")
     print(f"🌐 Xem Web Quản Trị trên trình duyệt: http://localhost:{port}/")
     print(f"📱 Đối với Android Emulator: http://10.0.2.2:{port}/")
     print(f"📁 Cơ sở dữ liệu SQLite: {DB_PATH}")
@@ -2074,6 +2081,10 @@ def run_server(port=8000):
 
 if __name__ == '__main__':
     port = 8000
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    run_server(port)
+    reseed = False
+    for arg in sys.argv[1:]:
+        if arg in ['--reseed', 'reseed', '-r', '--reset', '--reset-db']:
+            reseed = True
+        elif arg.isdigit():
+            port = int(arg)
+    run_server(port, force_reseed=reseed)
