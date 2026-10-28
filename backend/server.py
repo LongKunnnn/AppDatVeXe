@@ -182,7 +182,9 @@ def init_database(force_reseed=False):
             ('TX00003', 'Lê Văn Hùng', '0988555666', 'E-667788', 'NX00001', ''),
             ('TX00004', 'Phạm Quốc Tuấn', '0988777888', 'D-334455', 'NX00001', ''),
             ('TX00005', 'Hoàng Đức Anh', '0988999000', 'E-112233', 'NX00002', ''),
-            ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00002', '')
+            ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00002', ''),
+            ('TX00007', 'Lê Thanh Tùng', '0988444555', 'E-778899', 'NX00002', ''),
+            ('TX00008', 'Vũ Hải Nam', '0988666777', 'D-889900', 'NX00002', '')
         ]
         cursor.executemany("INSERT INTO taixe VALUES (?, ?, ?, ?, ?, ?)", drivers_data)
 
@@ -220,7 +222,9 @@ def init_database(force_reseed=False):
             ('US00012', 'taixe3', '123456', 'hung.le@vexeapp.com', '0988555666', 'TaiXe', 'Lê Văn Hùng', None, 'NX00001', 'TX00003'),
             ('US00013', 'taixe4', '123456', 'tuan.pham@vexeapp.com', '0988777888', 'TaiXe', 'Phạm Quốc Tuấn', None, 'NX00001', 'TX00004'),
             ('US00014', 'taixe5', '123456', 'anh.hoang@vexeapp.com', '0988999000', 'TaiXe', 'Hoàng Đức Anh', None, 'NX00002', 'TX00005'),
-            ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00002', 'TX00006')
+            ('US00015', 'taixe6', '123456', 'quan.do@vexeapp.com', '0988222333', 'TaiXe', 'Đỗ Minh Quân', None, 'NX00002', 'TX00006'),
+            ('US00016', 'taixe7', '123456', 'tung.le@vexeapp.com', '0988444555', 'TaiXe', 'Lê Thanh Tùng', None, 'NX00002', 'TX00007'),
+            ('US00017', 'taixe8', '123456', 'nam.vu@vexeapp.com', '0988666777', 'TaiXe', 'Vũ Hải Nam', None, 'NX00002', 'TX00008')
         ])
 
         cursor.executemany("INSERT INTO tuyenxe VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
@@ -987,7 +991,11 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             # 4. TÀI XẾ & CHI TIẾT TÀI XẾ
             elif path == '/api/taixe':
-                cursor.execute("SELECT * FROM taixe")
+                nx_filter = qs.get('Nhaxe', [''])[0] or qs.get('nhaxe', [''])[0] or qs.get('nhaxe_id', [''])[0]
+                if nx_filter:
+                    cursor.execute("SELECT * FROM taixe WHERE Nhaxe = ?", (nx_filter,))
+                else:
+                    cursor.execute("SELECT * FROM taixe")
                 rows = []
                 for r in cursor.fetchall():
                     d = dict(r)
@@ -1005,6 +1013,8 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d["phone"] = r["SoDienThoai"]
                     d["SoBangLai"] = r["SoBangLai"]
                     d["soBangLai"] = r["SoBangLai"]
+                    d["Nhaxe"] = r["Nhaxe"] if "Nhaxe" in r.keys() else ""
+                    d["nhaxe"] = r["Nhaxe"] if "Nhaxe" in r.keys() else ""
                     d["soCCCD"] = "037198001234"
                     d["LoaiBangLai"] = "Hạng D"
                     d["NgayHetHanBangLai"] = "2028-12-31"
@@ -1037,7 +1047,11 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 return self._send_json({}, 404)
 
             elif path == '/api/chitiettaixe':
-                cursor.execute("SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe FROM chitiettaixe c LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID")
+                nx_filter = qs.get('Nhaxe', [''])[0] or qs.get('nhaxe', [''])[0] or qs.get('nhaxe_id', [''])[0]
+                if nx_filter:
+                    cursor.execute("SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe FROM chitiettaixe c LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID WHERE c.Nhaxe = ?", (nx_filter,))
+                else:
+                    cursor.execute("SELECT c.*, t.HoTen, t.SoDienThoai, t.SoBangLai, t.AnhDaiDien, n.tenNhaXe FROM chitiettaixe c LEFT JOIN taixe t ON c.TaiXe = t.TaiXeID LEFT JOIN nhaxe n ON c.Nhaxe = n.NhaxeID")
                 rows = []
                 for idx, r in enumerate(cursor.fetchall(), start=1):
                     d = dict(r)
@@ -1358,8 +1372,16 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 kh_id = qs.get('KhachHang', [''])[0]
                 status = qs.get('TrangThai', [''])[0]
                 cx_id = qs.get('ChuyenXe', [''])[0]
+                nx_filter = qs.get('Nhaxe', [''])[0] or qs.get('nhaXeId', [''])[0] or qs.get('nhaxe', [''])[0]
 
-                query = "SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, n.tenNhaXe FROM ve v LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID WHERE 1=1"
+                query = """SELECT v.*, c.ngayKhoiHanh, c.gioDi, t.tenTuyen, t.Nhaxe as nhaXeId, n.tenNhaXe,
+                                  k.hoTen as tenKhachHang, k.soDienThoai as sdtKhachHang
+                           FROM ve v
+                           LEFT JOIN chuyenxe c ON v.Chuyenxe = c.ChuyenxeID
+                           LEFT JOIN tuyenxe t ON c.Tuyenxe = t.TuyenxeID
+                           LEFT JOIN nhaxe n ON t.Nhaxe = n.NhaxeID
+                           LEFT JOIN khachhang k ON v.KhachHang = k.KhachHangID
+                           WHERE 1=1"""
                 params = []
                 if kh_id:
                     query += " AND v.KhachHang = ?"
@@ -1373,6 +1395,9 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 if cx_id:
                     query += " AND v.Chuyenxe = ?"
                     params.append(cx_id)
+                if nx_filter:
+                    query += " AND t.Nhaxe = ?"
+                    params.append(nx_filter)
 
                 cursor.execute(query, params)
                 rows = []
@@ -1381,8 +1406,15 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d["VeID"] = r["VeID"]
                     d["TenTuyen"] = r["tenTuyen"] or "Tuyến xe"
                     d["tenTuyen"] = r["tenTuyen"] or "Tuyến xe"
-                    d["TenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
-                    d["tenNhaXe"] = r["tenNhaXe"] or "Tràng An Limousine"
+                    d["TenNhaXe"] = r["tenNhaXe"] or "Nhà xe"
+                    d["tenNhaXe"] = r["tenNhaXe"] or "Nhà xe"
+                    d["Nhaxe"] = r["nhaXeId"] or ""
+                    d["nhaxe"] = r["nhaXeId"] or ""
+                    d["nhaXeId"] = r["nhaXeId"] or ""
+                    d["HoTenKhachHang"] = r["tenKhachHang"] or ""
+                    d["hoTenKhachHang"] = r["tenKhachHang"] or ""
+                    d["SoDienThoaiKhachHang"] = r["sdtKhachHang"] or ""
+                    d["soDienThoaiKhachHang"] = r["sdtKhachHang"] or ""
                     d["NgayKhoiHanh"] = r["ngayKhoiHanh"]
                     d["ngayKhoiHanh"] = r["ngayKhoiHanh"]
                     d["GioDi"] = r["gioDi"]

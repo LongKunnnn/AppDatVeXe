@@ -17,6 +17,9 @@ import com.vexeapp.api.ApiClient;
 import com.vexeapp.api.ApiService;
 import com.vexeapp.models.NhaXe;
 import com.vexeapp.models.Trip;
+import com.vexeapp.models.Ticket;
+import android.widget.Toast;
+import java.util.HashMap;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +35,8 @@ public class OperatorMainActivity extends AppCompatActivity {
 
     private TextView tvHeaderName, tvBannerName, tvBannerId;
     private TableLayout tlSchedule;
+    private TextView tvPendingCountBadge, tvPendingHint;
+    private LinearLayout containerPendingTicketsOpMain;
     private String opUid;
     private ApiService apiService;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -50,8 +55,16 @@ public class OperatorMainActivity extends AppCompatActivity {
         initViews();
         loadNhaxeInfo();
         loadRealSchedule();
+        loadPendingTickets();
         setupBottomNavigation();
         setupProfileClick();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPendingTickets();
+        loadRealSchedule();
     }
 
     private void initViews() {
@@ -59,6 +72,144 @@ public class OperatorMainActivity extends AppCompatActivity {
         tvBannerName = findViewById(R.id.tvBannerOpName);
         tvBannerId = findViewById(R.id.tvBannerOpId);
         tlSchedule = findViewById(R.id.tlSchedule);
+        tvPendingCountBadge = findViewById(R.id.tvPendingCountBadge);
+        tvPendingHint = findViewById(R.id.tvPendingHint);
+        containerPendingTicketsOpMain = findViewById(R.id.containerPendingTicketsOpMain);
+    }
+
+    private void loadPendingTickets() {
+        if (containerPendingTicketsOpMain == null) return;
+
+        apiService.getTickets(null, null).enqueue(new Callback<List<Ticket>>() {
+            @Override
+            public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Ticket> pendingList = new ArrayList<>();
+                    for (Ticket t : response.body()) {
+                        String ticketOp = t.getNhaXeId();
+                        boolean matchesOp = ticketOp == null || ticketOp.isEmpty() || ticketOp.equalsIgnoreCase(opUid);
+                        if (!matchesOp) {
+                            String bannerTitle = tvHeaderName != null ? tvHeaderName.getText().toString().trim() : "";
+                            if (!bannerTitle.isEmpty() && t.getTenNhaXe().toLowerCase().contains(bannerTitle.toLowerCase())) {
+                                matchesOp = true;
+                            }
+                        }
+
+                        if (matchesOp) {
+                            String st = t.getTrangThai();
+                            String paySt = t.getTrangThaiThanhToan();
+                            if ("Chờ xác nhận".equalsIgnoreCase(st) ||
+                                "Chờ xác nhận".equalsIgnoreCase(paySt) ||
+                                "Đã thanh toán (Chờ xác nhận)".equalsIgnoreCase(paySt)) {
+                                pendingList.add(t);
+                            }
+                        }
+                    }
+
+                    renderPendingTickets(pendingList);
+                } else {
+                    renderPendingTickets(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                renderPendingTickets(new ArrayList<>());
+            }
+        });
+    }
+
+    private void renderPendingTickets(List<Ticket> pendingList) {
+        if (containerPendingTicketsOpMain == null) return;
+        containerPendingTicketsOpMain.removeAllViews();
+
+        if (pendingList.isEmpty()) {
+            if (tvPendingCountBadge != null) tvPendingCountBadge.setText("0 vé");
+            if (tvPendingHint != null) tvPendingHint.setText("Hiện không có vé nào đang chờ nhà xe xác nhận.");
+            return;
+        }
+
+        if (tvPendingCountBadge != null) tvPendingCountBadge.setText(pendingList.size() + " vé chờ xác nhận");
+        if (tvPendingHint != null) tvPendingHint.setText("Khách đã bấm thanh toán QR ảo, bấm xác nhận để hoàn tất:");
+
+        for (Ticket t : pendingList) {
+            View itemView = getLayoutInflater().inflate(R.layout.item_operator_pending_ticket, containerPendingTicketsOpMain, false);
+
+            TextView tvCode = itemView.findViewById(R.id.tvTicketCode);
+            TextView tvCust = itemView.findViewById(R.id.tvCustomerInfo);
+            TextView tvTrip = itemView.findViewById(R.id.tvTripInfo);
+            TextView tvSeat = itemView.findViewById(R.id.tvSeatInfo);
+            TextView tvPrice = itemView.findViewById(R.id.tvPriceInfo);
+            View btnViewTrip = itemView.findViewById(R.id.btnViewTripDetail);
+            View btnConfirm = itemView.findViewById(R.id.btnConfirmTicket);
+
+            if (tvCode != null) tvCode.setText("Mã vé: " + t.getVeID());
+            if (tvCust != null) {
+                String khName = t.getHoTenKhachHang();
+                String khPhone = t.getSoDienThoaiKhachHang();
+                if (khName.isEmpty()) khName = t.getKhachHangID() != null ? t.getKhachHangID() : "Khách hàng";
+                if (!khPhone.isEmpty()) khName += " (" + khPhone + ")";
+                tvCust.setText("👤 Khách: " + khName);
+            }
+            if (tvTrip != null) {
+                String gio = t.getGioDi() != null ? t.getGioDi() : "";
+                tvTrip.setText("🚌 " + t.getTenTuyen() + (gio.isEmpty() ? "" : " | " + gio));
+            }
+            if (tvSeat != null) {
+                tvSeat.setText("💺 Ghế: " + t.getFormattedSeats());
+            }
+            if (tvPrice != null) {
+                tvPrice.setText(String.format(Locale.getDefault(), "%,.0f đ", t.getTongTien()));
+            }
+
+            if (btnConfirm != null) {
+                btnConfirm.setOnClickListener(v -> {
+                    btnConfirm.setEnabled(false);
+                    Map<String, Object> body = new HashMap<>();
+                    body.put("ve_id", t.getVeID());
+                    apiService.xacNhanVe(body).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Toast.makeText(OperatorMainActivity.this, "Đã xác nhận vé " + t.getVeID() + " thành công!", Toast.LENGTH_SHORT).show();
+                            loadPendingTickets();
+                            loadRealSchedule();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t2) {
+                            btnConfirm.setEnabled(true);
+                            Toast.makeText(OperatorMainActivity.this, "Lỗi kết nối khi xác nhận vé!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+            }
+
+            if (btnViewTrip != null) {
+                btnViewTrip.setOnClickListener(v -> {
+                    apiService.getTrips().enqueue(new Callback<List<Trip>>() {
+                        @Override
+                        public void onResponse(Call<List<Trip>> call, Response<List<Trip>> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                for (Trip tr : response.body()) {
+                                    if (tr.getId() != null && tr.getId().equalsIgnoreCase(t.getChuyenXeID())) {
+                                        Intent intent = new Intent(OperatorMainActivity.this, TripDetailActivity.class);
+                                        intent.putExtra("trip", tr);
+                                        startActivity(intent);
+                                        return;
+                                    }
+                                }
+                            }
+                            Toast.makeText(OperatorMainActivity.this, "Mở chi tiết chuyến " + t.getChuyenXeID(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Trip>> call, Throwable t2) {}
+                    });
+                });
+            }
+
+            containerPendingTicketsOpMain.addView(itemView);
+        }
     }
 
     private void loadNhaxeInfo() {

@@ -60,6 +60,9 @@ public class Trip implements Serializable {
     @SerializedName(value = "ThoiGian", alternate = {"thoiGian", "thoiGianUocTinh", "duration"})
     private String duration;
 
+    @SerializedName(value = "Nhaxe", alternate = {"nhaxe", "nhaXeId", "NhaxeID"})
+    private String nhaXeId;
+
     private int seats = 4;
     private Driver assignedDriver;
     private List<Passenger> passengers = new ArrayList<>();
@@ -97,6 +100,9 @@ public class Trip implements Serializable {
 
     public String getTaiXeID() { return taiXeID != null ? taiXeID : ""; }
     public void setTaiXeID(String taiXeID) { this.taiXeID = taiXeID; }
+
+    public String getNhaXeId() { return nhaXeId != null ? nhaXeId : ""; }
+    public void setNhaXeId(String nhaXeId) { this.nhaXeId = nhaXeId; }
 
     public String getDuration() { return duration != null ? duration : "2h"; }
     public void setDuration(String duration) { this.duration = duration; }

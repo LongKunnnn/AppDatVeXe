@@ -96,9 +96,6 @@ public class CreateDriverAccountActivity extends AppCompatActivity {
             if (validateInput()) {
                 checkDuplicatesAndCreate();
             }
-            if (validateInput()) {
-                checkDuplicatesAndCreate();
-            }
         });
     }
 

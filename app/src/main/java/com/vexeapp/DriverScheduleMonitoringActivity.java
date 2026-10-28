@@ -148,22 +148,55 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String currentOpUid = pref.getString("nhaxe_id", null);
+        if (currentOpUid == null || currentOpUid.isEmpty() || "null".equalsIgnoreCase(currentOpUid)) {
+            currentOpUid = pref.getString("op_uid", "NX00001");
+        }
+        final String targetOp = currentOpUid;
+
         apiService.getChiTietTaiXeList("Get").enqueue(new Callback<List<ChiTietTaiXeModel>>() {
             @Override
             public void onResponse(Call<List<ChiTietTaiXeModel>> call, Response<List<ChiTietTaiXeModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    drivers = response.body();
+                    drivers.clear();
+                    for (ChiTietTaiXeModel d : response.body()) {
+                        if (d.getNhaxe() == null || d.getNhaxe().isEmpty() || d.getNhaxe().equalsIgnoreCase(targetOp)) {
+                            drivers.add(d);
+                        }
+                    }
                     setupDriverSpinner();
+                    // Reload trips to reflect filtered drivers
+                    loadTripsForOperator(targetOp);
                 }
             }
-            @Override public void onFailure(Call<List<ChiTietTaiXeModel>> call, Throwable t) {}
+            @Override public void onFailure(Call<List<ChiTietTaiXeModel>> call, Throwable t) {
+                loadTripsForOperator(targetOp);
+            }
         });
+    }
 
+    private void loadTripsForOperator(String targetOp) {
         apiService.getTrips().enqueue(new Callback<List<Trip>>() {
             @Override
             public void onResponse(Call<List<Trip>> call, Response<List<Trip>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    allTrips = response.body();
+                    allTrips.clear();
+                    for (Trip t : response.body()) {
+                        String tripOp = t.getNhaXeId();
+                        boolean driverMatch = false;
+                        if (t.getTaiXeID() != null) {
+                            for (ChiTietTaiXeModel d : drivers) {
+                                if (t.getTaiXeID().equalsIgnoreCase(d.getTaiXeID()) || t.getTaiXeID().equalsIgnoreCase(d.getTaixe())) {
+                                    driverMatch = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (driverMatch || (tripOp != null && tripOp.equalsIgnoreCase(targetOp))) {
+                            allTrips.add(t);
+                        }
+                    }
                     renderSchedule();
                 }
             }

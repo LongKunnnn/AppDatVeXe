@@ -41,6 +41,15 @@ public class Ticket implements Serializable {
     @SerializedName(value = "ChuyenXe", alternate = {"Chuyenxe", "chuyenXe", "tripId"})
     private String chuyenXeID;
 
+    @SerializedName(value = "Nhaxe", alternate = {"nhaxe", "nhaXeId", "NhaxeID"})
+    private String nhaXeId;
+
+    @SerializedName(value = "HoTenKhachHang", alternate = {"hoTenKhachHang", "tenKhachHang"})
+    private String hoTenKhachHang;
+
+    @SerializedName(value = "SoDienThoaiKhachHang", alternate = {"soDienThoaiKhachHang", "sdtKhachHang"})
+    private String soDienThoaiKhachHang;
+
     public String getVeID() { return veID; }
     public String getTenTuyen() { return tenTuyen != null ? tenTuyen : "N/A"; }
     public String getTenNhaXe() { return tenNhaXe != null ? tenNhaXe : "Tràng An Limousine"; }
@@ -53,6 +62,9 @@ public class Ticket implements Serializable {
     public String getTrangThaiThanhToan() { return trangThaiThanhToan != null ? trangThaiThanhToan : "Chưa thanh toán"; }
     public String getKhachHangID() { return khachHangID; }
     public String getChuyenXeID() { return chuyenXeID; }
+    public String getNhaXeId() { return nhaXeId != null ? nhaXeId : ""; }
+    public String getHoTenKhachHang() { return hoTenKhachHang != null ? hoTenKhachHang : ""; }
+    public String getSoDienThoaiKhachHang() { return soDienThoaiKhachHang != null ? soDienThoaiKhachHang : ""; }
 
     public void setTenTuyen(String tenTuyen) { this.tenTuyen = tenTuyen; }
     public void setTenNhaXe(String tenNhaXe) { this.tenNhaXe = tenNhaXe; }

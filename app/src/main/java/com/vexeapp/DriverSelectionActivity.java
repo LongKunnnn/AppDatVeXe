@@ -146,12 +146,23 @@ public class DriverSelectionActivity extends AppCompatActivity implements Driver
     }
 
     private void loadRealData() {
+        android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String currentOpUid = pref.getString("nhaxe_id", null);
+        if (currentOpUid == null || currentOpUid.isEmpty() || "null".equalsIgnoreCase(currentOpUid)) {
+            currentOpUid = pref.getString("op_uid", "NX00001");
+        }
+        final String targetOp = currentOpUid;
+
         apiService.getChiTietTaiXe().enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     driverList.clear();
                     for (Map<String, Object> map : response.body()) {
+                        String nxe = findVal(map, "Nhaxe", "nhaxe", "NhaxeID", "nhaxe_id");
+                        if (!nxe.isEmpty() && !nxe.equalsIgnoreCase(targetOp)) {
+                            continue; // Bỏ qua tài xế của nhà xe khác
+                        }
                         String id = findVal(map, "TaiXe", "Taixe", "TaiXeID", "TaixeID", "id");
                         String name = findVal(map, "HoTen", "hoten", "name");
                         String phone = findVal(map, "SoDienThoai", "sodienthoai", "phone");
@@ -175,12 +186,23 @@ public class DriverSelectionActivity extends AppCompatActivity implements Driver
     }
 
     private void fallbackLoadDrivers() {
+        android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String currentOpUid = pref.getString("nhaxe_id", null);
+        if (currentOpUid == null || currentOpUid.isEmpty() || "null".equalsIgnoreCase(currentOpUid)) {
+            currentOpUid = pref.getString("op_uid", "NX00001");
+        }
+        final String targetOp = currentOpUid;
+
         apiService.getDriversRaw().enqueue(new Callback<List<Map<String, Object>>>() {
             @Override
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     driverList.clear();
                     for (Map<String, Object> map : response.body()) {
+                        String nxe = findVal(map, "Nhaxe", "nhaxe", "NhaxeID");
+                        if (!nxe.isEmpty() && !nxe.equalsIgnoreCase(targetOp)) {
+                            continue;
+                        }
                         String id = findVal(map, "TaiXeID", "TaixeID", "TaiXe", "id");
                         String name = findVal(map, "HoTen", "hoten");
                         String phone = findVal(map, "SoDienThoai", "phone");
