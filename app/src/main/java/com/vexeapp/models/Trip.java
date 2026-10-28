@@ -21,7 +21,7 @@ public class Trip implements Serializable {
     @SerializedName(value = "TrangThai", alternate = {"trangThai", "status"})
     private String status;
 
-    @SerializedName(value = "Xe", alternate = {"xe", "XeID", "bienSo", "BienSoXe"})
+    @SerializedName(value = "Xe", alternate = {"xe", "XeID", "xeID"})
     private String xe; 
 
     @SerializedName(value = "TuyenXe", alternate = {"Tuyenxe", "tuyenXeID", "tuyen", "TuyenxeID"})
@@ -33,7 +33,7 @@ public class Trip implements Serializable {
     @SerializedName(value = "TenTaiXe", alternate = {"tenTaiXe", "driverName"})
     private String tenTaiXe;
 
-    @SerializedName(value = "BienSo", alternate = {"bienSo", "bienSoXe", "plateNumber"})
+    @SerializedName(value = "BienSo", alternate = {"bienSo", "bienSoXe", "BienSoXe", "plateNumber"})
     private String bienSo;
 
     @SerializedName(value = "DiemDi", alternate = {"diemDi", "startPoint"})
