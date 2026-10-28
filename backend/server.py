@@ -1,3 +1,10 @@
+import sys
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+import re
 import json
 import sqlite3
 import os
@@ -1263,10 +1270,13 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "taixe": r["TaiXe"],
                         "taiXeID": r["TaiXe"],
                         "tenTaiXe": r["tenTaiXe"],
+                        "TenTaiXe": r["tenTaiXe"],
                         "tenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
                         "duration": r["thoiGianUocTinh"] or "1 giờ 30 phút",
                         "XeID": r["Xe"],
-                        "bienSo": r["bienSo"]
+                        "bienSo": r["bienSo"],
+                        "BienSo": r["bienSo"],
+                        "bienSoXe": r["bienSo"]
                     }
                     res.append(item)
                 return self._send_json(res)
@@ -1307,7 +1317,14 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         "giaVe": r["giaVe"] if r["giaVe"] else 200000,
                         "TenNhaXe": r["tenNhaXe"] or "Tràng An Limousine",
                         "SoChoTrong": r["soCho"] or 34,
-                        "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút"
+                        "ThoiGian": r["thoiGianUocTinh"] or "1 giờ 30 phút",
+                        "TenTaiXe": r["tenTaiXe"],
+                        "tenTaiXe": r["tenTaiXe"],
+                        "BienSo": r["bienSo"],
+                        "bienSo": r["bienSo"],
+                        "bienSoXe": r["bienSo"],
+                        "diemDi": r["diemDi"],
+                        "diemDen": r["diemDen"]
                     }
                     return self._send_json(item)
                 return self._send_json({}, 404)
@@ -1385,6 +1402,10 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     d["ChuyenXe"] = r["Chuyenxe"]
                     d["chuyenXe"] = r["Chuyenxe"]
                     d["Chuyenxe"] = r["Chuyenxe"]
+                    d["DiemDon"] = r["diemDon"] or ""
+                    d["diemDon"] = r["diemDon"] or ""
+                    d["DiemTra"] = r["diemTra"] or ""
+                    d["diemTra"] = r["diemTra"] or ""
                     rows.append(d)
                 return self._send_json(rows)
 
@@ -1614,17 +1635,25 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             # TẠO TUYẾN XE
             elif path == '/api/tuyenxe':
                 txe_id = data.get("TuyenxeID") or data.get("tuyenXeID") or f"TXE{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                raw_dist = str(data.get("khoangCach") or data.get("QuangDuong") or "100")
+                clean_dist = re.sub(r'[^0-9.]', '', raw_dist.replace(',', '.'))
+                khoang_cach = float(clean_dist) if clean_dist else 100.0
+
+                raw_price = str(data.get("giaCoBan") or data.get("giaVe") or "150000")
+                clean_price = re.sub(r'[^0-9]', '', raw_price)
+                gia_co_ban = int(clean_price) if clean_price else 150000
+
                 cursor.execute("""
-                INSERT INTO tuyenxe (TuyenxeID, tenTuyen, diemDi, diemDen, diemDung, khoangCach, thoiGianUocTinh, giaCoBan, Nhaxe)
+                INSERT OR REPLACE INTO tuyenxe (TuyenxeID, tenTuyen, diemDi, diemDen, diemDung, khoangCach, thoiGianUocTinh, giaCoBan, Nhaxe)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     txe_id, data.get("tenTuyen") or data.get("name"),
                     data.get("diemDi") or data.get("startPoint"),
                     data.get("diemDen") or data.get("endPoint"),
                     data.get("diemDung") or data.get("DiemTrungGian", ""),
-                    float(data.get("khoangCach") or data.get("QuangDuong", 100)),
+                    khoang_cach,
                     data.get("thoiGianUocTinh") or data.get("ThoiGian", "1 giờ 30 phút"),
-                    int(data.get("giaCoBan", 150000)),
+                    gia_co_ban,
                     data.get("Nhaxe") or data.get("nhaXe", "NX00001")
                 ))
                 conn.commit()
@@ -1639,13 +1668,23 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 ngay_di = data.get("NgayKhoiHanh") or data.get("ngayKhoiHanh") or date.today().isoformat()
                 gio_di = data.get("GioDi") or data.get("gioDi", "08:00")
                 gio_den = data.get("GioDen") or data.get("gioDen", "10:30")
-                gia_ve = int(data.get("GiaVe") or data.get("giaVe", 160000))
+                
+                raw_price = str(data.get("GiaVe") or data.get("giaVe") or "160000")
+                clean_price = re.sub(r'[^0-9]', '', raw_price)
+                gia_ve = int(clean_price) if clean_price else 160000
                 trang_thai = data.get("TrangThai") or data.get("trangThai", "Chưa hoàn thành")
 
                 cursor.execute("INSERT OR REPLACE INTO chuyenxe (ChuyenxeID, Tuyenxe, Xe, TaiXe, ngayKhoiHanh, gioDi, gioDen, giaVe, trangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                (cx_id, tuyen_id, xe_id, taixe_id, ngay_di, gio_di, gio_den, gia_ve, trang_thai))
                 conn.commit()
-                auto_generate_seats_if_needed(conn, cx_id)
+
+                car_type_id = "LX01"
+                if xe_id:
+                    cursor.execute("SELECT Loaixe FROM xe WHERE XeID = ?", (xe_id,))
+                    row_xe = cursor.fetchone()
+                    if row_xe and row_xe[0]:
+                        car_type_id = row_xe[0]
+                auto_generate_seats_if_needed(conn, cx_id, car_type_id)
 
                 trip_obj = {
                     "ChuyenXeID": cx_id,
@@ -1798,9 +1837,33 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                         elif k in ['gioDen', 'GioDen']:
                             cursor.execute("UPDATE chuyenxe SET gioDen = ? WHERE ChuyenxeID = ?", (v, res_id))
                         elif k in ['giaVe', 'GiaVe']:
-                            cursor.execute("UPDATE chuyenxe SET giaVe = ? WHERE ChuyenxeID = ?", (int(v), res_id))
+                            clean_price = re.sub(r'[^0-9]', '', str(v))
+                            cursor.execute("UPDATE chuyenxe SET giaVe = ? WHERE ChuyenxeID = ?", (int(clean_price) if clean_price else 160000, res_id))
                     conn.commit()
                     return self._send_json({"status": "success", "ChuyenxeID": res_id})
+
+                elif resource == 'tuyenxe':
+                    for k, v in data.items():
+                        if k in ['tenTuyen', 'name', 'TenTuyen']:
+                            cursor.execute("UPDATE tuyenxe SET tenTuyen = ? WHERE TuyenxeID = ?", (v, res_id))
+                        elif k in ['diemDi', 'startPoint', 'DiemDi']:
+                            cursor.execute("UPDATE tuyenxe SET diemDi = ? WHERE TuyenxeID = ?", (v, res_id))
+                        elif k in ['diemDen', 'endPoint', 'DiemDen']:
+                            cursor.execute("UPDATE tuyenxe SET diemDen = ? WHERE TuyenxeID = ?", (v, res_id))
+                        elif k in ['diemDung', 'DiemTrungGian', 'midPoint']:
+                            cursor.execute("UPDATE tuyenxe SET diemDung = ? WHERE TuyenxeID = ?", (v, res_id))
+                        elif k in ['khoangCach', 'QuangDuong', 'distance']:
+                            clean_dist = re.sub(r'[^0-9.]', '', str(v).replace(',', '.'))
+                            cursor.execute("UPDATE tuyenxe SET khoangCach = ? WHERE TuyenxeID = ?", (float(clean_dist) if clean_dist else 100.0, res_id))
+                        elif k in ['thoiGianUocTinh', 'ThoiGian', 'time']:
+                            cursor.execute("UPDATE tuyenxe SET thoiGianUocTinh = ? WHERE TuyenxeID = ?", (str(v), res_id))
+                        elif k in ['giaCoBan', 'giaVe', 'price']:
+                            clean_price = re.sub(r'[^0-9]', '', str(v))
+                            cursor.execute("UPDATE tuyenxe SET giaCoBan = ? WHERE TuyenxeID = ?", (int(clean_price) if clean_price else 150000, res_id))
+                        elif k in ['Nhaxe', 'nhaXe']:
+                            cursor.execute("UPDATE tuyenxe SET Nhaxe = ? WHERE TuyenxeID = ?", (v, res_id))
+                    conn.commit()
+                    return self._send_json({"status": "success", "TuyenxeID": res_id})
 
                 elif resource == 'xe':
                     for k, v in data.items():

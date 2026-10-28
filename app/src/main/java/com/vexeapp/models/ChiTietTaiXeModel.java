@@ -37,5 +37,6 @@ public class ChiTietTaiXeModel {
     public String getNhaxe() { return nhaxe; }
     public void setNhaxe(String nhaxe) { this.nhaxe = nhaxe; }
     public String getTaixe() { return taixe; }
+    public String getTaiXeID() { return taixe; }
     public void setTaixe(String taixe) { this.taixe = taixe; }
 }

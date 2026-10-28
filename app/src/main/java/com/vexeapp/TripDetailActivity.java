@@ -39,7 +39,7 @@ import retrofit2.Response;
 
 public class TripDetailActivity extends AppCompatActivity {
 
-    private TextView tvRouteName, tvTime, tvTotalSeats, tvAvailableSeats, tvStatus, tvStatusOption, tvDuration;
+    private TextView tvRouteName, tvTime, tvTotalSeats, tvAvailableSeats, tvStatus, tvStatusOption, tvDuration, tvTripDate, tvDriverName, tvVehiclePlate;
     private MaterialButton btnAssign;
     private RecyclerView rvPassengers;
     private Trip trip;
@@ -65,6 +65,9 @@ public class TripDetailActivity extends AppCompatActivity {
         tvDuration = findViewById(R.id.tvDuration);
         tvTotalSeats = findViewById(R.id.tvTotalSeats);
         tvAvailableSeats = findViewById(R.id.tvAvailableSeats);
+        tvTripDate = findViewById(R.id.tvTripDate);
+        tvDriverName = findViewById(R.id.tvDriverName);
+        tvVehiclePlate = findViewById(R.id.tvVehiclePlate);
         tvStatus = findViewById(R.id.tvStatus);
         tvStatusOption = findViewById(R.id.tvStatusOption);
         btnAssign = findViewById(R.id.btnAssign);
@@ -249,6 +252,27 @@ public class TripDetailActivity extends AppCompatActivity {
         tvRouteName.setText(trip.getRouteName());
         tvTime.setText("Giờ xuất phát: " + trip.getTime());
         tvTotalSeats.setText("Tổng số ghế: " + trip.getSeats());
+
+        if (tvTripDate != null) {
+            tvTripDate.setText("Ngày khởi hành: " + trip.getDate());
+        }
+        if (tvDriverName != null) {
+            String driver = trip.getTenTaiXe();
+            if (driver == null || driver.isEmpty()) {
+                driver = trip.getTaiXeID();
+            }
+            if (driver == null || driver.isEmpty() || driver.equalsIgnoreCase("null")) {
+                driver = "Chưa phân công";
+            }
+            tvDriverName.setText("Tài xế: " + driver);
+        }
+        if (tvVehiclePlate != null) {
+            String plate = trip.getBienSo();
+            if (plate == null || plate.isEmpty()) {
+                plate = trip.getXeID();
+            }
+            tvVehiclePlate.setText("Xe: " + (plate != null && !plate.isEmpty() ? plate : "Chưa chọn"));
+        }
         
         String s = trip.getStatus();
         tvStatus.setText((s != null && s.equalsIgnoreCase("Đã hoàn thành")) ? "Hoàn thành" : s);

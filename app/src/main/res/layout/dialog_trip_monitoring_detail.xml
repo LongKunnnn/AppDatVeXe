@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <!-- HEADER DIALOG -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,28 +24,76 @@
 
         <ImageView
             android:id="@+id/btnCloseDialog"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             app:tint="#666666" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvDetailRoute"
-        android:layout_width="wrap_content"
+    <!-- TRIP SUMMARY CARD -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Tuyến: Hà Nội - Ninh Bình"
-        android:textColor="#0091D5"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#F0F8FF">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvDetailRoute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuyến: Hà Nội - Ninh Bình"
+                android:textColor="#0091D5"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDetailDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Khởi hành: 08:30 (2026-10-28)"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvDetailDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Tài xế: Nguyễn Văn Bình (TX00001)"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvDetailTripStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#FFF9C4"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="Chưa hoàn thành"
+                android:textColor="#FBC02D"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- TABS -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         app:tabIndicatorColor="#0091D5"
         app:tabSelectedTextColor="#0091D5"
         app:tabTextColor="#666666"
@@ -69,36 +118,68 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:minHeight="150dp">
+        android:minHeight="140dp">
 
-        <!-- CONTENT LỘ TRÌNH -->
+        <!-- CONTENT THÔNG TIN XE (TAB 0) -->
         <LinearLayout
-            android:id="@+id/layoutTabRoute"
+            android:id="@+id/layoutTabVehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvRoutePoints"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxHeight="300dp" />
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Mã chuyến:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvTripId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CX00001" android:textColor="#000000" android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvNoTickets"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="20dp"
-                android:text="Chưa có khách hàng đặt vé"
-                android:textColor="#999999"
-                android:visibility="gone" />
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Biển số xe:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvVehiclePlate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Loại xe:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvVehicleType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Số ghế:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvVehicleSeats" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Giá vé:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvTripPrice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#D32F2F" android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp">
+                <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="Trạng thái xe:" android:textColor="#666666" />
+                <TextView android:id="@+id/tvVehicleStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đang hoạt động" android:textColor="#4CAF50" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- CONTENT THÔNG TIN XE -->
+        <!-- CONTENT LỘ TRÌNH (TAB 1) -->
         <LinearLayout
-            android:id="@+id/layoutTabVehicle"
+            android:id="@+id/layoutTabRoute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -107,35 +188,69 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-                <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="Biển số xe:" android:textColor="#666666" />
-                <TextView android:id="@+id/tvVehiclePlate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" android:textStyle="bold" />
+                android:orientation="vertical"
+                android:background="#F9F9F9"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tvRouteStartEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lộ trình chính: Hà Nội &#8594; Ninh Bình"
+                    android:textColor="#0091D5"
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvRouteEstimatedTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Thời gian dự kiến: 1 giờ 30 phút"
+                    android:textColor="#666666"
+                    android:textSize="12sp"/>
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-                <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="Số ghế:" android:textColor="#666666" />
-                <TextView android:id="@+id/tvVehicleSeats" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" />
-            </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:text="Điểm đón / trả khách:"
+                android:textColor="#333333"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRoutePoints"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-                <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="Trạng thái:" android:textColor="#666666" />
-                <TextView android:id="@+id/tvVehicleStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#4CAF50" />
-            </LinearLayout>
+                android:maxHeight="220dp"
+                android:layout_marginTop="4dp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvNoTickets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-                <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="Loại xe:" android:textColor="#666666" />
-                <TextView android:id="@+id/tvVehicleType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="---" android:textColor="#000000" />
-            </LinearLayout>
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Chưa có khách hàng đặt vé dọc tuyến"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
+
+    <!-- ACTION BUTTON: QUẢN LÝ / XEM CHI TIẾT CHUYẾN -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOpenFullTripDetail"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:text="Xem danh sách khách &amp; Quản lý chuyến"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="#0091D5"
+        app:cornerRadius="8dp" />
 
 </LinearLayout>

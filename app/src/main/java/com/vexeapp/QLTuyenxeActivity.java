@@ -47,6 +47,7 @@ public class QLTuyenxeActivity extends AppCompatActivity implements RouteAdapter
     private RecyclerView rvRoutes;
     private RouteAdapter adapter;
     private List<Route> routeList;
+    private List<Route> allRoutesList = new ArrayList<>();
     private MaterialButton btnAddRoute;
     private ImageView btnBack;
     private TextView tvToolbarTitle;
@@ -113,21 +114,23 @@ public class QLTuyenxeActivity extends AppCompatActivity implements RouteAdapter
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     routeList.clear();
+                    allRoutesList.clear();
                     for (Map<String, Object> rMap : response.body()) {
+                        String id = findVal(rMap, "TuyenXeID", "id", "tuyenXeID", "TuyenxeID");
+                        String name = findVal(rMap, "TenTuyen", "name", "tenTuyen");
+                        String start = findVal(rMap, "DiemDi", "startPoint", "diemDi");
+                        String mid = findVal(rMap, "DiemTrungGian", "midPoint");
+                        String end = findVal(rMap, "DiemDen", "endPoint", "diemDen");
+                        String dist = unifyDistance(findVal(rMap, "QuangDuong", "distance", "khoangCach"));
+                        String time = unifyTime(findVal(rMap, "ThoiGian", "time", "thoiGianUocTinh"));
+                        String status = findVal(rMap, "TrangThai", "status");
+
+                        Route rObj = new Route(id, name, start, mid, end, dist, time, status);
+                        allRoutesList.add(rObj);
+
                         String nhaXeId = findVal(rMap, "Nhaxe", "NhaxeID", "nhaXe");
                         if (opUid.equals(nhaXeId)) {
-                            String id = findVal(rMap, "TuyenXeID", "id", "tuyenXeID");
-                            String name = findVal(rMap, "TenTuyen", "name", "tenTuyen");
-                            String start = findVal(rMap, "DiemDi", "startPoint", "diemDi");
-                            String mid = findVal(rMap, "DiemTrungGian", "midPoint");
-                            String end = findVal(rMap, "DiemDen", "endPoint", "diemDen");
-                            
-                            String dist = unifyDistance(findVal(rMap, "QuangDuong", "distance"));
-                            String time = unifyTime(findVal(rMap, "ThoiGian", "time"));
-                            
-                            String status = findVal(rMap, "TrangThai", "status");
-
-                            routeList.add(new Route(id, name, start, mid, end, dist, time, status));
+                            routeList.add(rObj);
                         }
                     }
                     sortAndNotify();
@@ -373,7 +376,11 @@ public class QLTuyenxeActivity extends AppCompatActivity implements RouteAdapter
             finalTime = finalTime.replace(".", ",");
         }
         
+        String cleanDist = distStr.replaceAll("[^0-9,.]", "").replace(",", ".").trim();
+        if (cleanDist.isEmpty() || cleanDist.equals("0")) cleanDist = "100";
+        data.put("khoangCach", cleanDist);
         data.put("QuangDuong", finalDist);
+        data.put("thoiGianUocTinh", finalTime);
         data.put("ThoiGian", finalTime);
         data.put("TrangThai", editingRoute != null ? editingRoute.getStatus() : "Đang hoạt động");
         data.put("nhaXe", opUid);
@@ -413,18 +420,22 @@ public class QLTuyenxeActivity extends AppCompatActivity implements RouteAdapter
 
     private String generateNextRouteId() {
         int maxNum = 0;
-        if (routeList != null) {
-            for (Route r : routeList) {
+        List<Route> source = (allRoutesList != null && !allRoutesList.isEmpty()) ? allRoutesList : routeList;
+        if (source != null) {
+            for (Route r : source) {
                 String id = r.getId();
-                if (id != null && id.startsWith("TX")) {
+                if (id != null) {
                     try {
-                        int num = Integer.parseInt(id.substring(2));
-                        if (num > maxNum) maxNum = num;
+                        String digits = id.replaceAll("[^0-9]", "");
+                        if (!digits.isEmpty()) {
+                            int num = Integer.parseInt(digits);
+                            if (num > maxNum) maxNum = num;
+                        }
                     } catch (Exception ignored) {}
                 }
             }
         }
-        return String.format("TX%05d", maxNum + 1);
+        return String.format(java.util.Locale.getDefault(), "TXE%05d", maxNum + 1);
     }
 
     private void showRouteSuccessPopup(String msg) {

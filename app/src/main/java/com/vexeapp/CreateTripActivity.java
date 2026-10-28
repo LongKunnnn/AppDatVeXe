@@ -227,6 +227,15 @@ public class CreateTripActivity extends AppCompatActivity {
         data.put("TuyenXe", selectedRouteId);
         data.put("TrangThai", (editingTrip != null) ? editingTrip.getStatus() : "Chưa hoàn thành");
 
+        int cleanPrice = 160000;
+        try {
+            if (currentPrice != null && !currentPrice.isEmpty()) {
+                cleanPrice = Integer.parseInt(currentPrice.replaceAll("[^0-9]", ""));
+            }
+        } catch (Exception ignored) {}
+        data.put("GiaVe", cleanPrice);
+        data.put("giaVe", cleanPrice);
+
         if (editingTrip != null && editingTrip.getTaiXeID() != null && !editingTrip.getTaiXeID().isEmpty()) {
             data.put("Taixe", editingTrip.getTaiXeID());
         } else {

@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -273,61 +274,108 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
 
         TextView tvTitle = view.findViewById(R.id.tvDetailTitle);
         TextView tvRoute = view.findViewById(R.id.tvDetailRoute);
-        TabLayout tabLayout = view.findViewById(R.id.tabLayoutDetail);
-        LinearLayout layoutTabRoute = view.findViewById(R.id.layoutTabRoute);
-        LinearLayout layoutTabVehicle = view.findViewById(R.id.layoutTabVehicle);
-        RecyclerView rvRoutePoints = view.findViewById(R.id.rvRoutePoints);
-        TextView tvNoTickets = view.findViewById(R.id.tvNoTickets);
+        TextView tvDateTime = view.findViewById(R.id.tvDetailDateTime);
+        TextView tvDriver = view.findViewById(R.id.tvDetailDriver);
+        TextView tvTripStatus = view.findViewById(R.id.tvDetailTripStatus);
 
+        TabLayout tabLayout = view.findViewById(R.id.tabLayoutDetail);
+        LinearLayout layoutTabVehicle = view.findViewById(R.id.layoutTabVehicle);
+        LinearLayout layoutTabRoute = view.findViewById(R.id.layoutTabRoute);
+
+        TextView tvTripId = view.findViewById(R.id.tvTripId);
         TextView tvPlate = view.findViewById(R.id.tvVehiclePlate);
         TextView tvSeats = view.findViewById(R.id.tvVehicleSeats);
-        TextView tvStatus = view.findViewById(R.id.tvVehicleStatus);
         TextView tvType = view.findViewById(R.id.tvVehicleType);
+        TextView tvPrice = view.findViewById(R.id.tvTripPrice);
+        TextView tvVehicleStatus = view.findViewById(R.id.tvVehicleStatus);
+
+        TextView tvRouteStartEnd = view.findViewById(R.id.tvRouteStartEnd);
+        TextView tvRouteEstimatedTime = view.findViewById(R.id.tvRouteEstimatedTime);
+        RecyclerView rvRoutePoints = view.findViewById(R.id.rvRoutePoints);
+        TextView tvNoTickets = view.findViewById(R.id.tvNoTickets);
+        View btnOpenFull = view.findViewById(R.id.btnOpenFullTripDetail);
 
         tvTitle.setText("Chi tiết chuyến xe");
         tvRoute.setText(trip.getRouteName());
 
-        rvRoutePoints.setLayoutManager(new LinearLayoutManager(this));
-        
-        tabLayout.getTabAt(1).select();
-        layoutTabRoute.setVisibility(View.VISIBLE);
-        layoutTabVehicle.setVisibility(View.GONE);
+        String timeStr = trip.getTime();
+        String endTimeStr = trip.getEndTime();
+        if (endTimeStr != null && !endTimeStr.isEmpty() && !endTimeStr.equals(timeStr)) {
+            timeStr += " - " + endTimeStr;
+        }
+        tvDateTime.setText("Khởi hành: " + timeStr + " (" + trip.getDate() + ")");
 
-        apiService.getTicketsByTrip(trip.getId()).enqueue(new Callback<List<Map<String, Object>>>() {
-            @Override
-            public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
-                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    tvNoTickets.setVisibility(View.GONE);
-                    List<Map<String, String>> pickPoints = new ArrayList<>();
-                    List<Map<String, String>> dropPoints = new ArrayList<>();
-                    
-                    for (Map<String, Object> ticket : response.body()) {
-                        String don = (String) ticket.get("DiemDon");
-                        String tra = (String) ticket.get("DiemTra");
-                        if (don != null) { Map<String, String> m = new java.util.HashMap<>(); m.put("name", don); m.put("type", "Điểm đón"); pickPoints.add(m); }
-                        if (tra != null) { Map<String, String> m = new java.util.HashMap<>(); m.put("name", tra); m.put("type", "Điểm trả"); dropPoints.add(m); }
+        // Driver name
+        String driverName = trip.getTenTaiXe();
+        if (driverName == null || driverName.isEmpty()) {
+            if (trip.getTaiXeID() != null && !trip.getTaiXeID().isEmpty()) {
+                for (ChiTietTaiXeModel d : drivers) {
+                    if (trip.getTaiXeID().equalsIgnoreCase(d.getTaixe())) {
+                        driverName = d.getHoTen();
+                        break;
                     }
-                    List<Map<String, String>> allPoints = new ArrayList<>(pickPoints);
-                    allPoints.addAll(dropPoints);
-                    rvRoutePoints.setAdapter(new RoutePointAdapter(allPoints));
-                } else {
-                    tvNoTickets.setVisibility(View.VISIBLE);
                 }
             }
-            @Override public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) { tvNoTickets.setVisibility(View.VISIBLE); }
-        });
+        }
+        if (driverName == null || driverName.isEmpty()) {
+            driverName = (trip.getTaiXeID() != null && !trip.getTaiXeID().isEmpty()) ? trip.getTaiXeID() : "Chưa phân công";
+        }
+        tvDriver.setText("Tài xế: " + driverName);
 
-        // FIX LỖI: Sử dụng Model VehicleManaged thay vì Map<String, Object>
+        // Status pill
+        boolean isDone = "Hoàn thành".equalsIgnoreCase(trip.getStatus()) || "Đã hoàn thành".equalsIgnoreCase(trip.getStatus());
+        tvTripStatus.setText(isDone ? "Hoàn thành" : "Chưa hoàn thành");
+        tvTripStatus.setTextColor(Color.parseColor(isDone ? "#2E7D32" : "#F57F17"));
+        tvTripStatus.setBackgroundColor(Color.parseColor(isDone ? "#E8F5E9" : "#FFF9C4"));
+
+        // Vehicle info tab
+        tvTripId.setText(trip.getId());
+        tvPlate.setText((trip.getBienSo() != null && !trip.getBienSo().isEmpty()) ? trip.getBienSo() : trip.getXeID());
+        tvType.setText(trip.getVehicleType());
+        tvSeats.setText(trip.getSeats() + " chỗ ngồi");
+
+        String priceStr = trip.getPrice();
+        try {
+            long p = Long.parseLong(priceStr.replaceAll("[^0-9]", ""));
+            priceStr = String.format(Locale.getDefault(), "%,d đ", p);
+        } catch (Exception ignored) {}
+        tvPrice.setText(priceStr);
+        tvVehicleStatus.setText("Đang hoạt động");
+
+        // Route info tab
+        String startPoint = trip.getDiemDi();
+        String endPoint = trip.getDiemDen();
+        if (startPoint == null || startPoint.isEmpty()) {
+            tvRouteStartEnd.setText("Lộ trình: " + trip.getRouteName().replace("Tuyến: ", ""));
+        } else {
+            tvRouteStartEnd.setText("Lộ trình: " + startPoint + " ➔ " + endPoint);
+        }
+        tvRouteEstimatedTime.setText("Thời gian dự kiến: " + trip.getDuration());
+
+        // Default: Tab 0 (Thông tin xe)
+        layoutTabVehicle.setVisibility(View.VISIBLE);
+        layoutTabRoute.setVisibility(View.GONE);
+        if (tabLayout.getTabAt(0) != null) {
+            tabLayout.getTabAt(0).select();
+        }
+
+        // Fetch vehicle details from API
         apiService.getVehicles().enqueue(new Callback<List<VehicleManaged>>() {
             @Override
             public void onResponse(Call<List<VehicleManaged>> call, Response<List<VehicleManaged>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     for (VehicleManaged v : response.body()) {
                         if (v.getXeID() != null && v.getXeID().equalsIgnoreCase(trip.getXeID())) {
-                            tvPlate.setText(v.getBienSoXe());
-                            tvSeats.setText(v.getSoGhe() != null ? String.valueOf(v.getSoGhe()) : "---");
-                            tvStatus.setText(v.getTrangThai());
-                            tvType.setText(v.getLoaiXeIDStr());
+                            if (v.getBienSoXe() != null && !v.getBienSoXe().equals("N/A")) {
+                                tvPlate.setText(v.getBienSoXe());
+                            }
+                            if (v.getSoGhe() != null) {
+                                tvSeats.setText(v.getSoGhe() + " chỗ ngồi");
+                            }
+                            tvVehicleStatus.setText(v.getTrangThai());
+                            if (v.getLoaiXeIDStr() != null && !v.getLoaiXeIDStr().equals("N/A")) {
+                                tvType.setText(v.getLoaiXeIDStr());
+                            }
                             break;
                         }
                     }
@@ -336,12 +384,56 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
             @Override public void onFailure(Call<List<VehicleManaged>> call, Throwable t) {}
         });
 
+        // Setup route points
+        rvRoutePoints.setLayoutManager(new LinearLayoutManager(this));
+        apiService.getTicketsByTrip(trip.getId()).enqueue(new Callback<List<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    List<Map<String, String>> allPoints = new ArrayList<>();
+                    for (Map<String, Object> ticket : response.body()) {
+                        String don = (String) ticket.get("DiemDon");
+                        if (don == null) don = (String) ticket.get("diemDon");
+                        String tra = (String) ticket.get("DiemTra");
+                        if (tra == null) tra = (String) ticket.get("diemTra");
+
+                        if (don != null && !don.isEmpty()) {
+                            Map<String, String> m = new HashMap<>();
+                            m.put("name", don);
+                            m.put("type", "Điểm đón (Khách đặt)");
+                            allPoints.add(m);
+                        }
+                        if (tra != null && !tra.isEmpty()) {
+                            Map<String, String> m = new HashMap<>();
+                            m.put("name", tra);
+                            m.put("type", "Điểm trả (Khách đặt)");
+                            allPoints.add(m);
+                        }
+                    }
+                    if (!allPoints.isEmpty()) {
+                        tvNoTickets.setVisibility(View.GONE);
+                        rvRoutePoints.setVisibility(View.VISIBLE);
+                        rvRoutePoints.setAdapter(new RoutePointAdapter(allPoints));
+                    } else {
+                        tvNoTickets.setVisibility(View.VISIBLE);
+                        rvRoutePoints.setVisibility(View.GONE);
+                    }
+                } else {
+                    tvNoTickets.setVisibility(View.VISIBLE);
+                    rvRoutePoints.setVisibility(View.GONE);
+                }
+            }
+            @Override public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
+                tvNoTickets.setVisibility(View.VISIBLE);
+                rvRoutePoints.setVisibility(View.GONE);
+            }
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 View tabView = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tab.getPosition());
-                tabView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start();
-                
+                tabView.animate().scaleX(1.05f).scaleY(1.05f).setDuration(150).start();
                 if (tab.getPosition() == 1) { // Lộ trình
                     layoutTabRoute.setVisibility(View.VISIBLE);
                     layoutTabVehicle.setVisibility(View.GONE);
@@ -353,7 +445,7 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 View tabView = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tab.getPosition());
-                tabView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start();
+                tabView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start();
             }
             @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
@@ -361,6 +453,16 @@ public class DriverScheduleMonitoringActivity extends AppCompatActivity {
         AlertDialog dialog = builder.setView(view).create();
         if (dialog.getWindow() != null) dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         view.findViewById(R.id.btnCloseDialog).setOnClickListener(v -> dialog.dismiss());
+
+        if (btnOpenFull != null) {
+            btnOpenFull.setOnClickListener(v -> {
+                dialog.dismiss();
+                Intent intent = new Intent(DriverScheduleMonitoringActivity.this, TripDetailActivity.class);
+                intent.putExtra("trip", trip);
+                startActivity(intent);
+            });
+        }
+
         dialog.show();
     }
 

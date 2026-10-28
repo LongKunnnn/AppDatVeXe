@@ -30,6 +30,18 @@ public class Trip implements Serializable {
     @SerializedName(value = "Taixe", alternate = {"TaiXe", "TaiXeID", "taixe", "taiXeID"})
     private String taiXeID;
 
+    @SerializedName(value = "TenTaiXe", alternate = {"tenTaiXe", "driverName"})
+    private String tenTaiXe;
+
+    @SerializedName(value = "BienSo", alternate = {"bienSo", "bienSoXe", "plateNumber"})
+    private String bienSo;
+
+    @SerializedName(value = "DiemDi", alternate = {"diemDi", "startPoint"})
+    private String diemDi;
+
+    @SerializedName(value = "DiemDen", alternate = {"diemDen", "endPoint"})
+    private String diemDen;
+
     @SerializedName(value = "TenTuyen", alternate = {"tenTuyen", "tuyenXeName", "routeName"})
     private String tenTuyen;
 
@@ -126,6 +138,18 @@ public class Trip implements Serializable {
         this.seats = seats; 
         this.soChoTrong = seats;
     }
+
+    public String getTenTaiXe() { return tenTaiXe != null ? tenTaiXe : ""; }
+    public void setTenTaiXe(String tenTaiXe) { this.tenTaiXe = tenTaiXe; }
+
+    public String getBienSo() { return bienSo != null ? bienSo : ""; }
+    public void setBienSo(String bienSo) { this.bienSo = bienSo; }
+
+    public String getDiemDi() { return diemDi != null ? diemDi : ""; }
+    public void setDiemDi(String diemDi) { this.diemDi = diemDi; }
+
+    public String getDiemDen() { return diemDen != null ? diemDen : ""; }
+    public void setDiemDen(String diemDen) { this.diemDen = diemDen; }
 
     public Driver getAssignedDriver() { return assignedDriver; }
     public void setAssignedDriver(Driver assignedDriver) { this.assignedDriver = assignedDriver; }
