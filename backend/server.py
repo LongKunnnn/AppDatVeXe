@@ -169,6 +169,8 @@ def init_database(force_reseed=False):
             ('LX02', 'Xe Giường Nằm 40 chỗ', 40, 150000),
             ('LX03', 'Xe Ghế Ngồi 29 chỗ', 29, 120000),
             ('LX04', 'Limousine Cung Điện 22 phòng', 22, 250000),
+            ('LX05', 'Limousine Cung Điện 99 phòng', 99, 2500000),
+
         ])
 
         cursor.executemany("INSERT INTO nhaxe VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
@@ -185,7 +187,8 @@ def init_database(force_reseed=False):
             ('TX00006', 'Đỗ Minh Quân', '0988222333', 'D-445566', 'NX00002', ''),
             ('TX00007', 'Lê Thanh Tùng', '0988444555', 'E-778899', 'NX00002', ''),
             ('TX00008', 'Vũ Hải Nam', '0988666777', 'D-889900', 'NX00002', ''),
-            ('TX00009', 'Văn Phương Nam', '0111111222', 'D-889999', 'NX00001', '')
+            ('TX00009', 'Đặng Hoàng Long', '0111111222', 'D-889999', 'NX00001', ''),
+
 
         ]
         cursor.executemany("INSERT INTO taixe VALUES (?, ?, ?, ?, ?, ?)", drivers_data)
@@ -1834,7 +1837,19 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
 
             # TẠO MỚI LOẠI XE (CREATE CAR TYPE)
             elif path == '/api/loaixe':
-                loaixe_id = data.get("LoaixeID") or data.get("loaixe_id") or f"LX{int(datetime.now().timestamp()*1000)%1000000:06d}"
+                loaixe_id = data.get("LoaixeID") or data.get("loaixe_id") or data.get("id")
+                if not loaixe_id or str(loaixe_id).strip() == "":
+                    cursor.execute("SELECT LoaixeID FROM loaixe")
+                    max_num = 0
+                    for r in cursor.fetchall():
+                        lid = str(r[0]) if r and r[0] else ""
+                        m = re.match(r'^(?:LX|lx)(\d+)$', lid.strip())
+                        if m:
+                            num = int(m.group(1))
+                            if num < 10000:
+                                max_num = max(max_num, num)
+                    loaixe_id = f"LX{max_num + 1:02d}"
+
                 ten_loai = data.get("tenLoai") or data.get("TenLoai") or f"Xe {data.get('soCho', 34)} chỗ"
                 so_cho = int(data.get("soCho") or data.get("SoCho") or 34)
                 gia_chuan = int(data.get("giaChuan") or data.get("GiaChuan") or data.get("giaVe") or data.get("GiaVe") or 150000)
@@ -2047,6 +2062,7 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                     "xe": ("xe", "XeID"),
                     "tuyenxe": ("tuyenxe", "TuyenxeID"),
                     "taixe": ("taixe", "TaiXeID"),
+                    "chitiettaixe": ("chitiettaixe", "ChiTietID"),
                     "chuyenxe": ("chuyenxe", "ChuyenxeID"),
                     "khachhang": ("khachhang", "KhachHangID"),
                     "user-auth": ("nguoidung", "UserID"),
@@ -2056,6 +2072,15 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
                 if resource in table_map:
                     tbl, col = table_map[resource]
                     cursor.execute(f"DELETE FROM {tbl} WHERE {col} = ?", (res_id,))
+                    if resource in ['taixe', 'chitiettaixe']:
+                        cursor.execute("DELETE FROM taixe WHERE TaiXeID = ?", (res_id,))
+                        cursor.execute("DELETE FROM chitiettaixe WHERE TaiXe = ? OR ChiTietID = ?", (res_id, res_id))
+                        cursor.execute("DELETE FROM nguoidung WHERE TaiXeID = ?", (res_id,))
+                        cursor.execute("UPDATE chuyenxe SET TaiXe = NULL WHERE TaiXe = ?", (res_id,))
+                    elif resource == 'xe':
+                        cursor.execute("UPDATE chuyenxe SET Xe = NULL WHERE Xe = ?", (res_id,))
+                    elif resource == 'tuyenxe':
+                        cursor.execute("DELETE FROM chuyenxe WHERE Tuyenxe = ?", (res_id,))
                     conn.commit()
                     return self._send_json({"status": "deleted"})
             return self._send_json({"status": "deleted"})
