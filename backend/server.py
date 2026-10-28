@@ -729,7 +729,7 @@ def generate_web_dashboard(conn):
                                     <td class="fw-bold text-primary"><i class="fa-solid fa-user-circle me-1 text-muted"></i>{tx["HoTen"]}</td>
                                     <td><a href="tel:{tx["SoDienThoai"]}" class="text-decoration-none">{tx["SoDienThoai"]}</a></td>
                                     <td><span class="badge bg-secondary">{tx["SoBangLai"]}</span></td>
-                                    <td>{"Tràng An Limousine" if tx.get("Nhaxe") == "NX00001" else "Vân Anh Limousine"}</td>
+                                    <td>{"Tràng An Limousine" if ("Nhaxe" in tx.keys() and tx["Nhaxe"] == "NX00001") else "Vân Anh Limousine"}</td>
                                 </tr>"""
 
     html += """
@@ -763,7 +763,7 @@ def generate_web_dashboard(conn):
                                 <tr>
                                     <td class="fw-bold">{r["TuyenxeID"]}</td>
                                     <td class="fw-bold text-primary">{r["tenTuyen"]}</td>
-                                    <td><span class="badge bg-primary">{"Tràng An Limousine" if r.get("Nhaxe") == "NX00001" else "Vân Anh Limousine"}</span></td>
+                                    <td><span class="badge bg-primary">{"Tràng An Limousine" if ("Nhaxe" in r.keys() and r["Nhaxe"] == "NX00001") else "Vân Anh Limousine"}</span></td>
                                     <td><i class="fa-solid fa-location-dot text-danger me-1"></i>{r["diemDi"]}</td>
                                     <td><i class="fa-solid fa-flag-checkered text-success me-1"></i>{r["diemDen"]}</td>
                                     <td>{r["khoangCach"]} km</td>
@@ -1488,6 +1488,10 @@ class VeXeApiHandler(BaseHTTPRequestHandler):
             else:
                 return self._send_json({"error": "Endpoint not found"}, 404)
 
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return self._send_json({"error": str(e)}, 500)
         finally:
             conn.close()
 

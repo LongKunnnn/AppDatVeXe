@@ -46,6 +46,12 @@ public class SearchTicketActivity extends AppCompatActivity {
         initViews();
         setupCityData();
         setupBottomNavigation(); 
+
+        // Xóa key dùng chung cũ nếu có để tránh lộ lịch sử của tài khoản trước
+        if (sharedPreferences.contains("search_history")) {
+            sharedPreferences.edit().remove("search_history").apply();
+        }
+
         displayRecentHistory();
 
         edtDate.setOnClickListener(v -> openDatePicker());
@@ -141,6 +147,26 @@ public class SearchTicketActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayRecentHistory();
+    }
+
+    private String getHistoryKey() {
+        String uid = sharedPreferences.getString("user_id", "");
+        if (uid.isEmpty()) {
+            uid = sharedPreferences.getString("customerPhone", "");
+        }
+        if (uid.isEmpty()) {
+            uid = sharedPreferences.getString("customerUid", "");
+        }
+        if (uid.isEmpty()) {
+            uid = "guest";
+        }
+        return "search_history_" + uid;
+    }
+
     private void saveSearchHistory(String origin, String dest, String date, String time) {
         List<SearchHistory> history = getHistory();
         SearchHistory newItem = new SearchHistory(origin, dest, date, time);
@@ -156,7 +182,7 @@ public class SearchTicketActivity extends AppCompatActivity {
         if (history.size() > 5) history.remove(5);
 
         String json = gson.toJson(history);
-        sharedPreferences.edit().putString("search_history", json).apply();
+        sharedPreferences.edit().putString(getHistoryKey(), json).apply();
         displayRecentHistory();
     }
 
@@ -166,7 +192,7 @@ public class SearchTicketActivity extends AppCompatActivity {
     }
 
     private List<SearchHistory> getHistory() {
-        String json = sharedPreferences.getString("search_history", "");
+        String json = sharedPreferences.getString(getHistoryKey(), "");
         List<SearchHistory> validList = new ArrayList<>();
         if (!json.isEmpty()) {
             try {
@@ -181,22 +207,21 @@ public class SearchTicketActivity extends AppCompatActivity {
                 }
             } catch (Exception ignored) {}
         }
-
-        if (validList.isEmpty()) {
-            validList.add(new SearchHistory("Hà Nội", "Ninh Bình", "", "07:30"));
-            validList.add(new SearchHistory("Hà Nội", "Thanh Hóa", "", "09:00"));
-            validList.add(new SearchHistory("Ninh Bình", "Thanh Hóa", "", "14:00"));
-            sharedPreferences.edit().putString("search_history", gson.toJson(validList)).apply();
-        } else {
-            sharedPreferences.edit().putString("search_history", gson.toJson(validList)).apply();
-        }
         return validList;
     }
 
     private void displayRecentHistory() {
+        if (llRecentHistory == null) return;
         llRecentHistory.removeAllViews();
         List<SearchHistory> history = getHistory();
         
+        View tvTitle = findViewById(R.id.tvRecentTitle);
+        if (history.isEmpty()) {
+            if (tvTitle != null) tvTitle.setVisibility(View.GONE);
+            return;
+        }
+
+        if (tvTitle != null) tvTitle.setVisibility(View.VISIBLE);
         for (SearchHistory item : history) {
             View card = LayoutInflater.from(this).inflate(R.layout.item_search_history, llRecentHistory, false);
             TextView tvRoute = card.findViewById(R.id.tvHistoryRoute);
